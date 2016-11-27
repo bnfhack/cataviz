@@ -158,5 +158,6 @@ for ( $i=0; $i < $size; $i++ ) {
     });
     </script>
     <p>Données <a href="http://data.bnf.fr/semanticweb">data.bnf.fr</a> (avril 2016).</p>
+    <p>Entre 60% et 80% des titres sont publiés à Paris, avec généralement un nombre de pages moyen plus élevé que pour les autres lieux d’édition.</p>
   </body>
 </html>

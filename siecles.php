@@ -2,11 +2,11 @@
 // header('Content-type: text/plain; charset=utf-8');
 include ( dirname(__FILE__).'/Cataviz.php' );
 $db = new Cataviz( "databnf.db" );
-$from = 1780;
+$from = 1865;
 if (isset($_REQUEST['from'])) $from = $_REQUEST['from'];
 if ( $from < 1475 ) $from = 1475;
 if ( $from > 2015 ) $from = 2000;
-$to = 1865;
+$to = 1960;
 if (isset($_REQUEST['to'])) $to = $_REQUEST['to'];
 if ( $to < 1475 ) $to = 2014;
 if ( $to > 2014 ) $to = 2014;
@@ -176,5 +176,6 @@ for ( $date=$from; $date <= $to; $date++ ) {
     });
     </script>
     <p>Données <a href="http://data.bnf.fr/semanticweb">data.bnf.fr</a> (avril 2016).</p>
+    <p>Une fois stabilisé, le nombre de titres d’un siècle varie assez peu, c’est-à-dire que le nombre de documents attribués à un auteur du XVII<sup>e</sup> s. est relativement stable au XIX<sup>e</sup> et au XX<sup>e</sup> s, même si le nombre de titres est 10 fois plus important. L‘espace supplémentaire est occupé par les nouveautés. La réédition des titres anciens est affectée par les guerres, comme les nouveautés, on observera le profil très particulier après 1945, où la réédition reprend beaucoup plus fort qu’après 1918, politique volontariste du Conceil National de la Résistance. Le pic de 1990 résulte du “Grand Récollement”, c’est-à-dire du déménagement de la bibliothèque nationale vers le site de Tolbiac, qui a permis de retrouver beaucoup de livres qui n’étaient pas encore catalogués.</p>
   </body>
 </html>

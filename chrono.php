@@ -39,7 +39,7 @@ if ( $smooth > 50 ) $smooth = 50;
         <button id="log" type="button">log</button>
         <button id="linear" disabled="true" type="button">linéaire</button>
       </form>
-      <a href="" target="_new">BNF, titres en français par an, moyenne du nombre de pages</a> :
+      <a href="?">BNF, titres en français par an, moyenne du nombre de pages</a> :
       <a href="?from=1600&amp;to=1788&amp;smooth=2">1600–1789</a>,
       <a href="?from=1780&amp;to=1860">1789–1870</a>,
       <a href="?from=1860&amp;to=1966">1870–1962</a>,
@@ -146,5 +146,6 @@ for ( $date=$from; $date <= $to; $date++ ) {
     log.onclick = function() { setLog(true); };
     </script>
     <p>Données <a href="http://data.bnf.fr/semanticweb">data.bnf.fr</a> (avril 2016).</p>
+    <p>Pour l’Ancien-Régime, l’agitation de la Fronde et de la Révolution produit plus de titres mais avec moins de pages (moins de périodiques qu’au XIX<sup>e</sup>). Ensuite, les guerres et le révolutions affectent généralement beaucoup le nombre de titres et de pages (restrictions de papier, blocage de Paris).</p>
   </body>
 </html>

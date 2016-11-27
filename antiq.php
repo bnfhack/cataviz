@@ -143,5 +143,6 @@ for ( $date=$from; $date <= $to; $date++ ) {
 
     </script>
     <p>Données <a href="http://data.bnf.fr/semanticweb">data.bnf.fr</a> (avril 2016).</p>
+    <p>Des statististiques sur la santé des classiques peuvent s’obtenir en croisant la date de naissance de l’auteur, et la langue déclarée du document. Les effectifs par an sont faibles et doivent être lissés pour ne pas brouiller les tendances. On découvrira d’abord que le latin est encore une langue très vivante. Le pape et les congrégations produisent toujours beaucoup de titres qui entrent au catalogue. Le pic de 1990 résulte du “Grand Récollement”, c’est-à-dire du déménagement de la bibliothèque nationale vers le site de Tolbiac, qui a permis de retrouver beaucoup de livres qui n’étaient pas encore catalogués. Les guerres affectent l’activité éditoriale savante, et notamment les traductions des textes antiques. L’activité de traduction commence a dépasser l’édition des originaux latins à partir de 1830.</p>
   </body>
 </html>
