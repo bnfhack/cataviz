@@ -7,5 +7,5 @@
   | <a href="antiq.php">Antiquité</a>
   | <a href="langs.php?from=1780&to=1980&max=350&smooth=2">Langues</a>
   | <a href="zipf.php">Zipf documents/auteurs</a>
-  | <a href="http://resultats.hypotheses.org/795">Explications ▶</a>
+  | <a href="http://resultats.hypotheses.org/795" target="_new">Explications ▶</a>
 </nav>

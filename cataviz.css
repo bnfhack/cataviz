@@ -22,5 +22,5 @@ div.graph { height: 99.9%; width: 99.9%; font-family: sans-serif; background-col
 .dygraph-legend {  background-color: rgba(255, 255, 255, 0.75) !important; padding: 4px; border: 1px solid #000; border-radius: 10px; box-shadow: 4px 4px 4px #888; pointer-events: none; font-size: 14pt !important; }
 .dygraph-axis-label-x { font-size: 16pt; }
 .dygraph-label { font-size: 18pt; font-weight: bold; }
-.ann { color: rgba(0, 0, 0, 0.7) !important; font-size: 25px !important; font-weight: bold; border: none !important; border-left: 3px solid #F00 !important; padding-left: 0.5ex; background: rgba(255, 255, 255, 0.3) !important;}
+.ann { color: #FFFFFF !important; text-shadow: 1px 1px 1px #000, -1px 1px 1px #000;  font-size: 25px !important; font-weight: bold; border: none !important; border-left: 3px solid #000 !important; background: rgba(128, 128, 128, 0.3) !important; line-height: 1em; padding: 0.2ex 0.2ex 0ex 0ex; }
 nav.menu { background-color: #FFFFFF; padding: 0 1ex; position: absolute; top: 0; left: 0; right: 0; }
