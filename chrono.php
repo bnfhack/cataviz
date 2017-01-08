@@ -19,6 +19,8 @@ if ( $smooth > 50 ) $smooth = 50;
 if ( isset($_REQUEST['pagefloor']) ) $pagefloor = $_REQUEST['pagefloor'];
 else $pagefloor = 100;
 
+$log = NULL;
+if ( isset($_REQUEST['log']) ) $log = $_REQUEST['log'];
 
 ?><!DOCTYPE html>
 <html>
@@ -125,6 +127,7 @@ $B = "Titres <= $pagefloor p.";
         ylabel: "Titres",
         y2label: "Pages",
         showRoller: true,
+        <?php if ($log) echo "logscale: true,";  ?>
         rollPeriod: <?php echo $smooth ?>,
         series: {
           "<?=$A?>": {
