@@ -26,8 +26,8 @@ if ( $to > 2015 ) $to = 2015;
       <button id="linear" disabled="true">linear</button>
       <button id="log">log</button>
     </div>
-    <h1>Canon and archive, the catalog is not democratic (a zipfian distribution)</h1>
-    <p>A few authors wrote a lot of the documents edited and re-edited; lots of authors wrote only one or two documents. The catalog is highly uneqal, and exactly follow a <a href="https://en.wikipedia.org/wiki/Zipf's_law">Zipf progression</a> (click log scale), like words of a corpus.</p>
+    <h1>Canon and archive, a catalog is not democratic (a zipfian distribution)</h1>
+    <p>A few authors wrote a lot of the documents edited and re-edited; lots of authors wrote only one or two documents. A catalog is highly uneqal, and exactly follow a <a href="https://en.wikipedia.org/wiki/Zipf's_law">Zipf progression</a> (click log scale), like words of a corpus.</p>
     <div id="chart" class="dygraph" style="width:100%; height:600px;"></div>
     <script type="text/javascript">
     g = new Dygraph(

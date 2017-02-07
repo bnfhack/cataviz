@@ -55,7 +55,7 @@ if ($a40) echo '{ series: "Sorties", x:'.$a40.', tickHeight: 40, shortText: "40 
   });
 </script>
 <?php
-echo '<p>'.$person['name'].', auteur de '.$person['docs'].' documents au catalogue de la BNF, distribution des sorties par année, et approximation du stock (amortissement sur 30 ans)</p>';
+echo '<p>'.$person['name'].', auteur de '.$person['docs'].' documents dans data.bnf.fr, distribution des sorties par année, et approximation du stock (amortissement sur 30 ans)</p>';
 ?>
 
     <?php

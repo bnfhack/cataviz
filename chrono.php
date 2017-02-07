@@ -47,7 +47,7 @@ if ( isset($_REQUEST['log']) ) $log = $_REQUEST['log'];
         <button id="log" type="button">log</button>
         <button id="linear" disabled="true" type="button">linéaire</button>
       </form>
-      <a href="?">BNF, titres en français par an, moyenne du nombre de pages</a> :
+      <a href="?">Data.bnf.fr, titres en français par an, moyenne du nombre de pages</a> :
       <a href="?from=1600&amp;to=1788&amp;smooth=2">1600–1789</a>,
       <a href="?from=1780&amp;to=1860&amp;smooth=1">1789–1870</a>,
       <a href="?from=1860&amp;to=1958&amp;smooth=1">1870–1960</a>,

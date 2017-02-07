@@ -35,7 +35,7 @@ if ( $smooth > 50 ) $smooth = 50;
       <button type="submit">GO</button>
     </form>
     <div class="titre">
-      <a href="" target="_new">BNF, documents d‘un auteur mort (toutes langues confondues)</a>
+      <a href="" target="_new">Data.bnf.fr, documents d‘un auteur mort (toutes langues confondues)</a>
       <a href="?from=1475&amp;to=1780&amp;smooth=10">1475–1780</a>,
       <a href="?from=1780&amp;to=1860">1780–1860</a>,
       <a href="?from=1860&amp;to=1960">1860–1960</a>,

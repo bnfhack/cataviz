@@ -35,7 +35,7 @@ if ( $smooth > 50 ) $smooth = 50;
       smooth <input name="smooth" size="2" value="<?php echo  $smooth ?>"/>
       <button type="submit">GO</button>
     </form>
-    <a href="" target="_new">BNF : Paris, place principale de publication des documents en français</a>
+    <a href="" target="_new">Data.bnf.fr : Paris, place principale de publication des documents en français</a>
     <a href="?from=1475&amp;to=1780&amp;smooth=2">1475–1780</a>,
     <a href="?from=1780&amp;to=1890">1780–1890</a>,
     <a href="?from=1860&amp;to=1960">1860–1960</a>,

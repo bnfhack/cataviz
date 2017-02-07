@@ -1,2 +1,2 @@
 # cataviz
-Visualisations sur le catalogue de la BNF (dans databnf)
+Visualisations pour data.bnf.fr

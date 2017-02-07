@@ -44,7 +44,7 @@ $max = @$_REQUEST['max'];
       <button id="linear" disabled="true" type="button">linéaire</button>
     </form>
     <div style=" padding-top: 2em; ">
-      <a href="?">BNF, répartition des langues</a> |
+      <a href="?">Data.bnf.fr, répartition des langues</a> |
       <a href="?from=1475&amp;to=1645&amp;smooth=5">1475-1645 montée du français</a> |
       <a href="?from=1620&amp;to=1830&amp;smooth=10&amp;max=350">1620-1830 baisse du latin</a> |
       <a href="?from=1780&amp;to=1980&amp;max=350&amp;smooth=2">1780-1980 conservation du latin</a> |

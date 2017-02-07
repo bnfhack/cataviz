@@ -37,7 +37,7 @@ $max = @$_REQUEST['max'];
         to <input name="to" size="4" value="<?php echo  $to ?>"/>
         <button type="submit">▶</button>
       </form>
-      <a href="?">BNF, latin et antiquité, titres par année</a> |
+      <a href="?">Data.bnf.fr, latin et antiquité, titres par année</a> |
       <a href="?from=1450&amp;to=1650">1450–1650</a> |
       <a href="?from=1650&amp;to=1800">1650-1800</a> |
       <a href="?from=1800&amp;to=1980">1800-1980</a>
