@@ -1,6 +1,6 @@
 <?php
 include ( dirname(__FILE__).'/Cataviz.php' );
-$db = new Cataviz( "databnf.db" );
+$db = new Cataviz( "databnf.sqlite" );
 if ( isset( $_REQUEST['person'] ) ) $persark=$_REQUEST['person'];
 else $persark = "cb11888978p"; // Apollinaire
 $person = $db->person( $persark );
@@ -60,8 +60,9 @@ echo '<p>'.$person['name'].', auteur de '.$person['docs'].' documents dans data.
 
     <?php
 echo '<p>Ouvrir le graphe de <a href="relations.php?person='.$persark.'" target="_new">relations</a></p>';
-echo '<iframe name="biblio" src="biblio.php?person='.$persark.'" width="100%" height="100%"></iframe>';
 echo $db->editions( $persark );
+
+echo '<iframe name="biblio" src="biblio.php?person='.$persark.'" width="100%" height="100%"></iframe>';
 
     ?>
     <script type="text/javascript" src="Sortable.js">//</script>

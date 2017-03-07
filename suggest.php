@@ -2,7 +2,7 @@
 header('Content-type: application/javascript; charset=utf-8');
 include ( dirname(__FILE__).'/frtr.php' );
 include ( dirname(__FILE__).'/Cataviz.php' );
-$db = new Cataviz( "databnf.db" );
+$db = new Cataviz( "databnf.sqlite" );
 $q = @$_REQUEST['q'];
 if (!$q) return;
 $sort = strtr( $q, $frtr );

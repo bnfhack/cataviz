@@ -1,6 +1,6 @@
 <?php
 include ( dirname(__FILE__).'/Cataviz.php' );
-$db = new Cataviz( "databnf.db" );
+$db = new Cataviz( "databnf.sqlite" );
 $from = @$_REQUEST['from'];
 $to = @$_REQUEST['to'];
 $pre = @$_REQUEST['pre'];

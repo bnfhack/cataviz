@@ -168,7 +168,7 @@ class Cataviz
     if ( isset( self::$roles[$role] ) )  $filter=" AND role IN ".self::$roles[$role];
     $sql = "SELECT person.*, contribution.role
         FROM contribution, person
-        WHERE contribution.person=person.id AND person != ? AND document = ? $filter
+        WHERE contribution.person=person.id AND document = ? $filter
         LIMIT ?
     ";
 
@@ -182,7 +182,7 @@ class Cataviz
     $edgeid = 1;
     while ( $doc = $qdoc->fetch( PDO::FETCH_ASSOC ) ) {
       // tester si ce document à un autre contributeur avant de stocker
-      $qpers->execute( array( $center['id'], $doc['id'], $this->persByDocLimit ) );
+      $qpers->execute( array( $doc['id'], 5 ) );
       while ( $pers = $qpers->fetch( PDO::FETCH_ASSOC ) ) {
         // écrire la relation à la personne centrale
         $json[] = '      { "id":'.$edgeid.', "source":"'.$center['ark'].'", "target":"'.$doc['ark'].'", "color":"#CCCCCC" },';
@@ -320,6 +320,13 @@ class Cataviz
     $html[] = '</table>';
     return implode( $html, "\n" );
   }
+  /**
+   * Les identifiants BNF sont sûrs
+   */
+   public static function ark2id( $ark ) {
+     return 0+substr($ark, 2, -1);
+   }
+
 }
 
 ?>

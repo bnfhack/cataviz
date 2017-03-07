@@ -1,6 +1,6 @@
 <?php
 include ( dirname(__FILE__).'/Cataviz.php' );
-$db = new Cataviz( "databnf.db" );
+$db = new Cataviz( "databnf.sqlite" );
 if ( isset( $_REQUEST['person'] ) ) $perscode=$_REQUEST['person'];
 else $perscode = "cb11888978p"; // Apollinaire
 $pers = $db->person( $perscode );
@@ -19,7 +19,7 @@ $role = @$_REQUEST['role'];
     <script src="sigma/sigma.layout.forceAtlas2.min.js">//</script>
     <script src="sigma/sigma.plugins.dragNodes.min.js">//</script>
     <script src="sigma/sigma.exporters.image.min.js">//</script>
-    <script src="Cataviz.js">//</script>
+    <script src="catagraph.js">//</script>
     <link rel="stylesheet" type="text/css" href="cataviz.css"/>
   </head>
   <body style="margin:0; padding: 0; ">

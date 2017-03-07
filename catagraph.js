@@ -1,10 +1,11 @@
+// sigma autoloader FAILED, synchronism problem, script tags in html file is easier than everything
 // get URI of this script
 var scripts = document.getElementsByTagName("script");
 var src = scripts[scripts.length-1].src;
-
-// sigma autoloader FAILED, synchronism problem, scipt tags in html file is easier than everything
 ;(function() {
   'use strict';
+
+
 
   sigma.utils.pkg('sigma.canvas.labels');
   /**

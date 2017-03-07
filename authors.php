@@ -1,6 +1,6 @@
 <?php
 include ( dirname(__FILE__).'/Cataviz.php' );
-$db = new Cataviz( "databnf.db" );
+$db = new Cataviz( "databnf.sqlite" );
 
 /*
 Boucler sur des périodes temporelles pour chercher les auteurs les plus appelés

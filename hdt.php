@@ -1,7 +1,7 @@
 <?php
 // header('Content-type: text/plain; charset=utf-8');
 include ( dirname(__FILE__).'/Cataviz.php' );
-$db = new Cataviz( "databnf.db" );
+$db = new Cataviz( "databnf.sqlite" );
 if (isset($_REQUEST['from'])) $from = $_REQUEST['from'];
 else $from = 1600;
 if ( $from < 1452 ) $from = 1452;

@@ -23,4 +23,9 @@ div.graph { height: 99.9%; width: 99.9%; font-family: sans-serif; background-col
 .dygraph-axis-label-x { font-size: 16pt; }
 .dygraph-label { font-size: 18pt; font-weight: bold; }
 .ann { color: #FFFFFF !important; text-shadow: 1px 1px 1px #000, -1px 1px 1px #000;  font-size: 25px !important; font-weight: bold; border: none !important; border-left: 3px solid #000 !important; background: rgba(128, 128, 128, 0.3) !important; line-height: 1em; padding: 0.2ex 0.2ex 0ex 0ex; }
-nav.menu { background-color: #FFFFFF; padding: 0 1ex; position: absolute; top: 0; left: 0; right: 0; }
+nav.menu { background-color: #FFFFFF; padding: 0 1ex; position: absolute; top: 0; left: 0; right: 0; white-space: nowrap; }
+
+::-webkit-input-placeholder {  opacity: 0.8; color: #BBB; font-style: italic; }
+:-moz-placeholder { opacity: 0.8; color: #BBB; font-style: italic; }
+::-moz-placeholder { opacity: 0.8; color: #BBB; font-style: italic; }
+:-ms-input-placeholder { opacity: 0.8; color: #BBB; font-style: italic; }

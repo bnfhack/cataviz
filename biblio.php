@@ -1,6 +1,6 @@
 <?php
 include ( dirname(__FILE__).'/Cataviz.php' );
-$db = new Cataviz( "databnf.db" );
+$db = new Cataviz( "databnf.sqlite" );
 if ( isset( $_REQUEST['person'] ) ) $persark=$_REQUEST['person'];
 else $persark = "cb11888978p"; // Apollinaire
 $person = $db->person( $persark );
