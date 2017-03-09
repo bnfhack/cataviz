@@ -168,7 +168,7 @@ class Cataviz
     if ( isset( self::$roles[$role] ) )  $filter=" AND role IN ".self::$roles[$role];
     $sql = "SELECT person.*, contribution.role
         FROM contribution, person
-        WHERE contribution.person=person.id AND document = ? $filter
+        WHERE contribution.person=person.id AND person != ? AND document = ? $filter
         LIMIT ?
     ";
 
@@ -182,7 +182,7 @@ class Cataviz
     $edgeid = 1;
     while ( $doc = $qdoc->fetch( PDO::FETCH_ASSOC ) ) {
       // tester si ce document à un autre contributeur avant de stocker
-      $qpers->execute( array( $doc['id'], 5 ) );
+      $qpers->execute( array( $center['id'], $doc['id'], $this->persByDocLimit ) );
       while ( $pers = $qpers->fetch( PDO::FETCH_ASSOC ) ) {
         // écrire la relation à la personne centrale
         $json[] = '      { "id":'.$edgeid.', "source":"'.$center['ark'].'", "target":"'.$doc['ark'].'", "color":"#CCCCCC" },';
@@ -254,7 +254,6 @@ class Cataviz
     if( !current($q->fetch()) ) return;
 
     $html = array();
-    $html[] = '<p>Cette bibliographie est établie automatiquement à partir des <a href="http://data.bnf.fr/liste-oeuvres">notices d’œuvres</a> de la BNF. Elle peut être significative de l’histoire éditoriale d’un auteur, mais elle ne sera pas exhaustive, ni des œuvres, ni des rééditions.</p>';
     // récupérer le premier document de l’auteur
     $sql = "";
 

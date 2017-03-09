@@ -35,23 +35,24 @@ if ( isset($_REQUEST['log']) ) $log = $_REQUEST['log'];
   <body>
     <?php include ( dirname(__FILE__).'/menu.php' ) ?>
     <header style="min-height: 2.7em; ">
-      <form name="dates" style="float: right;">
+      <div class="links">
+        <a href="?">Data.bnf.fr, titres en français par an, moyenne du nombre de pages</a> :
+        <a href="?from=1600&amp;to=1788&amp;smooth=2">1600–1789</a>,
+        <a href="?from=1780&amp;to=1860&amp;smooth=1">1789–1870</a>,
+        <a href="?from=1860&amp;to=1958&amp;smooth=1">1870–1960</a>,
+        <a href="?from=1950&amp;to=2015&amp;smooth=1">1950–…</a>
+      </div>
+      <form name="dates">
         De <input name="from" size="4" value="<?php echo $from ?>"/>
         à <input name="to" size="4" value="<?php echo  $to ?>"/>
         <label>Seuil pages <input name="pagefloor" size="4" value="<?php echo  $pagefloor ?>"/></label>
         <label>Lissage <input name="smooth" size="1" value="<?php echo  $smooth ?>"/></label>
-        <button type="submit">▶</button>
-        <br/>
         <button onclick="window.location.href='?'; " type="button">Reset</button>
         Échelle
         <button id="log" type="button">log</button>
         <button id="linear" disabled="true" type="button">linéaire</button>
+        <button type="submit">▶</button>
       </form>
-      <a href="?">Data.bnf.fr, titres en français par an, moyenne du nombre de pages</a> :
-      <a href="?from=1600&amp;to=1788&amp;smooth=2">1600–1789</a>,
-      <a href="?from=1780&amp;to=1860&amp;smooth=1">1789–1870</a>,
-      <a href="?from=1860&amp;to=1958&amp;smooth=1">1870–1960</a>,
-      <a href="?from=1950&amp;to=2015&amp;smooth=1">1950–…</a>,
     </header>
     <div id="chart" class="dygraph" style="width:100%; height:600px;"></div>
     <script type="text/javascript">
@@ -204,7 +205,6 @@ $B = "Titres <= $pagefloor p.";
     linear.onclick = function() { setLog(false); };
     log.onclick = function() { setLog(true); };
     </script>
-    <p>Données <a href="http://data.bnf.fr/semanticweb">data.bnf.fr</a> (avril 2016).</p>
     <p>
 Le nombre de titres français par an augmente beaucoup au cours des siècles,
 de quelques titres au début de la bibliothèque (1537), à plusieurs dizaines de milliers de nos jours.
@@ -220,5 +220,6 @@ On remarque par exemple que l’agitation de la Fronde, de 1789 ou de 1848 produ
 mais affecte beaucoup moins les nombre de titres de plus de 100 pages.
 Les guerres, par contre, affectent durement tous les genres éditoriaux (restrictions de papier, blocage de Paris).
   </p>
+  <?php include ( dirname(__FILE__).'/footer.php' ) ?>
   </body>
 </html>

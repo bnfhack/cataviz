@@ -30,18 +30,20 @@ $max = @$_REQUEST['max'];
   </head>
   <body>
     <?php include ( dirname(__FILE__).'/menu.php' ) ?>
-    <div>
-      <form name="dates" style="float: right;">
+    <header>
+      <div class="links">
+        <a href="?">Data.bnf.fr, latin et antiquité, titres par année</a> |
+        <a href="?from=1450&amp;to=1650">1450–1650</a> |
+        <a href="?from=1650&amp;to=1800">1650-1800</a> |
+        <a href="?from=1800&amp;to=1980">1800-1980</a>
+      </div>
+      <form name="dates">
         <button onclick="window.location.href='?'; " type="button">Reset</button>
         From <input name="from" size="4" value="<?php echo $from ?>"/>
         to <input name="to" size="4" value="<?php echo  $to ?>"/>
         <button type="submit">▶</button>
       </form>
-      <a href="?">Data.bnf.fr, latin et antiquité, titres par année</a> |
-      <a href="?from=1450&amp;to=1650">1450–1650</a> |
-      <a href="?from=1650&amp;to=1800">1650-1800</a> |
-      <a href="?from=1800&amp;to=1980">1800-1980</a>
-    </div>
+    </header>
     <div id="chart" class="dygraph" style="width:100%; height:550px;"></div>
     <script type="text/javascript">
     g = new Dygraph(
@@ -142,7 +144,7 @@ for ( $date=$from; $date <= $to; $date++ ) {
     });
 
     </script>
-    <p>Données <a href="http://data.bnf.fr/semanticweb">data.bnf.fr</a> (avril 2016).</p>
     <p>Des statististiques sur la santé des classiques peuvent s’obtenir en croisant la date de naissance de l’auteur, et la langue déclarée du document. Les effectifs par an sont faibles et doivent être lissés pour ne pas brouiller les tendances. On découvrira d’abord que le latin est encore une langue très vivante. Le pape et les congrégations produisent toujours beaucoup de titres qui entrent au catalogue. Le pic de 1990 résulte du “Grand Récollement”, c’est-à-dire du déménagement de la bibliothèque nationale vers le site de Tolbiac, qui a permis de retrouver beaucoup de livres qui n’étaient pas encore catalogués. Les guerres affectent l’activité éditoriale savante, et notamment les traductions des textes antiques. L’activité de traduction commence a dépasser l’édition des originaux latins à partir de 1830.</p>
+    <?php include ( dirname(__FILE__).'/footer.php' ) ?>
   </body>
 </html>

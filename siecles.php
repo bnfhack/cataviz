@@ -32,23 +32,22 @@ $max = @$_REQUEST['max'];
   <body>
     <?php include ( dirname(__FILE__).'/menu.php' ) ?>
     <header id="header">
-      <form name="dates" style="float: right; text-align: right;">
-        <button onclick="window.location.href='?'; " type="button">Reset</button>
-        From <input name="from" size="4" value="<?php echo $from ?>"/>
-        to <input name="to" size="4" value="<?php echo  $to ?>"/>
-        <button type="submit">▶</button>
-        <br/>
-        Zoom
-        <button type="button" onclick="var options = {}; var max = g.yAxisRange()[1] /1.5; options.valueRange = [ 0, max]; g.updateOptions(options); ">▼</button>
-        <button type="button" onclick="var options = {}; var max = g.yAxisRange()[1] *1.5; options.valueRange = [ 0, max]; g.updateOptions(options); ">▲</button>
-      </form>
-      <div>
+      <div class="links">
         <a href="?">Titres d’auteurs morts à la date de publicationn, colorés par siècles</a> |
         <a href="?from=1450&amp;to=1640&amp;smooth=4">1450–1640</a> |
         <a href="?from=1640&amp;to=1780&amp;smooth=4">1640-1780</a> |
         <a href="?from=1780&amp;to=1865">1780-1865</a> |
         <a href="?from=1865&amp;to=1962">1865-1962</a>
       </div>
+      <form name="dates">
+        <button onclick="window.location.href='?'; " type="button">Reset</button>
+        From <input name="from" size="4" value="<?php echo $from ?>"/>
+        to <input name="to" size="4" value="<?php echo  $to ?>"/>
+        Zoom
+        <button type="button" onclick="var options = {}; var max = g.yAxisRange()[1] /1.5; options.valueRange = [ 0, max]; g.updateOptions(options); ">▼</button>
+        <button type="button" onclick="var options = {}; var max = g.yAxisRange()[1] *1.5; options.valueRange = [ 0, max]; g.updateOptions(options); ">▲</button>
+        <button type="submit">▶</button>
+      </form>
     </header>
     <div id="chart" class="dygraph" style="width:100%; height:550px;"></div>
     <script type="text/javascript">
@@ -175,7 +174,7 @@ for ( $date=$from; $date <= $to; $date++ ) {
       ]);
     });
     </script>
-    <p>Données <a href="http://data.bnf.fr/semanticweb">data.bnf.fr</a> (avril 2016).</p>
     <p>Une fois stabilisé, le nombre de titres d’un siècle varie assez peu, c’est-à-dire que le nombre de documents attribués à un auteur du XVII<sup>e</sup> s. est relativement stable au XIX<sup>e</sup> et au XX<sup>e</sup> s, même si le nombre de titres publiés est 10 fois plus important. L‘espace supplémentaire est occupé par les nouveautés. La réédition des titres anciens est affectée par les guerres, comme les nouveautés, on observera le profil très particulier après 1945, où la réédition reprend beaucoup plus fort qu’après 1918, politique volontariste du Conceil National de la Résistance. Le pic de 1990 résulte du “Grand Récollement”, c’est-à-dire du déménagement de la bibliothèque nationale vers le site de Tolbiac, qui a permis de retrouver beaucoup de livres qui n’étaient pas encore ou mal catalogués.</p>
+    <?php include ( dirname(__FILE__).'/footer.php' ) ?>
   </body>
 </html>

@@ -30,26 +30,27 @@ $max = @$_REQUEST['max'];
   </head>
   <body>
     <?php include ( dirname(__FILE__).'/menu.php' ) ?>
-    <form name="dates" style="float: right; z-index: 3; ">
-      <button onclick="window.location.href='?'; " type="button">Reset</button>
-      From <input name="from" size="4" value="<?php echo $from ?>"/>
-      to <input name="to" size="4" value="<?php echo  $to ?>"/>
-      <button type="submit">▶</button>
-      <br/>
-      Zoom
-      <button type="button" onclick="var options = {}; var max = g.yAxisRange()[1] /1.5; options.valueRange = [ 1, max]; g.updateOptions(options); ">▼</button>
-      <button type="button" onclick="var options = {}; var max = g.yAxisRange()[1] *1.5; options.valueRange = [ 1, max]; g.updateOptions(options); ">▲</button>
-      Échelle
-      <button id="log" type="button">log</button>
-      <button id="linear" disabled="true" type="button">linéaire</button>
-    </form>
-    <div style=" padding-top: 2em; ">
-      <a href="?">Data.bnf.fr, répartition des langues</a> |
-      <a href="?from=1475&amp;to=1645&amp;smooth=5">1475-1645 montée du français</a> |
-      <a href="?from=1620&amp;to=1830&amp;smooth=10&amp;max=350">1620-1830 baisse du latin</a> |
-      <a href="?from=1780&amp;to=1980&amp;max=350&amp;smooth=2">1780-1980 conservation du latin</a> |
-      <a href="?from=1830&amp;to=1990">1830-1990 taux d’erreur</a>
-    </div>
+    <header>
+      <div class="links">
+        <a href="?">Data.bnf.fr, répartition des langues</a> |
+        <a href="?from=1475&amp;to=1645&amp;smooth=5">1475-1645 montée du français</a> |
+        <a href="?from=1620&amp;to=1830&amp;smooth=10&amp;max=350">1620-1830 baisse du latin</a> |
+        <a href="?from=1780&amp;to=1980&amp;max=350&amp;smooth=2">1780-1980 conservation du latin</a> |
+        <a href="?from=1830&amp;to=1990">1830-1990 taux d’erreur</a>
+      </div>
+      <form name="dates" style="z-index: 3; ">
+        <button onclick="window.location.href='?'; " type="button">Reset</button>
+        From <input name="from" size="4" value="<?php echo $from ?>"/>
+        to <input name="to" size="4" value="<?php echo  $to ?>"/>
+        <button type="submit">▶</button>
+        Zoom
+        <button type="button" onclick="var options = {}; var max = g.yAxisRange()[1] /1.5; options.valueRange = [ 1, max]; g.updateOptions(options); ">▼</button>
+        <button type="button" onclick="var options = {}; var max = g.yAxisRange()[1] *1.5; options.valueRange = [ 1, max]; g.updateOptions(options); ">▲</button>
+        Échelle
+        <button id="log" type="button">log</button>
+        <button id="linear" disabled="true" type="button">linéaire</button>
+      </form>
+    </header>
     <div id="chart" class="dygraph" style="width:100%; height:550px;"></div>
     <script type="text/javascript">
     g = new Dygraph(
@@ -173,6 +174,6 @@ for ( $i=0; $i < $size; $i++ ) {
     linear.onclick = function() { setLog(false); };
     log.onclick = function() { setLog(true); };
     </script>
-    <p>Données <a href="http://data.bnf.fr/semanticweb">data.bnf.fr</a> (avril 2016).</p>
+    <?php include ( dirname(__FILE__).'/footer.php' ) ?>
   </body>
 </html>

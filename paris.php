@@ -28,19 +28,22 @@ if ( $smooth > 50 ) $smooth = 50;
   </head>
   <body>
     <?php include ( dirname(__FILE__).'/menu.php' ) ?>
-    <form name="dates" style="float: right;">
+    <div class="links">
+      <a href="" target="_new">Data.bnf.fr : Paris, place principale de publication des documents en français</a>
+      <a href="?from=1475&amp;to=1780&amp;smooth=2">1475–1780</a>,
+      <a href="?from=1780&amp;to=1890">1780–1890</a>,
+      <a href="?from=1860&amp;to=1960">1860–1960</a>,
+      <a href="?from=1960&amp;to=2015">1960–…</a>
+    </div>
+    <form name="dates">
       <button onclick="window.location.href='?'; " type="button">Reset</button>
       From <input name="from" size="4" value="<?php echo $from ?>"/>
       to <input name="to" size="4" value="<?php echo  $to ?>"/>
       smooth <input name="smooth" size="2" value="<?php echo  $smooth ?>"/>
-      <button type="submit">GO</button>
+      <button type="submit">▶</button>
     </form>
-    <a href="" target="_new">Data.bnf.fr : Paris, place principale de publication des documents en français</a>
-    <a href="?from=1475&amp;to=1780&amp;smooth=2">1475–1780</a>,
-    <a href="?from=1780&amp;to=1890">1780–1890</a>,
-    <a href="?from=1860&amp;to=1960">1860–1960</a>,
-    <a href="?from=1960&amp;to=2015">1960–…</a>
-    <div id="chart" class="dygraph" style="width:100%; height:550px;"></div>
+      <div id="chart" class="dygraph" style="width:100%; height:550px;"></div>
+
     <script type="text/javascript">
     g = new Dygraph(
       document.getElementById("chart"),
@@ -157,7 +160,7 @@ for ( $i=0; $i < $size; $i++ ) {
       ]);
     });
     </script>
-    <p>Données <a href="http://data.bnf.fr/semanticweb">data.bnf.fr</a> (avril 2016).</p>
     <p>Entre 60% et 80% des titres sont publiés à Paris, avec généralement un nombre de pages moyen plus élevé que pour les autres lieux d’édition.</p>
+    <?php include ( dirname(__FILE__).'/footer.php' ) ?>
   </body>
 </html>

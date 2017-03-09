@@ -1,18 +1,27 @@
 * { box-sizing: border-box; }
 html, body { height: 100%; font-family: sans-serif; }
+body { padding: 2.5em 1em 4em 1em; margin-bottom: 4em;margin: 0; background-color: #f5f3eb; }
 form { display: block; clear: both; }
-h1 { font-size: 130%; margin-top: 0; }
+h1 { font-size: 130%; }
 a { text-decoration: none }
 a:hover { text-decoration: underline; }
-body { padding: 2em 1em 1em 1em; margin: 0; background-color: #f5f3eb; }
+footer, nav.menu { white-space: nowrap; padding: 3px 1em 1px 1em; }
+footer { position: fixed; bottom: 0; left: 0; right: 0; border-top: 1px #CCC solid; color: #999; background-color: #FFFFFF; }
+nav.menu { position: absolute; top: 0; left: 0; right: 0; background-color: rgba(255, 255, 255, 0.4 ); }
+/* background-image: -webkit-linear-gradient( left, rgba(255, 255, 255, 0), #FFFFFF ); background-image:    -moz-linear-gradient( left, rgba(255, 255, 255, 0), #FFFFFF ); background-image:      -o-linear-gradient( left, rgba(255, 255, 255, 0), #FFFFFF ); background-image:         linear-gradient( to left, rgba(255, 255, 255, 0), #FFFFFF ); */
+.menu .plus a { display: none; }
+.menu .plus:hover { position: absolute; padding: 0 1ex 1ex 1ex; z-index: 99; background-color: #FFFFFF; }
+.menu .plus:hover a { display: block; }
+nav a { text-decoration: none; color: #999; }
+nav a:hover { color: #000; background-color: #FFF; }
+
+div.links { margin-bottom: 1em; }
 p { text-align: justify; }
 nav.top { margin: 0 2em 1em 0; }
 table.data { font-size: 10pt; }
-nav a { text-decoration: none; color: #999; }
-nav a:hover { color: #000; background-color: #FFF; }
 .even { background-color: #FFFFFF; }
 div.dygraph { background-color: #FFFFFF;}
-div.graph { height: 99.9%; width: 99.9%; font-family: sans-serif; background-color: #FFFFFF; }
+div.graph { font-family: sans-serif; background-color: #FFFFFF; }
 .editions .gridy { border-left: 1px #CCCCCC dotted; position: absolute; height: 100%; top: 10px; }
 .editions .year { font-size: 10px; position: absolute; transform:  translateX(-50%); }
 .editions .title { text-align: right; display: inline-block; padding-right: 1ex; }
@@ -23,7 +32,11 @@ div.graph { height: 99.9%; width: 99.9%; font-family: sans-serif; background-col
 .dygraph-axis-label-x { font-size: 16pt; }
 .dygraph-label { font-size: 18pt; font-weight: bold; }
 .ann { color: #FFFFFF !important; text-shadow: 1px 1px 1px #000, -1px 1px 1px #000;  font-size: 25px !important; font-weight: bold; border: none !important; border-left: 3px solid #000 !important; background: rgba(128, 128, 128, 0.3) !important; line-height: 1em; padding: 0.2ex 0.2ex 0ex 0ex; }
-nav.menu { background-color: #FFFFFF; padding: 0 1ex; position: absolute; top: 0; left: 0; right: 0; white-space: nowrap; }
+.logo { position: absolute; top: 2px; right: 2px; }
+#perslist { position: absolute; visibility: hidden; display: block; z-index: 99; background-color: #FFFFFF; margin-left: 5rem; padding: 0;}
+form input, form select, form button { font-size: 14pt; outline: 0; }
+label span { width: 5rem; display: inline-block; text-align: right; }
+
 
 ::-webkit-input-placeholder {  opacity: 0.8; color: #BBB; font-style: italic; }
 :-moz-placeholder { opacity: 0.8; color: #BBB; font-style: italic; }
