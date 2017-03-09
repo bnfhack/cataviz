@@ -171,7 +171,7 @@ var src = scripts[scripts.length-1].src;
     this.sigma.bind( 'doubleClickNode', function( e ) {
       if ( e.data.node.type=="person" ) {
         // window.open("http://catalogue.bnf.fr/ark:/12148/"+e.data.node.id);
-        window.top.location.href="auteur.php?person="+e.data.node.id;
+        window.top.location.href="?persark="+e.data.node.id;
       }
       else if ( e.data.node.type=="document" || e.data.node.type=="work" ) {
         window.open("http://catalogue.bnf.fr/ark:/12148/"+e.data.node.id);

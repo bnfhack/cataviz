@@ -57,7 +57,10 @@ $role = @$_REQUEST['role'];
     </div>
     <p>
 Ce réseau est construit autmatiquement à partir des collaborations enregistrées pour un même document.
-Le nœud central (en rouge) est l’auteur
+Le nœud central (en rouge) représente l’auteur sur lequel s’effectue la requête.
+Les nœuds rayonnants de premier niveau (en violet) représentent les documents auquel l’auteur principal a contribué avec d’autres personnes.
+Les nœuds de deuxième niveau (en gris) représentent les personnes ayant collaboré à un document avec l’auteur principal.
+Seuls les documents datés apparaissent.
     </p>
     <script id="data"> (function () {
       var data = <?php echo $db->sigma( $persark, $from, $to, $role ); ?>;

@@ -96,7 +96,7 @@ if ( $from || $title || $persark ) {
     $first = true;
     while ( $author = $byline->fetch( PDO::FETCH_ASSOC ) ) {
       if ( $first ) $first = false;
-      else echo " ;";
+      else echo " ; ";
       echo $author['family'];
       if ( $author['given'] ) echo ", ".$author['given'];
       if ( $j > 4 ) {

@@ -30,6 +30,8 @@ if ( !isset($limit) || $limit < 1 || $limit > 500 ) $limit = 50;
     Les données sont librement (!!!) téléchargeables sur <a href="http://data.bnf.fr/semanticweb">data.bnf.fr</a>,
     elles sont propulsées par une base SQLite produite avec <a href="http://github.com/bnfhack/databnf2sql">databnf2sql</a>.
   </p>
+  <p>Vous pouvez commencer à explorer le catalogue par <a href="auteur.php?persark=cb11928669t">Voltaire</a>, <a href="relations.php?persark=cb11888978p">Apollinaire</a>, les <a href="biblio.php?title=vampir*">vampires</a>, ou la <a href="femmes.php">place des femmes auteur</a>.
+  </p>
     <?php include ( dirname(__FILE__).'/footer.php' ) ?>
     <script type="text/javascript" src="Sortable.js">//</script>
   </body>

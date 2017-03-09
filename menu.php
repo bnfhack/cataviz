@@ -1,7 +1,7 @@
 <?php
 $_l="cb11888978p";
 if ( isset( $persark ) && $persark ) $_l=$persark;
-?><nav class="menu">
+?><nav class="menu" id="top">
   <a href=".">◀ Cataviz</a>
   | <a href="auteur.php?persark=<?php echo $_l; ?>" title="Chronologie bibliographique pour un auteur">Auteur</a>
   | <a href="relations.php?persark=<?php echo $_l; ?>" title="Relations d’un auteur avec les personnes collaborant à un document">Réseau</a>
