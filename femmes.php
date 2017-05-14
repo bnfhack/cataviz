@@ -21,7 +21,7 @@ if ( $smooth > 50 ) $smooth = 50;
 <html>
   <head>
     <meta charset="UTF-8" />
-    <script src="dygraph-combined.js">//</script>
+    <script src="lib/dygraph-combined.js">//</script>
     <link rel="stylesheet" type="text/css" href="cataviz.css"/>
     <style>
 .dygraph-legend { left: 40% !important; }
@@ -159,7 +159,7 @@ for ( $date=$from; $date <= $to; $date++ ) {
     linear.onclick = function() { setLog(false); };
     log.onclick = function() { setLog(true); };
     </script>
-    <p>Par an, la part des titres en français signés par une femme est très basse jusqu’au XX<sup>e</sup> s., &lt; 5%. On observe une progression sur le temps long, pour atteindre 1/3  de nos jours. La proportion de titres féminins baisse pendant les guerres et les révolutions, montrant bien qu’en période de restriction de papier, les hommes passent avant. Les titres féminins ont un nombre moyen de pages supérieur aux titres masculins, affecté pas des variations historiques comparables. Il est difficile d’inférer un genre avec juste le catalogue, mais on peut supposer que plus rares, les femmes écrivent des ouvrages plus importants, et ne remplissent pas la grande masse de petits fascicules utilitaires. Ce mouvement a changé. Depuis 1940, le nombre moyen de pages est comparable entre les sexes, et suit le mouvement historique, avec notamment une augmentation du nombre moyen de pages jusque 1968 (parallèle à une explosion du nombre de titres).  Après ce pic, la généralisation de l’offset et de la quadrichromie modifie la nature des imprimés déposés. Le nombre de pages baisse, les femmes ont devancé ce mouvement, et se retrouvent maintenant avec un nombre de pages moyen plus bas. Doit-on incriminer l’explosion de la littérature pour enfants et des livres de cuisine ?
+    <p>Par an, la part des titres en français signés par une femme est très basse jusqu’au XX<sup>e</sup> s., &lt; 5%. On observe une progression sur le temps long, pour atteindre 1/3  de nos jours. La proportion de titres féminins baisse pendant les guerres et les révolutions, montrant bien qu’en période de restriction de papier, les hommes passent avant. Les titres féminins ont un nombre moyen de pages supérieur aux titres masculins, affecté pas des variations historiques comparables. Il est difficile d’inférer un genre avec juste des effectifs, mais on peut supposer que plus rares, les femmes écrivent des ouvrages plus importants, et ne remplissent pas la grande masse de petits fascicules utilitaires. Ce mouvement a changé. Depuis 1940, le nombre moyen de pages est comparable entre les sexes, et suit le mouvement historique, avec notamment une augmentation du nombre moyen de pages jusque 1968 (parallèle à une explosion du nombre de titres).  Après ce pic, la généralisation de l’offset et de la quadrichromie modifie la nature des imprimés déposés. Le nombre de pages baisse, les femmes ont devancé ce mouvement, et se retrouvent maintenant avec un nombre de pages moyen plus bas. Doit-on incriminer l’explosion de la littérature pour enfants et des livres de cuisine ?
     </p>
     <?php include ( dirname(__FILE__).'/footer.php' ) ?>
   </body>

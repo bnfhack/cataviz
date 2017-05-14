@@ -34,29 +34,31 @@ $sql.=" LIMIT :limit ";
     <link rel="stylesheet" type="text/css" href="cataviz.css"/>
     <style>
 form label { display: block; }
+form, header, footer, nav { user-select: none; -moz-user-select: none; -khtml-user-select: none; -webkit-user-select: none; -o-user-select: none; }
     </style>
   </head>
   <body>
     <?php include ( dirname(__FILE__).'/menu.php' ) ?>
-    <h1><a href="?">Liste bibliographique</a></h1>
-    <form name="search">
-      <label><span>Auteur</span>
-          <input id="persark" name="persark" type="hidden" value="<?php echo $persark ?>"/>
-          <input id="name" name="name" placeholder="Auteur ?" value="<?php echo $db->perstitle( $persark ) ?>" size="30"/>
-          <select id="perslist" size="8">
+    <header>
+      <h1><a href="?">Liste bibliographique</a></h1>
+      <form name="search">
+        <label><span>Auteur</span>
+            <input id="persark" name="persark" type="hidden" value="<?php echo $persark ?>"/>
+            <input id="name" name="name" placeholder="Auteur ?" value="<?php echo $db->perstitle( $persark ) ?>" size="30"/>
+            <select id="perslist" size="8">
 
-          </select>
-        </div>
-      </label>
-      <label><span>Titre</span>
-        <input name="title" placeholder="Mots du titre ?" value="<?php echo $title ?>" size="30"/>
-      </label>
-      <label><span>Publié</span>
-        entre <input name="from" placeholder="AAAA" size="4" value="<?php echo $from ?>"/> et <input name="to" placeholder="AAAA"  value="<?php echo $to ?>" size="4"/>
-        <button name="go" type="submit">Chercher</button>
-      </label>
-    </form>
-
+            </select>
+          </div>
+        </label>
+        <label><span>Titre</span>
+          <input name="title" placeholder="Mots du titre ?" value="<?php echo $title ?>" size="30"/>
+        </label>
+        <label><span>Publié</span>
+          entre <input name="from" placeholder="AAAA" size="4" value="<?php echo $from ?>"/> et <input name="to" placeholder="AAAA"  value="<?php echo $to ?>" size="4"/>
+          <button name="go" type="submit">Chercher</button>
+        </label>
+      </form>
+    </header>
       <?php
 if ( $from || $title || $persark ) {
   $byline = $db->prepare( "SELECT * FROM person, contribution WHERE contribution.person = person.id AND contribution.document = ? " );
@@ -121,7 +123,6 @@ if ( $from || $title || $persark ) {
 }
       ?>
     </table>
-    <script type="text/javascript" src="Sortable.js">//</script>
     <script type="text/javascript" src="forms.js">//</script>
     <?php include ( dirname(__FILE__).'/footer.php' ) ?>
   </body>

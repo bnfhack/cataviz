@@ -17,7 +17,6 @@ if ( !isset($limit) || $limit < 1 || $limit > 500 ) $limit = 50;
 <html>
   <head>
     <meta charset="UTF-8" />
-    <script src="dygraph-combined.js">//</script>
     <link rel="stylesheet" type="text/css" href="cataviz.css"/>
     <style>
     </style>
@@ -96,7 +95,7 @@ while( $pers = $qpers->fetch( PDO::FETCH_ASSOC ) ) {
   else $docs = $pers['docs'];
   echo '  <tr>';
   echo '    <td align="right">'.$i.'</td>';
-  echo '    <td><a href="auteur.php?person='.$pers['ark'].'">'.$label.'</a></td>';
+  echo '    <td><a href="auteur.php?persark='.$pers['ark'].'">'.$label.'</a></td>';
   echo '    <td>'.$pers['birthyear'].'</td>';
   echo '    <td>'.$pers['deathyear'].'</td>';
   echo '    <td align="right">'.$docs.'</td>';

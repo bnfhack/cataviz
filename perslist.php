@@ -8,7 +8,7 @@ if ( isset( $_REQUEST['limit'] ) ) $limit = $_REQUEST['limit'];
 echo $callback."( [ \n";
 if ( isset( $q ) ) {
   include ( dirname(__FILE__).'/Cataviz.php' );
-  include( dirname( __FILE__ )."/frtr.php" ); // crée une variable $frtr
+  include( dirname( __FILE__ )."/lib/frtr.php" ); // crée une variable $frtr
   $db = new Cataviz( "databnf.sqlite" );
   $q = strtr( $q, $frtr );
   $qpers = $db->prepare("SELECT * FROM person WHERE sort >= ? AND sort <= ? ORDER BY posthum DESC LIMIT ?"); //

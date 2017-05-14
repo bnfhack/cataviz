@@ -26,7 +26,7 @@ if ( isset($_REQUEST['log']) ) $log = $_REQUEST['log'];
 <html>
   <head>
     <meta charset="UTF-8" />
-    <script src="dygraph-combined.js">//</script>
+    <script src="lib/dygraph-combined.js">//</script>
     <link rel="stylesheet" type="text/css" href="cataviz.css"/>
     <style>
 .dygraph-legend { left: 40% !important; }

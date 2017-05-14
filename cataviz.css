@@ -30,7 +30,7 @@ div.graph { font-family: sans-serif; background-color: #FFFFFF; }
 .editions .row:hover {  background-color: #FFFFCC; }
 .dygraph-legend {  background-color: rgba(255, 255, 255, 0.75) !important; padding: 4px; border: 1px solid #000; border-radius: 10px; box-shadow: 4px 4px 4px #888; pointer-events: none; font-size: 14pt !important; }
 .dygraph-axis-label-x { font-size: 16pt; }
-.dygraph-label { font-size: 18pt; font-weight: bold; }
+.dygraph-label { font-size: 18pt; font-weight: bold; color: #888; }
 .ann { color: #FFFFFF !important; text-shadow: 1px 1px 1px #000, -1px 1px 1px #000;  font-size: 25px !important; font-weight: bold; border: none !important; border-left: 3px solid #000 !important; background: rgba(128, 128, 128, 0.3) !important; line-height: 1em; padding: 0.2ex 0.2ex 0ex 0ex; }
 .logo { position: absolute; top: 2px; right: 2px; }
 #perslist { position: absolute; visibility: hidden; display: block; z-index: 99; background-color: #FFFFFF; margin-left: 5rem; padding: 0;}
@@ -42,3 +42,9 @@ label span { width: 5rem; display: inline-block; text-align: right; }
 :-moz-placeholder { opacity: 0.8; color: #BBB; font-style: italic; }
 ::-moz-placeholder { opacity: 0.8; color: #BBB; font-style: italic; }
 :-ms-input-placeholder { opacity: 0.8; color: #BBB; font-style: italic; }
+
+summary { cursor: pointer;  z-index: 10; }
+details.help summary { background: #FFFFFF; font-size: 150%; font-weight: bold; color: #000080; }
+details.help { display: block; background: #FFFFFF; color: #666; padding: 0.5rem 0.5rem 0.5rem 0.5rem; }
+details[open].help summary { padding: 0; float: left; margin-right: 0.5rem; }
+details p { margin: 0; }

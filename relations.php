@@ -21,9 +21,9 @@ $role = @$_REQUEST['role'];
     <script src="sigma/sigma.exporters.image.min.js">//</script>
     <script src="catagraph.js">//</script>
     <link rel="stylesheet" type="text/css" href="cataviz.css"/>
-    <script>
+    <style>
 #perslist { margin-left: 0;}
-    </script>
+    </style>
   </head>
   <body>
     <?php include ( dirname(__FILE__).'/menu.php' ) ?>

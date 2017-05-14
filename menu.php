@@ -18,5 +18,5 @@ if ( isset( $persark ) && $persark ) $_l=$persark;
     <a href="langues.php" title="">Langues</a>
     <a href="http://resultats.hypotheses.org/795" title="Billet d’explication" target="_new">Explications ▶</a>
   </span>
+  <a class="logo" href="//obvil.paris-sorbonne.fr/"><img class="logo" src="//obvil.paris-sorbonne.fr/corpus/theme/img/logo-obvil.png" alt="OBVIL"></a>
 </nav>
-<a class="logo" href="//obvil.paris-sorbonne.fr/"><img class="logo" src="//obvil.paris-sorbonne.fr/corpus/theme/img/logo-obvil.png" alt="OBVIL"></a>

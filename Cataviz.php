@@ -77,7 +77,8 @@ class Cataviz
   {
     $person = $this->person( $persark );
     $html = array();
-    $html[] = $person['name'];
+    $html[] = $person['family'];
+    if ( $person['given'] ) $html[] = ", ".$person['given'];
     if ( $person['deathyear'] < 0 ) $html[] = " (".$person['birthyear']."/".$person['deathyear'].")";
     else if ( $person['deathyear'] > 0 ) $html[] = " (".$person['birthyear']."–".$person['deathyear'].")";
     else if ( $person['birthyear'] > 0 ) $html[] = " (".$person['birthyear']."–…)";
@@ -94,7 +95,7 @@ class Cataviz
     $from = $person['birthyear'];
     if (!$from ) $from = 1400; // ex : Homère
     if ($from < 1400) $from = 1450;
-    $to = 2015;
+    $to = 2016;
     $sql = "SELECT count(*) FROM contribution WHERE person = ? AND date = ? AND writes = 1";
     $q = $this->pdo->prepare( $sql );
     // collecter toute la série pour calculer ensuite la moyenne glissante;
@@ -171,7 +172,6 @@ class Cataviz
         WHERE contribution.person=person.id AND person != ? AND document = ? $filter
         LIMIT ?
     ";
-
     $qpers = $this->pdo->prepare( $sql ); // filtrer sur le rôle ?
     $datemin=2016;
     $datemax=0;
@@ -271,6 +271,7 @@ class Cataviz
     $width = 800;
     $tick = 1;
     $work1 = true;
+    $html[] = '<p>Bibliographie établie automatiquement à partir des <a href="http://data.bnf.fr/liste-oeuvres" target="_blank">notices d’œuvres</a> de la BNF. Elle peut être significative de l’histoire éditoriale d’un auteur, mais elle ne sera pas exhaustive, ni des œuvres, ni des rééditions.</p>';
     $html[] = '<table class="editions sortable" align="center" style="position: relative; ">';
     $html[] = ' <tr>';
     $html[] = '   <td class="nosort" width="'.$width.'">';

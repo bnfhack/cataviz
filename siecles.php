@@ -22,7 +22,7 @@ $max = @$_REQUEST['max'];
 <html>
   <head>
     <meta charset="UTF-8" />
-    <script src="dygraph-combined.js">//</script>
+    <script src="lib/dygraph-combined.js">//</script>
     <link rel="stylesheet" type="text/css" href="cataviz.css"/>
     <style>
 .dygraph-legend { left: 60px !important; }
@@ -33,7 +33,7 @@ $max = @$_REQUEST['max'];
     <?php include ( dirname(__FILE__).'/menu.php' ) ?>
     <header id="header">
       <div class="links">
-        <a href="?">Titres d’auteurs morts à la date de publicationn, colorés par siècles</a> |
+        <a href="?">Titres d’auteurs morts à la date de publication, colorés selon le siècle de naissance</a> |
         <a href="?from=1450&amp;to=1640&amp;smooth=4">1450–1640</a> |
         <a href="?from=1640&amp;to=1780&amp;smooth=4">1640-1780</a> |
         <a href="?from=1780&amp;to=1865">1780-1865</a> |
