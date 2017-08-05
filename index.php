@@ -17,7 +17,6 @@ if ( !isset($limit) || $limit < 1 || $limit > 500 ) $limit = 50;
 <html>
   <head>
     <meta charset="UTF-8" />
-    <script src="dygraph-combined.js">//</script>
     <link rel="stylesheet" type="text/css" href="cataviz.css"/>
     <style>
     </style>

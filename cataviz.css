@@ -1,6 +1,7 @@
 * { box-sizing: border-box; }
 html, body { height: 100%; font-family: sans-serif; }
 body { padding: 2.5em 1em 4em 1em; margin-bottom: 4em;margin: 0; background-color: #f5f3eb; }
+header { margin-bottom: 1ex; }
 form { display: block; clear: both; }
 h1 { font-size: 130%; }
 a { text-decoration: none }
@@ -20,8 +21,8 @@ p { text-align: justify; }
 nav.top { margin: 0 2em 1em 0; }
 table.data { font-size: 10pt; }
 .even { background-color: #FFFFFF; }
-div.dygraph { background-color: #FFFFFF;}
-div.graph { font-family: sans-serif; background-color: #FFFFFF; }
+
+#chart { font-family: sans-serif; background-color: #FFFFFF; padding-bottom: 1em; }
 .editions .gridy { border-left: 1px #CCCCCC dotted; position: absolute; height: 100%; top: 10px; }
 .editions .year { font-size: 10px; position: absolute; transform:  translateX(-50%); }
 .editions .title { text-align: right; display: inline-block; padding-right: 1ex; }

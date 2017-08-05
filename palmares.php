@@ -17,9 +17,9 @@ if ( !isset($limit) || $limit < 1 || $limit > 500 ) $limit = 50;
 <html>
   <head>
     <meta charset="UTF-8" />
+    <script src="lib/dygraph.min.js">//</script>
+    <link rel="stylesheet" type="text/css" href="lib/dygraph.css"/>
     <link rel="stylesheet" type="text/css" href="cataviz.css"/>
-    <style>
-    </style>
   </head>
   <body>
     <?php include ( dirname(__FILE__).'/menu.php' ) ?>

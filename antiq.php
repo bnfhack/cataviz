@@ -8,8 +8,8 @@ if ( $from < 1475 ) $from = 1475;
 if ( $from > 2015 ) $from = 2000;
 $to = 1980;
 if (isset($_REQUEST['to'])) $to = $_REQUEST['to'];
-if ( $to < 1475 ) $to = 2014;
-if ( $to > 2015 ) $to = 2014;
+if ( $to < 1475 ) $to = 2015;
+if ( $to > 2015 ) $to = 2015;
 if ( isset($_REQUEST['smooth']) ) $smooth = $_REQUEST['smooth'];
 else $smooth = 3;
 if ( $smooth < 0 ) $smooth = 0;
@@ -22,7 +22,8 @@ $max = @$_REQUEST['max'];
 <html>
   <head>
     <meta charset="UTF-8" />
-    <script src="dygraph-combined.js">//</script>
+    <script src="lib/dygraph.min.js">//</script>
+    <link rel="stylesheet" type="text/css" href="lib/dygraph.css"/>
     <link rel="stylesheet" type="text/css" href="cataviz.css"/>
     <style>
 .dygraph-legend { left: 60px !important; }

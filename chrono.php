@@ -8,8 +8,8 @@ if ( $from < 1452 ) $from = 1452;
 if ( $from > 2014 ) $from = 2000;
 if (isset($_REQUEST['to'])) $to = $_REQUEST['to'];
 else $to = 1958;
-if ( $to < 1475 ) $to = 2014;
-if ( $to > 2014 ) $to = 2014;
+if ( $to < 1475 ) $to = 2015;
+if ( $to > 2015 ) $to = 2015;
 
 if ( isset($_REQUEST['smooth']) ) $smooth = $_REQUEST['smooth'];
 else $smooth = 1;

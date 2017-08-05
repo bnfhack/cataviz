@@ -21,7 +21,8 @@ if ( $smooth > 50 ) $smooth = 50;
 <html>
   <head>
     <meta charset="UTF-8" />
-    <script src="dygraph-combined.js">//</script>
+    <script src="lib/dygraph.min.js">//</script>
+    <link rel="stylesheet" type="text/css" href="lib/dygraph.css"/>
     <link rel="stylesheet" type="text/css" href="cataviz.css"/>
     <style>
 .dygraph-legend { left: 40% !important; }
