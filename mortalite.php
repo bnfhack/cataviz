@@ -27,11 +27,9 @@ if ( isset($_REQUEST['log']) ) $log = $_REQUEST['log'];
     <link rel="stylesheet" type="text/css" href="lib/dygraph.css"/>
     <link rel="stylesheet" type="text/css" href="cataviz.css"/>
     <style>
-    .dygraph-legend { left: 40% !important; top: 1.5em !important; }
-/*
-.dygraph-ylabel { color: rgba( 192, 0, 0, 1 ); font-weight: normal; }
-.dygraph-y2label { color: rgba( 128, 128, 128, 0.5); }
-*/
+    .dygraph-legend { left: 10% !important; top: 0.5em !important; }
+    .dygraph-axis-label-y2 { color: rgba( 192, 128, 192, 1 ); }
+    .dygraph-y2label { color: rgba( 192, 128, 192, 1 ); }
     </style>
   </head>
   <body>
@@ -56,58 +54,69 @@ if ( isset($_REQUEST['log']) ) $log = $_REQUEST['log'];
       document.getElementById("chart"),
       [
 <?php
-$qf = $db->prepare( "SELECT count(*), avg( ) AS count FROM person WHERE fr = 1 AND deathyear = ? AND gender = 2 " );
-$qm = $db->prepare( "SELECT count(*) AS count FROM person WHERE fr = 1 AND opus1 <= ? AND ( deathyear >= ? OR deathyear IS NULL ) AND gender = 1 " );
+$qm = $db->prepare( "SELECT avg(age) FROM person WHERE fr = 1 AND deathyear >= ? AND deathyear <= ? AND gender = 1 " );
+$qf = $db->prepare( "SELECT avg(age) FROM person WHERE fr = 1 AND deathyear >= ? AND deathyear <= ? AND gender = 2 " );
+$q = $db->prepare( "SELECT count(*) FROM person WHERE fr = 1 AND deathyear = ? " );
 
 $fcount = 0;
 $mcount = 0;
+$lfage = 0;
 for ( $date=$from; $date <= $to; $date++ ) {
-  $qf->execute( array( $date, $date ) );
-  list( $fcount ) = $qf->fetch( PDO::FETCH_NUM );
-  $qm->execute( array( $date, $date ) );
-  list( $mcount ) = $qm->fetch( PDO::FETCH_NUM );
+  $sigma = 0;
+  $qm->execute( array( $date-$sigma, $date+$sigma ) );
+  list( $mage ) = $qm->fetch( PDO::FETCH_NUM );
+  $sigma = 5;
+  $qf->execute( array( $date-$sigma, $date+$sigma ) );
+  list( $fage ) = $qf->fetch( PDO::FETCH_NUM );
+
+  $q->execute( array( $date ) );
+  list( $count ) = $q->fetch( PDO::FETCH_NUM );
   echo "[".$date;
-  echo ",".( $mcount + $fcount );
-  echo ",".$fcount;
-  echo ",". ( 100.0 * ($mcount + $fcount) / $count );
+  echo ",".( $count );
+  echo ",". number_format( $mage, 2, '.', '');
+  echo ",". number_format( $fage, 2, '.', '');
   echo "],\n";
 }
-
-/*
-"Moy. pages": {
-  axis: 'y2',
-  color: "rgba( 128, 128, 128, 0.5)",
-  strokeWidth: 5,
-},
-
-*/
        ?>],
       {
-        labels: [ "Année", "Total", "Femmes", "% femmes" ],
+        labels: [ "Année", "Morts", "♂ longévité", "♀ longévité" ],
         legend: "always",
         labelsSeparateLines: "true",
-        ylabel: "Nombre",
-        // showRoller: true,
+        ylabel: "Nombre de morts",
+        y2label: "Âge à la mort",
+        showRoller: true,
         rollPeriod: <?php echo $smooth ?>,
+        <?php if ($log) echo "logscale: true,";  ?>
         series: {
-          "Total": {
-            color: "rgba( 0, 0, 0, 1 )",
-            strokeWidth: 2,
+          "Morts": {
+            color: "rgba( 64, 64, 64, 1 )",
+            strokeWidth: 1,
+            fillGraph: true,
           },
           "Femmes": {
-            color: "rgba( 255, 128, 128, 1 )",
-            strokeWidth: 2,
+            color: "rgba( 255, 128, 128, 0.7 )",
+            strokeWidth: 4,
+          },
+          "♂ longévité": {
+            axis: 'y2',
+            color: "rgba( 0, 0, 192, 0.7 )",
+            strokeWidth: 4,
+          },
+          "♀ longévité": {
+            axis: 'y2',
+            color: "rgba( 255, 128, 128, 0.7 )",
+            strokeWidth: 4,
           },
         },
         axes: {
           x: {
-            gridLineWidth: 2,
-            drawGrid: true,
+            drawGrid: false,
             independentTicks: true,
+            gridLineColor: "rgba( 128, 128, 128, 0.5)",
+            gridLineWidth: 1,
           },
           y: {
             independentTicks: true,
-            <?php if ($log) echo "logscale: true,";  ?>
             drawGrid: true,
             gridLineColor: "rgba( 128, 128, 128, 0.5)",
             gridLineWidth: 1,
@@ -115,11 +124,22 @@ for ( $date=$from; $date <= $to; $date++ ) {
           y2: {
             independentTicks: true,
             drawGrid: true,
-            gridLinePattern: [6,3],
-            gridLineColor: "rgba( 0, 0, 0, 0.2)",
+            gridLineColor: "rgba( 192, 128, 160, 1 )",
             gridLineWidth: 1,
           },
-        }
+        },
+        underlayCallback: function(canvas, area, g) {
+          canvas.fillStyle = "rgba(255, 128, 0, 0.2)";
+          var periods = [ [1789,1794], [1814,1815], [1830,1831], [1848,1849], [1870,1871], [1914,1918], [1939,1945]];
+          var lim = periods.length;
+          for ( var i = 0; i < lim; i++ ) {
+            var bottom_left = g.toDomCoords( periods[i][0], -20 );
+            var top_right = g.toDomCoords( periods[i][1], +20 );
+            var left = bottom_left[0];
+            var right = top_right[0];
+            canvas.fillRect(left, area.y, right - left, area.h);
+          }
+        },
       }
     );
     var linear = document.getElementById("linear");

@@ -3,13 +3,14 @@
 include ( dirname(__FILE__).'/Cataviz.php' );
 $db = new Cataviz( "databnf.sqlite" );
 $from = 1865;
+$tomax = 2015;
 if (isset($_REQUEST['from'])) $from = $_REQUEST['from'];
 if ( $from < 1475 ) $from = 1475;
-if ( $from > 2015 ) $from = 2000;
+if ( $from > $tomax ) $from = 2000;
 $to = 1960;
 if (isset($_REQUEST['to'])) $to = $_REQUEST['to'];
-if ( $to < 1475 ) $to = 2014;
-if ( $to > 2014 ) $to = 2014;
+if ( $to < 1475 ) $to = $tomax;
+if ( $to > $tomax ) $to = $tomax;
 if ( isset($_REQUEST['smooth']) ) $smooth = $_REQUEST['smooth'];
 else $smooth = 0;
 if ( $smooth < 0 ) $smooth = 0;
@@ -58,14 +59,14 @@ $max = @$_REQUEST['max'];
 <?php
 // fre, eng, ger, ita, zxx ?, spa, lat, frm, ara, gre, chi
 // part des documents avec un langue
-$qlive = $db->prepare( "SELECT count(*) AS count FROM document WHERE date = ? AND type = 'Text' AND posthum IS NULL; " );
+$qlive = $db->prepare( "SELECT count(*) AS count FROM document WHERE date = ? AND type = 'Text' AND lang = 'fre' AND posthum IS NULL; " );
 $qant = $db->prepare( "SELECT count(*) AS count FROM document WHERE date = ? AND type = 'Text' AND posthum=1 AND birthyear < 150; " );
 $q500 = $db->prepare( "SELECT count(*) AS count FROM document WHERE date = ? AND type = 'Text' AND posthum=1 AND birthyear >= 150 AND birthyear < 1450; " );
 $q1450 = $db->prepare( "SELECT count(*) AS count FROM document WHERE date = ? AND type = 'Text' AND posthum=1 AND birthyear >= 1450 AND birthyear < 1600; " );
-$q1600 = $db->prepare( "SELECT count(*) AS count FROM document WHERE date = ? AND type = 'Text' AND posthum=1 AND birthyear >= 1600 AND birthyear < 1680; " );
-$q1690 = $db->prepare( "SELECT count(*) AS count FROM document WHERE date = ? AND type = 'Text' AND posthum=1 AND birthyear >= 1680 AND birthyear < 1780; " );
-$q1780 = $db->prepare( "SELECT count(*) AS count FROM document WHERE date = ? AND type = 'Text' AND posthum=1 AND birthyear >= 1780 AND birthyear < 1880; " );
-$q1880 = $db->prepare( "SELECT count(*) AS count FROM document WHERE date = ? AND type = 'Text' AND posthum=1 AND birthyear >= 1880 ; " );
+$q1600 = $db->prepare( "SELECT count(*) AS count FROM document WHERE date = ? AND type = 'Text' AND lang = 'fre' AND posthum=1 AND birthyear >= 1600 AND birthyear < 1680; " );
+$q1690 = $db->prepare( "SELECT count(*) AS count FROM document WHERE date = ? AND type = 'Text' AND lang = 'fre' AND posthum=1 AND birthyear >= 1680 AND birthyear < 1780; " );
+$q1780 = $db->prepare( "SELECT count(*) AS count FROM document WHERE date = ? AND type = 'Text' AND lang = 'fre' AND posthum=1 AND birthyear >= 1780 AND birthyear < 1880; " );
+$q1880 = $db->prepare( "SELECT count(*) AS count FROM document WHERE date = ? AND type = 'Text' AND lang = 'fre' AND posthum=1 AND birthyear >= 1880 ; " );
 
 for ( $date=$from; $date <= $to; $date++ ) {
 

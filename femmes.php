@@ -8,14 +8,16 @@ if ( $from < 1452 ) $from = 1452;
 if ( $from > 2014 ) $from = 2000;
 if (isset($_REQUEST['to'])) $to = $_REQUEST['to'];
 else $to = 1960;
-if ( $to < 1475 ) $to = 2014;
-if ( $to > 2014 ) $to = 2014;
+if ( $to < 1475 ) $to = 2016;
+if ( $to > 2016 ) $to = 2016;
 
 if ( isset($_REQUEST['smooth']) ) $smooth = $_REQUEST['smooth'];
-else $smooth = 4;
+else $smooth = 5;
 if ( $smooth < 0 ) $smooth = 0;
 if ( $smooth > 50 ) $smooth = 50;
 
+$log = NULL;
+if ( isset($_REQUEST['log']) ) $log = $_REQUEST['log'];
 
 ?><!DOCTYPE html>
 <html>
@@ -25,8 +27,9 @@ if ( $smooth > 50 ) $smooth = 50;
     <link rel="stylesheet" type="text/css" href="lib/dygraph.css"/>
     <link rel="stylesheet" type="text/css" href="cataviz.css"/>
     <style>
-.dygraph-legend { left: 40% !important; }
-.dygraph-ylabel { color: rgba( 192, 0, 0, 1 ); font-weight: normal; }
+.dygraph-legend { left: 8% !important; }
+.dygraph-ylabel { color: rgba( 0, 0, 0, 0.7 ); font-weight: normal; }
+.dygraph-axis-label-y1 { color: #000; }
 .dygraph-y2label { color: rgba( 128, 128, 128, 0.5); }
     </style>
   </head>
@@ -43,41 +46,39 @@ if ( $smooth > 50 ) $smooth = 50;
         <button onclick="window.location.href='?'; " type="button">Reset</button>
         De <input name="from" size="4" value="<?php echo $from ?>"/>
         à <input name="to" size="4" value="<?php echo  $to ?>"/>
+        Échelle
+        <button id="log" type="button">log</button>
+        <button id="linear" disabled="true" type="button">linéaire</button>
         <button type="submit">▶</button>
       </form>
     </header>
-    <div id="chart" class="dygraph" style="width:100%; height:600px;"></div>
+    <div id="chart" class="dygraph" style="width:100%; height:400px;"></div>
     <script type="text/javascript">
     g = new Dygraph(
       document.getElementById("chart"),
       [
 <?php
-$qtitf = $db->prepare( "SELECT count(*) AS count FROM document WHERE document.date = ? AND gender = 2 AND type='Text' AND lang='fre' " );
-$qtit = $db->prepare( "SELECT count(*) AS count FROM document WHERE document.date = ? AND pers = 1 AND type='Text' AND lang='fre' " );
+// 844653 document 'fre' mais pas 'Text' (albums illustrés…)
+$qtitf = $db->prepare( "SELECT count(*) AS count FROM document WHERE document.date = ? AND type='Text' AND lang='fre' AND gender = 2 " );
+$qtith = $db->prepare( "SELECT count(*) AS count FROM document WHERE document.date = ? AND type='Text' AND lang='fre' AND gender = 1 " );
 // logique un peu bizarre, mais permet de profiter de l’index birthyear au max, gens entre 20 et 70 ans (mais pas morts)
 // après expérience, pas très intéressant
 // $qautf = $db->prepare( "SELECT count(*) FROM person WHERE gender = 2 AND writes = 1 AND lang = 'fre' AND birthyear <= (? - 20) AND birthyear >= (?-70) AND deathyear > ? " );
-$qpagesf = $db->prepare( "SELECT avg(pages) FROM document WHERE date = ?  AND type = 'Text' AND lang='fre' AND gender=2 " );
-$qpages = $db->prepare( "SELECT avg(pages) FROM document WHERE date = ?  AND type = 'Text' AND lang='fre' " );
+// $qpagesf = $db->prepare( "SELECT avg(pages) FROM document WHERE date = ?  AND type = 'Text' AND lang='fre' AND gender=2 " );
+// $qpages = $db->prepare( "SELECT avg(pages) FROM document WHERE date = ?  AND type = 'Text' AND lang='fre' " );
 
 
-$titf = 0;
-$tit = 0;
-$pagesf = 0;
-$pages = 0;
 for ( $date=$from; $date <= $to; $date++ ) {
   $qtitf->execute( array( $date ) );
   list( $titf ) = $qtitf->fetch( PDO::FETCH_NUM );
-  $qtit->execute( array( $date ) );
-  list( $tit ) = $qtit->fetch( PDO::FETCH_NUM );
-  $qpagesf->execute( array( $date ) );
-  list( $pagesf ) = $qpagesf->fetch( PDO::FETCH_NUM );
-  $qpages->execute( array( $date ) );
-  list( $pages ) = $qpages->fetch( PDO::FETCH_NUM );
+  $qtith->execute( array( $date ) );
+  list( $tith ) = $qtith->fetch( PDO::FETCH_NUM );
+
   echo "[".$date;
-  echo ",".number_format( 100*($titf/$tit), 2, '.', '');
-  echo ",".$pagesf;
-  echo ",".$pages;
+  echo ",".$tith;
+  echo ",".$titf;
+  echo ",".number_format( 100.0*($titf/( $tith+$titf )), 2, '.', '');
+  // echo ",".$titf;
   echo "],\n";
 }
 
@@ -91,29 +92,30 @@ for ( $date=$from; $date <= $to; $date++ ) {
 */
        ?>],
       {
-        labels: [ "Année", "Femmes % titres", "Femmes, pages", "Pages" ],
+        labels: [ "Année", "♂ titres", "♀ titres", "% des femmes" ],
         legend: "always",
         labelsSeparateLines: "true",
-        ylabel: "Part des titres %",
-        y2label: "Nombre moyen de pages",
+        ylabel: "Titres",
+        y2label: "Part des titres %",
         showRoller: true,
         rollPeriod: <?php echo $smooth ?>,
+        <?php if ($log) echo "logscale: true,";  ?>
         series: {
-          "Femmes % titres": {
+          "♂ titres": {
             // drawPoints: true,
             // pointSize: 3,
-            color: "rgba( 192, 0, 0, 1 )",
+            color: "rgba( 0, 0, 192, 1 )",
             strokeWidth: 2,
           },
-          "Femmes, pages": {
-            axis: 'y2',
-            color: "rgba( 255, 0, 0, 0.3 )",
-            strokeWidth: 5,
+          "♀ titres": {
+            color: "rgba( 255, 128, 128, 1 )",
+            strokeWidth: 2,
           },
-          "Pages": {
+          "% des femmes": {
             axis: 'y2',
-            color: "rgba( 128, 128, 128, 0.2)",
-            strokeWidth: 5,
+            color: "rgba( 128, 128, 128, 0.5)",
+            strokeWidth: 4,
+            // strokePattern: [4,4],
           },
         },
         axes: {
@@ -125,29 +127,31 @@ for ( $date=$from; $date <= $to; $date++ ) {
           y: {
             independentTicks: true,
             drawGrid: true,
-            gridLineColor: "rgba( 0, 0, 0, 0.5)",
+            gridLineColor: "rgba( 128, 128, 128, 0.5 )",
             gridLineWidth: 1,
           },
           y2: {
             independentTicks: true,
             drawGrid: true,
-            gridLineColor: "rgba( 128, 128, 128, 0.1)",
-            gridLineWidth: 5,
+            gridLineColor: "rgba( 128, 128, 128, 0.3)",
+            gridLineWidth: 2,
+            gridLinePattern: [4,4],
           },
         }
       }
     );
     g.ready(function() {
       g.setAnnotations([
-        { series: "Femmes % titres", x: "1648", shortText: "La Fronde", width: "", height: "", cssClass: "ann", },
-        { series: "Femmes % titres", x: "1789", shortText: "1789", width: "", height: "", cssClass: "ann", },
-        { series: "Femmes % titres", x: "1815", shortText: "1815", width: "", height: "", cssClass: "ann", },
-        { series: "Femmes % titres", x: "1830", shortText: "1830", width: "", height: "", cssClass: "ann", },
-        { series: "Femmes % titres", x: "1848", shortText: "1848", width: "", height: "", cssClass: "ann", },
-        { series: "Femmes % titres", x: "1870", shortText: "1870", width: "", height: "", cssClass: "ann", },
-        { series: "Femmes % titres", x: "1914", shortText: "1914", width: "", height: "", cssClass: "ann", },
-        { series: "Femmes % titres", x: "1939", shortText: "1939", width: "", height: "", cssClass: "ann", },
-        { series: "Femmes % titres", x: "1968", shortText: "1968", width: "", height: "", cssClass: "ann", },
+        { series: "♂ titres", x: "1648", shortText: "La Fronde", width: "", height: "", cssClass: "ann", },
+        { series: "♂ titres", x: "1788", shortText: "1788", width: "", height: "", cssClass: "ann", },
+        { series: "♂ titres", x: "1793", shortText: "1793", width: "", height: "", cssClass: "ann", },
+        { series: "♂ titres", x: "1815", shortText: "1815", width: "", height: "", cssClass: "ann", },
+        { series: "♂ titres", x: "1830", shortText: "1830", width: "", height: "", cssClass: "ann", },
+        { series: "♂ titres", x: "1848", shortText: "1848", width: "", height: "", cssClass: "ann", },
+        { series: "♂ titres", x: "1869", shortText: "1869", width: "", height: "", cssClass: "ann", },
+        { series: "♂ titres", x: "1913", shortText: "1913", width: "", height: "", cssClass: "ann", },
+        { series: "♂ titres", x: "1939", shortText: "1939", width: "", height: "", cssClass: "ann", },
+        { series: "♂ titres", x: "1968", shortText: "1968", width: "", height: "", cssClass: "ann", },
       ]);
     });
     var linear = document.getElementById("linear");
@@ -160,8 +164,7 @@ for ( $date=$from; $date <= $to; $date++ ) {
     linear.onclick = function() { setLog(false); };
     log.onclick = function() { setLog(true); };
     </script>
-    <p>Par an, la part des titres en français signés par une femme est très basse jusqu’au XX<sup>e</sup> s., &lt; 5%. On observe une progression sur le temps long, pour atteindre 1/3  de nos jours. La proportion de titres féminins baisse pendant les guerres et les révolutions, montrant bien qu’en période de restriction de papier, les hommes passent avant. Les titres féminins ont un nombre moyen de pages supérieur aux titres masculins, affecté pas des variations historiques comparables. Il est difficile d’inférer un genre avec juste des effectifs, mais on peut supposer que plus rares, les femmes écrivent des ouvrages plus importants, et ne remplissent pas la grande masse de petits fascicules utilitaires. Ce mouvement a changé. Depuis 1940, le nombre moyen de pages est comparable entre les sexes, et suit le mouvement historique, avec notamment une augmentation du nombre moyen de pages jusque 1968 (parallèle à une explosion du nombre de titres).  Après ce pic, la généralisation de l’offset et de la quadrichromie modifie la nature des imprimés déposés. Le nombre de pages baisse, les femmes ont devancé ce mouvement, et se retrouvent maintenant avec un nombre de pages moyen plus bas. Doit-on incriminer l’explosion de la littérature pour enfants et des livres de cuisine ?
-    </p>
+    <p>Par an, la part des titres en français signés par une femme est très basse jusqu’au XX<sup>e</sup> s., &lt; 5%. On observe une progression sur le temps long, pour atteindre 1/3  de nos jours. La proportion de titres féminins baisse pendant les guerres et les révolutions, montrant bien qu’en période de restriction de papier, les hommes passent avant.</p>
     <?php include ( dirname(__FILE__).'/footer.php' ) ?>
   </body>
 </html>

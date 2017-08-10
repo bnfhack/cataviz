@@ -17,7 +17,7 @@ if ( $smooth < 0 ) $smooth = 0;
 if ( $smooth > 50 ) $smooth = 50;
 
 if ( isset($_REQUEST['pagefloor']) ) $pagefloor = $_REQUEST['pagefloor'];
-else $pagefloor = 100;
+else $pagefloor = 50;
 
 $log = NULL;
 if ( isset($_REQUEST['log']) ) $log = $_REQUEST['log'];
@@ -112,8 +112,8 @@ for ( $date=$from; $date <= $to; $date++ ) {
     // .", ".number_format( (100*$nop/$tot), 2, '.', '')
   // echo  ", ".$text;
   echo  ", ".$broch;
-  echo ", ".number_format( $pages, 2, '.', '');
   echo  ", ".$tot;
+  // echo ", ".number_format( $pages, 2, '.', '');
   // echo  ", ".$pages2;
   echo "],\n";
 }
@@ -122,7 +122,7 @@ $A = "Titres > $pagefloor p.";
 $B = "Titres <= $pagefloor p.";
        ?>],
       {
-        labels: [ "Année", "<?=$A?>", "<?=$B?>", "Moy. pages", "Titres en français" ],
+        labels: [ "Année", "<?=$A?>", "<?=$B?>", "Titres en français" ], // "Moy. pages",
         legend: "always",
         labelsSeparateLines: "true",
         ylabel: "Titres",
@@ -148,13 +148,14 @@ $B = "Titres <= $pagefloor p.";
           "Titres en français": {
             drawPoints: false,
             pointSize: 0,
-            color: "rgba( 128, 0, 128, 0.2 )",
-            strokeWidth: 3,
+            color: "rgba( 0, 0, 0, 1 )",
+            strokeWidth: 2,
           },
           "Moy. pages": {
             axis: 'y2',
-            color: "rgba( 0, 0, 0, 1)",
-            strokeWidth: 1,
+            color: "rgba( 128, 128, 128, 0.5)",
+            strokeWidth: 3,
+            strokePattern: [4,4],
           },
         },
         axes: {
@@ -174,13 +175,14 @@ $B = "Titres <= $pagefloor p.";
           y2: {
             independentTicks: true,
             drawGrid: true,
-            gridLinePattern: [6,3],
-            gridLineColor: "rgba( 0, 0, 0, 0.2)",
-            gridLineWidth: 1,
+            gridLineColor: "rgba( 128, 128, 128, 0.1)",
+            gridLineWidth: 3,
+            // gridLinePattern: [4,4],
           },
         }
       }
     );
+    /*
     g.ready(function() {
       g.setAnnotations([
         { series: "Moy. pages", x: "1648", shortText: "La Fronde", width: "", height: "", cssClass: "ann", },
@@ -195,6 +197,7 @@ $B = "Titres <= $pagefloor p.";
         { series: "Moy. pages", x: "1968", shortText: "1968", width: "", height: "", cssClass: "ann", },
       ]);
     });
+    */
     var linear = document.getElementById("linear");
     var log = document.getElementById("log");
     var setLog = function(val) {

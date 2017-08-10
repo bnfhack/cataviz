@@ -29,10 +29,10 @@ table.data { font-size: 10pt; }
 .editions a.edition { position: absolute; color: #FF0000; font-weight: bold; text-decoration: none; width: 1ex; }
 .editions .row {  border-top: 1px #CCCCCC dotted; }
 .editions .row:hover {  background-color: #FFFFCC; }
-.dygraph-legend {  background-color: rgba(255, 255, 255, 0.75) !important; padding: 4px; border: 1px solid #000; border-radius: 10px; box-shadow: 4px 4px 4px #888; pointer-events: none; font-size: 14pt !important; }
+.dygraph-legend {  background-color: rgba(255, 255, 255, 0.6) !important; padding: 4px; border: 1px solid #000; border-radius: 10px; box-shadow: 4px 4px 4px #888; pointer-events: none; font-size: 14pt !important; line-height: 100%; }
 .dygraph-axis-label-x { font-size: 16pt; }
 .dygraph-label { font-size: 18pt; font-weight: bold; color: #888; }
-.ann { color: #FFFFFF !important; text-shadow: 1px 1px 1px #000, -1px 1px 1px #000;  font-size: 25px !important; font-weight: bold; border: none !important; border-left: 3px solid #000 !important; background: rgba(128, 128, 128, 0.3) !important; line-height: 1em; padding: 0.2ex 0.2ex 0ex 0ex; }
+.ann { color: rgba( 0, 0, 0, 0.4) !important; text-shadow: 1px 1px 1px #FFF, -1px 1px 1px #FFF;  font-size: 20px !important; font-weight: bold; border: none !important; border-left: 2px solid #000 !important; line-height: 1em; background-color: rgba(255, 255, 255, 0.1) !important; }
 .logo { position: absolute; top: 2px; right: 2px; }
 #perslist { position: absolute; visibility: hidden; display: block; z-index: 99; background-color: #FFFFFF; margin-left: 5rem; padding: 0;}
 form input, form select, form button { font-size: 14pt; outline: 0; }

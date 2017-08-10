@@ -28,8 +28,9 @@ if ( isset($_REQUEST['log']) ) $log = $_REQUEST['log'];
     <link rel="stylesheet" type="text/css" href="cataviz.css"/>
     <style>
     .dygraph-legend { left: 8% !important; top: 0.5em !important; }
-    .dygraph-y2label { color: rgba( 255, 128, 128, 0.5) !important; }
-    .dygraph-axis-label-y2 { color: rgba( 255, 128, 128, 1); }
+    .dygraph-y2label { color: rgba( 128, 128, 128, 0.5) !important; }
+    .dygraph-axis-label-y2 { color: rgba( 128, 128, 128, 1); }
+    .dygraph-ylabel { font-weight: normal !important; color: rgba( 0, 0, 0, 0.5) !important; }
 /*
 .dygraph-ylabel { color: rgba( 192, 0, 0, 1 ); font-weight: normal; }
 */
@@ -68,7 +69,7 @@ for ( $date=$from; $date <= $to; $date++ ) {
   $qm->execute( array( $date, $date ) );
   list( $mcount ) = $qm->fetch( PDO::FETCH_NUM );
   echo "[".$date;
-  echo ",".( $mcount + $fcount );
+  echo ",".( $mcount);
   echo ",".$fcount;
   echo ",". number_format( ( 100.0 * $fcount / ($mcount + $fcount) ), 2, '.', '');
   echo "],\n";
@@ -84,17 +85,17 @@ for ( $date=$from; $date <= $to; $date++ ) {
 */
        ?>],
       {
-        labels: [ "Année", "Total", "Femmes", "% femmes" ],
+        labels: [ "Année", "Hommes", "Femmes", "% femmes" ],
         legend: "always",
         labelsSeparateLines: "true",
-        ylabel: "Nombre",
+        ylabel: "Auteurs vivants",
         y2label: "% femmes",
         <?php if ($log) echo "logscale: true,";  ?>
-        // showRoller: true,
+        showRoller: true,
         rollPeriod: <?php echo $smooth ?>,
         series: {
-          "Total": {
-            color: "rgba( 0, 0, 0, 1 )",
+          "Hommes": {
+            color: "rgba( 0, 0, 192, 1 )",
             strokeWidth: 2,
           },
           "Femmes": {
@@ -103,8 +104,8 @@ for ( $date=$from; $date <= $to; $date++ ) {
           },
           "% femmes": {
             axis: 'y2',
-            color: "rgba( 255, 128, 128, 0.5 )",
-            strokeWidth: 5,
+            color: "rgba( 128, 128, 128, 0.5)",
+            strokeWidth: 4,
           },
         },
         axes: {
@@ -115,7 +116,6 @@ for ( $date=$from; $date <= $to; $date++ ) {
           },
           y: {
             independentTicks: true,
-            <?php if ($log) echo "logscale: true,";  ?>
             drawGrid: true,
             gridLineColor: "rgba( 128, 128, 128, 0.5)",
             gridLineWidth: 1,
@@ -123,13 +123,27 @@ for ( $date=$from; $date <= $to; $date++ ) {
           y2: {
             independentTicks: true,
             drawGrid: true,
-            // gridLinePattern: [6,3],
-            gridLineColor: "rgba( 255, 0, 0, 0.6)",
-            gridLineWidth: 1,
+            gridLineColor: "rgba( 128, 128, 128, 0.3)",
+            gridLineWidth: 2,
+            gridLinePattern: [4,4],
           },
         }
       }
     );
+    g.ready(function() {
+      g.setAnnotations([
+        { series: "% femmes", x: "1648", shortText: "La Fronde", width: "", height: "", cssClass: "ann", },
+        { series: "% femmes", x: "1789", shortText: "1789", width: "", height: "", cssClass: "ann", },
+        { series: "% femmes", x: "1793", shortText: "1793", width: "", height: "", cssClass: "ann", },
+        { series: "% femmes", x: "1815", shortText: "1815", width: "", height: "", cssClass: "ann", },
+        { series: "% femmes", x: "1830", shortText: "1830", width: "", height: "", cssClass: "ann", },
+        { series: "% femmes", x: "1848", shortText: "1848", width: "", height: "", cssClass: "ann", },
+        { series: "% femmes", x: "1870", shortText: "1870", width: "", height: "", cssClass: "ann", },
+        { series: "% femmes", x: "1914", shortText: "1914", width: "", height: "", cssClass: "ann", },
+        { series: "% femmes", x: "1939", shortText: "1939", width: "", height: "", cssClass: "ann", },
+        { series: "% femmes", x: "1968", shortText: "1968", width: "", height: "", cssClass: "ann", },
+      ]);
+    });
     var linear = document.getElementById("linear");
     var log = document.getElementById("log");
     var setLog = function(val) {
