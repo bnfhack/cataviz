@@ -12,11 +12,11 @@ if ( $to < 1475 ) $to = 2016;
 if ( $to > 2016 ) $to = 2016;
 
 if ( isset($_REQUEST['smooth']) ) $smooth = $_REQUEST['smooth'];
-else $smooth = 5;
+else $smooth = 2;
 if ( $smooth < 0 ) $smooth = 0;
 if ( $smooth > 50 ) $smooth = 50;
 
-$log = NULL;
+$log = true;
 if ( isset($_REQUEST['log']) ) $log = $_REQUEST['log'];
 
 ?><!DOCTYPE html>
@@ -27,10 +27,12 @@ if ( isset($_REQUEST['log']) ) $log = $_REQUEST['log'];
     <link rel="stylesheet" type="text/css" href="lib/dygraph.css"/>
     <link rel="stylesheet" type="text/css" href="cataviz.css"/>
     <style>
-.dygraph-legend { left: 8% !important; }
+.dygraph-legend { left: 9% !important; top: 1ex !important; }
 .dygraph-ylabel { color: rgba( 0, 0, 0, 0.7 ); font-weight: normal; }
 .dygraph-axis-label-y1 { color: #000; }
 .dygraph-y2label { color: rgba( 128, 128, 128, 0.5); }
+.dygraph-axis-label-y2 { color: rgba( 192, 192, 192, 1 ); font-weight: bold; font-size: 20px;}
+.ann { transform: rotateZ(-90deg); transform-origin: 0% 100%; padding-left: 1em; border-left: none !important; border-bottom: 1px solid #000 !important; font-size: 14pt !important; font-weight: normal; color: rgba( 0, 0, 0, 0.8) !important; }
     </style>
   </head>
   <body>
@@ -47,20 +49,20 @@ if ( isset($_REQUEST['log']) ) $log = $_REQUEST['log'];
         De <input name="from" size="4" value="<?php echo $from ?>"/>
         à <input name="to" size="4" value="<?php echo  $to ?>"/>
         Échelle
-        <button id="log" type="button">log</button>
-        <button id="linear" disabled="true" type="button">linéaire</button>
+        <button id="log" <?php if( $log ) echo'disabled="true"';?> type="button">log</button>
+        <button id="linear" <?php if( !$log ) echo'disabled="true"';?> type="button">linéaire</button>
         <button type="submit">▶</button>
       </form>
     </header>
-    <div id="chart" class="dygraph" style="width:100%; height:400px;"></div>
+    <div id="chart" class="dygraph" style="width:100%; height:500px;"></div>
     <script type="text/javascript">
     g = new Dygraph(
       document.getElementById("chart"),
       [
 <?php
 // 844653 document 'fre' mais pas 'Text' (albums illustrés…)
-$qtitf = $db->prepare( "SELECT count(*) AS count FROM document WHERE document.date = ? AND type='Text' AND lang='fre' AND gender = 2 " );
-$qtith = $db->prepare( "SELECT count(*) AS count FROM document WHERE document.date = ? AND type='Text' AND lang='fre' AND gender = 1 " );
+$qtitf = $db->prepare( "SELECT count(*) AS count FROM document WHERE lang='fre' AND book=1 AND posthum = 0 AND gender = 2 AND document.date = ? " );
+$qtith = $db->prepare( "SELECT count(*) AS count FROM document WHERE lang='fre' AND book=1 AND posthum = 0 AND gender = 1 AND document.date = ? " );
 // logique un peu bizarre, mais permet de profiter de l’index birthyear au max, gens entre 20 et 70 ans (mais pas morts)
 // après expérience, pas très intéressant
 // $qautf = $db->prepare( "SELECT count(*) FROM person WHERE gender = 2 AND writes = 1 AND lang = 'fre' AND birthyear <= (? - 20) AND birthyear >= (?-70) AND deathyear > ? " );
@@ -105,53 +107,64 @@ for ( $date=$from; $date <= $to; $date++ ) {
             // drawPoints: true,
             // pointSize: 3,
             color: "rgba( 0, 0, 192, 1 )",
-            strokeWidth: 2,
+            strokeWidth: 4,
           },
           "♀ titres": {
             color: "rgba( 255, 128, 128, 1 )",
-            strokeWidth: 2,
+            strokeWidth: 4,
           },
           "% des femmes": {
             axis: 'y2',
-            color: "rgba( 128, 128, 128, 0.5)",
-            strokeWidth: 4,
-            // strokePattern: [4,4],
+            color: "rgba( 128, 128, 128, 1 )",
+            strokeWidth: 1,
+            fillGraph: true,
           },
         },
         axes: {
           x: {
             gridLineWidth: 2,
-            drawGrid: true,
+            drawGrid: false,
             independentTicks: true,
           },
           y: {
             independentTicks: true,
             drawGrid: true,
-            gridLineColor: "rgba( 128, 128, 128, 0.5 )",
+            gridLineColor: "rgba( 192, 192, 192, 0.5 )",
             gridLineWidth: 1,
           },
           y2: {
             independentTicks: true,
             drawGrid: true,
-            gridLineColor: "rgba( 128, 128, 128, 0.3)",
-            gridLineWidth: 2,
-            gridLinePattern: [4,4],
+            gridLineColor: "rgba( 192, 192, 192, 0.4)",
+            gridLineWidth: 6,
+            gridLinePattern: [6,6],
           },
-        }
+        },
+        underlayCallback: function(canvas, area, g) {
+          canvas.fillStyle = "rgba(255, 128, 0, 0.2)";
+          var periods = [ [1648,1653],[1789,1795], [1814,1815], [1830,1831], [1848,1849], [1870,1871], [1914,1918], [1939,1945]];
+          var lim = periods.length;
+          for ( var i = 0; i < lim; i++ ) {
+            var bottom_left = g.toDomCoords( periods[i][0], -20 );
+            var top_right = g.toDomCoords( periods[i][1], +20 );
+            var left = bottom_left[0];
+            var right = top_right[0];
+            canvas.fillRect(left, area.y, right - left, area.h);
+          }
+        },
       }
     );
     g.ready(function() {
       g.setAnnotations([
-        { series: "♂ titres", x: "1648", shortText: "La Fronde", width: "", height: "", cssClass: "ann", },
-        { series: "♂ titres", x: "1788", shortText: "1788", width: "", height: "", cssClass: "ann", },
-        { series: "♂ titres", x: "1793", shortText: "1793", width: "", height: "", cssClass: "ann", },
-        { series: "♂ titres", x: "1815", shortText: "1815", width: "", height: "", cssClass: "ann", },
-        { series: "♂ titres", x: "1830", shortText: "1830", width: "", height: "", cssClass: "ann", },
-        { series: "♂ titres", x: "1848", shortText: "1848", width: "", height: "", cssClass: "ann", },
-        { series: "♂ titres", x: "1869", shortText: "1869", width: "", height: "", cssClass: "ann", },
-        { series: "♂ titres", x: "1913", shortText: "1913", width: "", height: "", cssClass: "ann", },
-        { series: "♂ titres", x: "1939", shortText: "1939", width: "", height: "", cssClass: "ann", },
-        { series: "♂ titres", x: "1968", shortText: "1968", width: "", height: "", cssClass: "ann", },
+        { series: "% des femmes", x: "1648", shortText: "La Fronde", width: "", height: "", cssClass: "ann", },
+        { series: "% des femmes", x: "1789", shortText: "1789", width: "", height: "", cssClass: "ann", },
+        { series: "% des femmes", x: "1815", shortText: "1815", width: "", height: "", cssClass: "ann", },
+        { series: "% des femmes", x: "1830", shortText: "1830", width: "", height: "", cssClass: "ann", },
+        { series: "% des femmes", x: "1848", shortText: "1848", width: "", height: "", cssClass: "ann", },
+        { series: "% des femmes", x: "1870", shortText: "1870", width: "", height: "", cssClass: "ann", },
+        { series: "% des femmes", x: "1914", shortText: "1914", width: "", height: "", cssClass: "ann", },
+        { series: "% des femmes", x: "1939", shortText: "1939", width: "", height: "", cssClass: "ann", },
+        { series: "% des femmes", x: "1968", shortText: "1968", width: "", height: "", cssClass: "ann", },
       ]);
     });
     var linear = document.getElementById("linear");

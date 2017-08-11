@@ -31,6 +31,7 @@ if ( isset($_REQUEST['log']) ) $log = $_REQUEST['log'];
     .dygraph-y2label { color: rgba( 128, 128, 128, 0.5) !important; }
     .dygraph-axis-label-y2 { color: rgba( 128, 128, 128, 1); }
     .dygraph-ylabel { font-weight: normal !important; color: rgba( 0, 0, 0, 0.5) !important; }
+    .ann { transform: rotateZ(-90deg); transform-origin: 0% 100%; padding-left: 1em; border-left: none !important; border-bottom: 1px solid #000 !important; font-size: 14pt !important; font-weight: normal; color: rgba( 0, 0, 0, 0.8) !important; }
 /*
 .dygraph-ylabel { color: rgba( 192, 0, 0, 1 ); font-weight: normal; }
 */
@@ -46,8 +47,8 @@ if ( isset($_REQUEST['log']) ) $log = $_REQUEST['log'];
         De <input name="from" size="4" value="<?php echo $from ?>"/>
         à <input name="to" size="4" value="<?php echo  $to ?>"/>
         Échelle
-        <button id="log" type="button">log</button>
-        <button id="linear" disabled="true" type="button">linéaire</button>
+        <button id="log" <?php if( $log ) echo'disabled="true"';?> type="button">log</button>
+        <button id="linear" <?php if( !$log ) echo'disabled="true"';?> type="button">linéaire</button>
         <button type="submit">▶</button>
         <button onclick="window.location.href='?'; " type="button">Reset</button>
       </form>
@@ -96,22 +97,23 @@ for ( $date=$from; $date <= $to; $date++ ) {
         series: {
           "Hommes": {
             color: "rgba( 0, 0, 192, 1 )",
-            strokeWidth: 2,
+            strokeWidth: 4,
           },
           "Femmes": {
             color: "rgba( 255, 128, 128, 1 )",
-            strokeWidth: 2,
+            strokeWidth: 4,
           },
           "% femmes": {
             axis: 'y2',
-            color: "rgba( 128, 128, 128, 0.5)",
-            strokeWidth: 4,
+            color: "rgba( 64, 64, 64, 1 )",
+            strokeWidth: 1,
+            fillGraph: true,
           },
         },
         axes: {
           x: {
-            gridLineWidth: 2,
-            drawGrid: true,
+            // gridLineWidth: 2,
+            drawGrid: false,
             independentTicks: true,
           },
           y: {
@@ -127,14 +129,25 @@ for ( $date=$from; $date <= $to; $date++ ) {
             gridLineWidth: 2,
             gridLinePattern: [4,4],
           },
-        }
+        },
+        underlayCallback: function(canvas, area, g) {
+          canvas.fillStyle = "rgba(255, 128, 0, 0.2)";
+          var periods = [ [1789,1795], [1814,1815], [1830,1831], [1848,1849], [1870,1871], [1914,1918], [1939,1945]];
+          var lim = periods.length;
+          for ( var i = 0; i < lim; i++ ) {
+            var bottom_left = g.toDomCoords( periods[i][0], -20 );
+            var top_right = g.toDomCoords( periods[i][1], +20 );
+            var left = bottom_left[0];
+            var right = top_right[0];
+            canvas.fillRect(left, area.y, right - left, area.h);
+          }
+        },
       }
     );
     g.ready(function() {
       g.setAnnotations([
         { series: "% femmes", x: "1648", shortText: "La Fronde", width: "", height: "", cssClass: "ann", },
         { series: "% femmes", x: "1789", shortText: "1789", width: "", height: "", cssClass: "ann", },
-        { series: "% femmes", x: "1793", shortText: "1793", width: "", height: "", cssClass: "ann", },
         { series: "% femmes", x: "1815", shortText: "1815", width: "", height: "", cssClass: "ann", },
         { series: "% femmes", x: "1830", shortText: "1830", width: "", height: "", cssClass: "ann", },
         { series: "% femmes", x: "1848", shortText: "1848", width: "", height: "", cssClass: "ann", },

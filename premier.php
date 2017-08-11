@@ -63,14 +63,16 @@ $fromgender = 1814;
 // $agehq  = $db->prepare( "SELECT avg( date - birthyear ) FROM document WHERE lang = 'fre' AND book = 1 AND posthum=0 AND gender=1 AND date >= ? AND date <= ?" );
 // $agefq  = $db->prepare( "SELECT avg( date - birthyear ) FROM document WHERE lang = 'fre' AND book = 1 AND posthum=0 AND gender=2 AND date >= ? AND date <= ?" );
 
-$ageq  = $db->prepare( "SELECT avg( date - birthyear ) FROM document WHERE lang = 'fre' AND book = 1 AND posthum=0 AND gender=2 AND date >= ? AND date <= ?" );
-
-$premq = $db->prepare( "SELECT avg( opus1 - birthyear ), count(*) AS count FROM person WHERE fr = 1 AND opus1 >= ? AND opus1 <= ? " );
+$ageq  = $db->prepare( "SELECT avg( date - birthyear ) FROM document WHERE lang = 'fre' AND book = 1 AND posthum=0 AND date = ?" );
+/*
 $hq = $db->prepare( "SELECT avg( opus1 - birthyear ) FROM person WHERE fr = 1 AND opus1 >= ? AND opus1 <= ? AND gender = 1 " );
 $fq = $db->prepare( "SELECT avg( opus1 - birthyear ) FROM person WHERE fr = 1 AND opus1 >= ? AND opus1 <= ? AND gender = 2 " );
+*/
+
 $totq = $db->prepare( "SELECT count(*) AS count FROM document WHERE lang = 'fre'  AND book = 1 AND date = ? " );
-$antq = $db->prepare( "SELECT count(*) AS count FROM document WHERE lang = 'fre' AND book = 1 AND posthum = 0 AND date = ? " );
-$postq = $db->prepare( "SELECT count(*) AS count FROM document WHERE lang = 'fre' AND book = 1 AND posthum = 1 AND date = ?" );
+$antq = $db->prepare( "SELECT count(*) AS count FROM document WHERE posthum = 0 AND book = 1 AND lang = 'fre' AND date = ? " );
+$postq = $db->prepare( "SELECT count(*) AS count FROM document WHERE posthum = 1 AND book = 1 AND lang = 'fre' AND date = ?" );
+$premq = $db->prepare( "SELECT avg( opus1 - birthyear ), count(*) AS count FROM person WHERE fr = 1 AND opus1 >= ? AND opus1 <= ? " );
 
 // $delta, modulo hauteur et largeur de la courbe
 $deltaq = $db->prepare( "SELECT count(*) AS count FROM document WHERE type = 'Text' AND lang = 'fre' AND book = 1 AND date = ?" );
@@ -81,22 +83,22 @@ $deltamod = sqrt( ( $to - $from ) / sqrt( $val ) );
 
 for ( $date=$from; $date <= $to; $date++ ) {
 
+  $delta = floor( 1.5*$deltamod );
+  // $ageq->execute( array( $date-$delta, $date+$delta ) );
+  $ageq->execute( array( $date ) );
+  list( $age ) = $ageq->fetch( PDO::FETCH_NUM );
+
   /*
   $delta = floor( 0.5*$deltamod );
   $agehq->execute( array( $date-$delta, $date+$delta ) );
   list( $ageh ) = $agehq->fetch( PDO::FETCH_NUM );
+
   $delta = floor( 1.5*$deltamod );
   $agefq->execute( array( $date-$delta, $date+$delta ) );
   list( $agef ) = $agefq->fetch( PDO::FETCH_NUM );
   */
-  $delta = floor( 1.5*$deltamod );
-  $ageq->execute( array( $date-$delta, $date+$delta ) );
-  list( $age ) = $ageq->fetch( PDO::FETCH_NUM );
+  /*
 
-  $delta = floor( 1.5*$deltamod );
-  $premq->execute( array( $date-$delta, $date+$delta ) );
-  list( $premage, $premcount ) = $premq->fetch( PDO::FETCH_NUM );
-  if( !isset( $prem100 ) ) $prem100 = $premcount;
 
   if ( $from >= $fromgender ) {
     $delta = floor( $deltamod );
@@ -106,6 +108,7 @@ for ( $date=$from; $date <= $to; $date++ ) {
     $fq->execute( array( $date-$delta, $date+$delta ) );
     list( $fage ) = $fq->fetch( PDO::FETCH_NUM );
   }
+  */
 
   $totq->execute( array( $date ) );
   list( $totcount ) = $totq->fetch( PDO::FETCH_NUM );
@@ -119,14 +122,19 @@ for ( $date=$from; $date <= $to; $date++ ) {
   list( $postcount ) = $postq->fetch( PDO::FETCH_NUM );
   if( !isset( $post100 ) ) $post100 = $postcount;
 
+  $delta = floor( 1.5*$deltamod );
+  $premq->execute( array( $date-$delta, $date+$delta ) );
+  list( $premage, $premcount ) = $premq->fetch( PDO::FETCH_NUM );
+  if( !isset( $prem100 ) ) $prem100 = $premcount;
+
 
   echo "[".$date;
 
   echo ",". number_format( $age, 2, '.', '');
-  // echo ",". number_format( $agef, 2, '.', '');
-  if ( $from < $fromgender ) {
+  if ( true || $from < $fromgender ) {
     echo ",".number_format( $premage, 2, '.', '' );
   }
+  // ? genrer ?
   else {
     if ( !$hage ) echo ',';
     else echo ",".number_format( $hage, 2, '.', '' );
@@ -135,21 +143,19 @@ for ( $date=$from; $date <= $to; $date++ ) {
     else echo ",".number_format( $fage, 2, '.', '' );
   }
 
-  // echo ",".( $hcount + $fcount );
-  // echo ",".$tcount;
   echo ",". number_format( 100.0* $totcount  / $tot100, 2, '.', '');
   echo ",". number_format( 100.0* $postcount  / $post100, 2, '.', '');
-  // echo ",". number_format( 100.0* $antcount  / $ant100, 2, '.', '');
   echo ",". number_format( 100.0* $premcount  / $prem100, 2, '.', '');
+
   echo "],\n";
 
 }
        ?>],
       {
         labels: [ "Année", "Âge à la publication", <?php
-         if ( $from < $fromgender ) echo '"Âge au premier livre"';
-         else echo '"♂ âge au premier livre", "♀ âge au premier livre"';
-         ?>, "Livres", "Rééditions", "Premiers livres" ],
+         if ( true || $from < $fromgender ) echo '"Âge au premier livre", ';
+         // else echo '"♂ âge au premier livre", "♀ âge au premier livre"';
+         ?>"Livres", "Rééditions", "Premiers livres" ],
         legend: "always",
         labelsSeparateLines: "true",
         y2label: "Âge moyen",
