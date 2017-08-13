@@ -1,23 +1,7 @@
 <?php
-// header('Content-type: text/plain; charset=utf-8');
+$smooth = 5;
 include ( dirname(__FILE__).'/Cataviz.php' );
 $db = new Cataviz( "databnf.sqlite" );
-if (isset($_REQUEST['from'])) $from = $_REQUEST['from'];
-else $from = 1760;
-if ( $from < 1452 ) $from = 1452;
-if ( $from > 1990 ) $from = 1990;
-if (isset($_REQUEST['to'])) $to = $_REQUEST['to'];
-else $to = 1960;
-if ( $to < 1475 ) $to = 1990;
-if ( $to > 1990 ) $to = 1990;
-
-if ( isset($_REQUEST['smooth']) ) $smooth = $_REQUEST['smooth'];
-else $smooth = 5;
-if ( $smooth < 0 ) $smooth = 0;
-if ( $smooth > 50 ) $smooth = 50;
-
-$log = true;
-if ( isset($_REQUEST['log']) ) $log = $_REQUEST['log'];
 
 ?><!DOCTYPE html>
 <html>
@@ -46,7 +30,7 @@ if ( isset($_REQUEST['log']) ) $log = $_REQUEST['log'];
         <button onclick="window.location.href='?'; " type="button">Reset</button>
       </form>
     </header>
-    <div id="chart" class="dygraph" style="width:100%; height:600px;"></div>
+    <div id="chart" class="dygraph"></div>
     <script type="text/javascript">
     g = new Dygraph(
       document.getElementById("chart"),
