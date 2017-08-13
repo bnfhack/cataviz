@@ -1,5 +1,29 @@
 <?php
 set_time_limit(-1);
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
+if ( !isset( $datemax ) ) $datemax = 2015;
+if ( !isset( $from ) ) $from = 1900;
+if ( !isset( $to ) ) $to = $datemax;
+if ( !isset( $smooth ) ) $smooth = 0;
+
+if ( isset($_REQUEST['from']) &&  0+$_REQUEST['from'] ) $from = $_REQUEST['from'];
+if ( $from < 1452 ) $from = 1452;
+if ( $from > $datemax ) $from = $datemax;
+
+if ( isset($_REQUEST['to']) && 0+isset($_REQUEST['to']) ) $to = $_REQUEST['to'];
+if ( $to < 1475 ) $to = $datemax;
+if ( $to > $datemax ) $to = $datemax;
+
+if ( isset($_REQUEST['smooth']) && 0+isset($_REQUEST['smooth']) ) $smooth = $_REQUEST['smooth'];
+if ( $smooth < 0 ) $smooth = 0;
+if ( $smooth > 50 ) $smooth = 50;
+
+if ( !isset( $log ) )  $log = 0;
+if ( isset($_REQUEST['log']) ) $log = $_REQUEST['log'];
+if ( !$log ) $log = 0;
+
 /**
  *
  */

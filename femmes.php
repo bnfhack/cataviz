@@ -1,28 +1,16 @@
 <?php
-// header('Content-type: text/plain; charset=utf-8');
+$log = true;
+$smooth = 0;
+$from = 1760;
+$to = 1960;
 include ( dirname(__FILE__).'/Cataviz.php' );
 $db = new Cataviz( "databnf.sqlite" );
-if (isset($_REQUEST['from'])) $from = $_REQUEST['from'];
-else $from = 1760;
-if ( $from < 1452 ) $from = 1452;
-if ( $from > 2014 ) $from = 2000;
-if (isset($_REQUEST['to'])) $to = $_REQUEST['to'];
-else $to = 1960;
-if ( $to < 1475 ) $to = 2016;
-if ( $to > 2016 ) $to = 2016;
-
-if ( isset($_REQUEST['smooth']) ) $smooth = $_REQUEST['smooth'];
-else $smooth = 2;
-if ( $smooth < 0 ) $smooth = 0;
-if ( $smooth > 50 ) $smooth = 50;
-
-$log = true;
-if ( isset($_REQUEST['log']) ) $log = $_REQUEST['log'];
 
 ?><!DOCTYPE html>
 <html>
   <head>
     <meta charset="UTF-8" />
+    <title>Femmes, titres, Databnf.</title>
     <script src="lib/dygraph.min.js">//</script>
     <link rel="stylesheet" type="text/css" href="lib/dygraph.css"/>
     <link rel="stylesheet" type="text/css" href="cataviz.css"/>
@@ -39,10 +27,10 @@ if ( isset($_REQUEST['log']) ) $log = $_REQUEST['log'];
     <?php include ( dirname(__FILE__).'/menu.php' ) ?>
     <header>
       <div class="links">
-        <a href="" target="_new">Data.bnf.fr, titres signés par une femme</a> :
+        <a href="?">Livres de femmes</a> :
         <a href="?from=1600&amp;to=1788&amp;smooth=8">1600–1789</a>,
         <a href="?from=1760&amp;to=1960">1760–1960 guerres et révolutions</a>,
-        <a href="?from=1910&amp;to=2015">XX<sup>e</sup> progression à nuancer</a>,
+        <a href="?from=1910&amp;to=2015">XX<sup>e</sup></a>.
       </div>
       <form name="dates">
         <button onclick="window.location.href='?'; " type="button">Reset</button>
@@ -54,14 +42,14 @@ if ( isset($_REQUEST['log']) ) $log = $_REQUEST['log'];
         <button type="submit">▶</button>
       </form>
     </header>
-    <div id="chart" class="dygraph" style="width:100%; height:500px;"></div>
+    <div id="chart" class="dygraph"></div>
     <script type="text/javascript">
     g = new Dygraph(
       document.getElementById("chart"),
       [
 <?php
 // 844653 document 'fre' mais pas 'Text' (albums illustrés…)
-$qtitf = $db->prepare( "SELECT count(*) AS count FROM document WHERE lang='fre' AND book=1 AND posthum = 0 AND gender = 2 AND document.date = ? " );
+$qtitf = $db->prepare( "SELECT count(*) AS count FROM document WHERE lang='fre' AND book=1 AND posthum = 0 AND gender = 2 AND document.date >= ? AND document.date <= ? " );
 $qtith = $db->prepare( "SELECT count(*) AS count FROM document WHERE lang='fre' AND book=1 AND posthum = 0 AND gender = 1 AND document.date = ? " );
 // logique un peu bizarre, mais permet de profiter de l’index birthyear au max, gens entre 20 et 70 ans (mais pas morts)
 // après expérience, pas très intéressant
@@ -71,14 +59,18 @@ $qtith = $db->prepare( "SELECT count(*) AS count FROM document WHERE lang='fre' 
 
 
 for ( $date=$from; $date <= $to; $date++ ) {
-  $qtitf->execute( array( $date ) );
+  $sigma = 0;
+  if ( $from < 1800 ) $sigma = 1;
+  if ( $from < 1700 ) $sigma = 2;
+  $qtitf->execute( array( $date-$sigma, $date+$sigma ) );
   list( $titf ) = $qtitf->fetch( PDO::FETCH_NUM );
+  $titf = 1.0*$titf / (1 + 2*$sigma);
   $qtith->execute( array( $date ) );
   list( $tith ) = $qtith->fetch( PDO::FETCH_NUM );
 
   echo "[".$date;
   echo ",".$tith;
-  echo ",".$titf;
+  echo ",".number_format( $titf, 2, '.', '');
   echo ",".number_format( 100.0*($titf/( $tith+$titf )), 2, '.', '');
   // echo ",".$titf;
   echo "],\n";
@@ -136,7 +128,7 @@ for ( $date=$from; $date <= $to; $date++ ) {
             independentTicks: true,
             drawGrid: true,
             gridLineColor: "rgba( 192, 192, 192, 0.4)",
-            gridLineWidth: 6,
+            gridLineWidth: 4,
             gridLinePattern: [6,6],
           },
         },
@@ -164,7 +156,6 @@ for ( $date=$from; $date <= $to; $date++ ) {
         { series: "% des femmes", x: "1870", shortText: "1870", width: "", height: "", cssClass: "ann", },
         { series: "% des femmes", x: "1914", shortText: "1914", width: "", height: "", cssClass: "ann", },
         { series: "% des femmes", x: "1939", shortText: "1939", width: "", height: "", cssClass: "ann", },
-        { series: "% des femmes", x: "1968", shortText: "1968", width: "", height: "", cssClass: "ann", },
       ]);
     });
     var linear = document.getElementById("linear");
@@ -177,7 +168,10 @@ for ( $date=$from; $date <= $to; $date++ ) {
     linear.onclick = function() { setLog(false); };
     log.onclick = function() { setLog(true); };
     </script>
-    <p>Par an, la part des titres en français signés par une femme est très basse jusqu’au XX<sup>e</sup> s., &lt; 5%. On observe une progression sur le temps long, pour atteindre 1/3  de nos jours. La proportion de titres féminins baisse pendant les guerres et les révolutions, montrant bien qu’en période de restriction de papier, les hommes passent avant.</p>
+    <div class="text">
+      <p>Projection par année du nombre de titres français signés par une femme vivante.
+      Le ration sexuel est très bas jusqu’au XX<sup>e</sup> s., &lt; 5%. On observe une progression sur le temps long, pour atteindre 30 %  de nos jours. La part des femmes baisse pendant les guerres et les révolutions, montrant qu’en période de restriction de papier, les hommes passent toujours avant.</p>
+    </div>
     <?php include ( dirname(__FILE__).'/footer.php' ) ?>
   </body>
 </html>

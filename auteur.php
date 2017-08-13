@@ -12,7 +12,9 @@ if ( isset( $_REQUEST['persark'] ) ) {
 <html>
   <head>
     <meta charset="UTF-8" />
-    <script src="lib/dygraph-combined.js">//</script>
+    <title>Auteur, Databnf</title>
+    <script src="lib/dygraph.min.js">//</script>
+    <link rel="stylesheet" type="text/css" href="lib/dygraph.css"/>
     <link rel="stylesheet" type="text/css" href="cataviz.css"/>
   </head>
   <body>

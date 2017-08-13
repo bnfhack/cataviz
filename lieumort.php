@@ -23,6 +23,7 @@ if ( isset($_REQUEST['log']) ) $log = $_REQUEST['log'];
 <html>
   <head>
     <meta charset="UTF-8" />
+    <title>Lieu de mot, Databnf.</title>
     <script src="lib/dygraph.min.js">//</script>
     <link rel="stylesheet" type="text/css" href="lib/dygraph.css"/>
     <link rel="stylesheet" type="text/css" href="cataviz.css"/>
@@ -47,7 +48,7 @@ if ( isset($_REQUEST['log']) ) $log = $_REQUEST['log'];
         <button onclick="window.location.href='?'; " type="button">Reset</button>
       </form>
     </header>
-    <div id="chart" class="dygraph" style="width:100%; height:400px;"></div>
+    <div id="chart" class="dygraph"></div>
     <script type="text/javascript">
     g = new Dygraph(
       document.getElementById("chart"),

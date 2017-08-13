@@ -1,3 +1,5 @@
 *.docx
 *.sqlite
 *.sqold
+
+test.php

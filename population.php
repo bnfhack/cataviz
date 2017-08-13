@@ -1,28 +1,17 @@
 <?php
-// header('Content-type: text/plain; charset=utf-8');
+$smooth = 0;
+$from = 1770;
+$to = 1880;
+$smooth = 0;
+$log = NULL;
 include ( dirname(__FILE__).'/Cataviz.php' );
 $db = new Cataviz( "databnf.sqlite" );
-if (isset($_REQUEST['from'])) $from = $_REQUEST['from'];
-else $from = 1770;
-if ( $from < 1452 ) $from = 1452;
-if ( $from > 2014 ) $from = 2000;
-if (isset($_REQUEST['to'])) $to = $_REQUEST['to'];
-else $to = 1880;
-if ( $to < 1475 ) $to = 2016;
-if ( $to > 2016 ) $to = 2016;
-
-if ( isset($_REQUEST['smooth']) ) $smooth = $_REQUEST['smooth'];
-else $smooth = 0;
-if ( $smooth < 0 ) $smooth = 0;
-if ( $smooth > 50 ) $smooth = 50;
-
-$log = NULL;
-if ( isset($_REQUEST['log']) ) $log = $_REQUEST['log'];
 
 ?><!DOCTYPE html>
 <html>
   <head>
     <meta charset="UTF-8" />
+    <title>Population des auteurs, Databnf.</title>
     <script src="lib/dygraph.min.js">//</script>
     <link rel="stylesheet" type="text/css" href="lib/dygraph.css"/>
     <link rel="stylesheet" type="text/css" href="cataviz.css"/>
@@ -41,7 +30,9 @@ if ( isset($_REQUEST['log']) ) $log = $_REQUEST['log'];
     <?php include ( dirname(__FILE__).'/menu.php' ) ?>
     <header>
       <div class="links">
-        <a href="" target="_new">Data.bnf.fr, auteurs, population </a> 
+        <a href="" target="_new">Population des auteurs </a> 
+        | <a href="?from=1760&amp;to=1860">Révolution</a>
+        | <a href="?from=1860&amp;to=2017">1860–…</a>.
       </div>
       <form name="dates">
         De <input name="from" size="4" value="<?php echo $from ?>"/>
@@ -53,7 +44,7 @@ if ( isset($_REQUEST['log']) ) $log = $_REQUEST['log'];
         <button onclick="window.location.href='?'; " type="button">Reset</button>
       </form>
     </header>
-    <div id="chart" class="dygraph" style="width:100%; height:400px;"></div>
+    <div id="chart" class="dygraph"></div>
     <script type="text/javascript">
     g = new Dygraph(
       document.getElementById("chart"),
@@ -146,28 +137,33 @@ for ( $date=$from; $date <= $to; $date++ ) {
     );
     g.ready(function() {
       g.setAnnotations([
-        { series: "% femmes", x: "1648", shortText: "La Fronde", width: "", height: "", cssClass: "ann", },
-        { series: "% femmes", x: "1789", shortText: "1789", width: "", height: "", cssClass: "ann", },
-        { series: "% femmes", x: "1815", shortText: "1815", width: "", height: "", cssClass: "ann", },
-        { series: "% femmes", x: "1830", shortText: "1830", width: "", height: "", cssClass: "ann", },
-        { series: "% femmes", x: "1848", shortText: "1848", width: "", height: "", cssClass: "ann", },
-        { series: "% femmes", x: "1870", shortText: "1870", width: "", height: "", cssClass: "ann", },
-        { series: "% femmes", x: "1914", shortText: "1914", width: "", height: "", cssClass: "ann", },
-        { series: "% femmes", x: "1939", shortText: "1939", width: "", height: "", cssClass: "ann", },
-        { series: "% femmes", x: "1968", shortText: "1968", width: "", height: "", cssClass: "ann", },
+        { series: "% femmes", x: "1648", shortText: "La Fronde", width: "", height: "", cssClass: "annl", },
+        { series: "% femmes", x: "1789", shortText: "1789", width: "", height: "", cssClass: "annl", },
+        { series: "% femmes", x: "1815", shortText: "1815", width: "", height: "", cssClass: "annl", },
+        { series: "% femmes", x: "1830", shortText: "1830", width: "", height: "", cssClass: "annl", },
+        { series: "% femmes", x: "1848", shortText: "1848", width: "", height: "", cssClass: "annl", },
+        { series: "% femmes", x: "1870", shortText: "1870", width: "", height: "", cssClass: "annl", },
+        // { series: "% femmes", x: "1881", shortText: "Lois J. Ferry", width: "", height: "", cssClass: "ann", },
+        { series: "% femmes", x: "1914", shortText: "1914", width: "", height: "", cssClass: "annl", },
+        { series: "% femmes", x: "1939", shortText: "1939", width: "", height: "", cssClass: "annl", },
       ]);
     });
     var linear = document.getElementById("linear");
     var log = document.getElementById("log");
-    var setLog = function(val) {
-      g.updateOptions({ logscale: val });
-      linear.disabled = !val;
-      log.disabled = val;
-    };
-    linear.onclick = function() { setLog(false); };
-    log.onclick = function() { setLog(true); };
+    if ( log && linear ) {
+      var setLog = function(val) {
+        g.updateOptions({ logscale: val });
+        linear.disabled = !val;
+        log.disabled = val;
+      };
+      linear.onclick = function() { setLog(false); };
+      log.onclick = function() { setLog(true); };
+    }
     </script>
-    <p>Population d’auteurs </p>
+    <div class="text">
+    <p>Pour chaque année, somme de tous les auteurs vivants ayant écrit un livre de plus de 50 pages. Si une personne n’a pas de date de mort, et une naissance après 1920, elle est considérée comme encore vivante actuellement. Ce calcul réagit vite à l’entrée de nouveaux auteurs dans la carrière, comme par exemple au moment d’une Révolution, par contre, il y a une grande inertie à la sortie, laissant vivre beaucoup d’auteurs d’un seul livre. Cette population ne participe peut-être moins à la vie intellectuelle, mais elles forment tout de même une masse de gens instruits qui doit peser dans le public.</p>
+    <p>La part des femmes est très faible, moins de 5 % pendant des siècles. Cette proportion croît de façon continue depuis 1860, mais avant, il y a eu des points d’inflexion, notamment autour de la Révolution.</p>
+    </div>
     <?php include ( dirname(__FILE__).'/footer.php' ) ?>
   </body>
 </html>

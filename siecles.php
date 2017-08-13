@@ -1,28 +1,19 @@
 <?php
 // header('Content-type: text/plain; charset=utf-8');
-include ( dirname(__FILE__).'/Cataviz.php' );
-$db = new Cataviz( "databnf.sqlite" );
 $from = 1865;
 $tomax = 2015;
-if (isset($_REQUEST['from'])) $from = $_REQUEST['from'];
-if ( $from < 1475 ) $from = 1475;
-if ( $from > $tomax ) $from = 2000;
-$to = 1960;
-if (isset($_REQUEST['to'])) $to = $_REQUEST['to'];
-if ( $to < 1475 ) $to = $tomax;
-if ( $to > $tomax ) $to = $tomax;
-if ( isset($_REQUEST['smooth']) ) $smooth = $_REQUEST['smooth'];
-else $smooth = 0;
-if ( $smooth < 0 ) $smooth = 0;
-if ( $smooth > 50 ) $smooth = 50;
-$log = 0;
-if ( isset( $_REQUEST['log'] ) ) $log = 0+$_REQUEST['log'];
+$smooth = 0;
+
+include ( dirname(__FILE__).'/Cataviz.php' );
+$db = new Cataviz( "databnf.sqlite" );
+
 $max = @$_REQUEST['max'];
 
 ?><!DOCTYPE html>
 <html>
   <head>
     <meta charset="UTF-8" />
+    <title>Siècles, rééditions, Databnf</title>
     <script src="lib/dygraph.min.js">//</script>
     <link rel="stylesheet" type="text/css" href="lib/dygraph.css"/>
     <link rel="stylesheet" type="text/css" href="cataviz.css"/>
@@ -43,15 +34,15 @@ $max = @$_REQUEST['max'];
       </div>
       <form name="dates">
         <button onclick="window.location.href='?'; " type="button">Reset</button>
-        From <input name="from" size="4" value="<?php echo $from ?>"/>
-        to <input name="to" size="4" value="<?php echo  $to ?>"/>
+        De <input name="from" size="4" value="<?php echo $from ?>"/>
+        à <input name="to" size="4" value="<?php echo  $to ?>"/>
         Zoom
         <button type="button" onclick="var options = {}; var max = g.yAxisRange()[1] /1.5; options.valueRange = [ 0, max]; g.updateOptions(options); ">▼</button>
         <button type="button" onclick="var options = {}; var max = g.yAxisRange()[1] *1.5; options.valueRange = [ 0, max]; g.updateOptions(options); ">▲</button>
         <button type="submit">▶</button>
       </form>
     </header>
-    <div id="chart" class="dygraph" style="width:100%; height:550px;"></div>
+    <div id="chart" class="dygraph"></div>
     <script type="text/javascript">
     g = new Dygraph(
       document.getElementById("chart"),
@@ -59,7 +50,7 @@ $max = @$_REQUEST['max'];
 <?php
 // fre, eng, ger, ita, zxx ?, spa, lat, frm, ara, gre, chi
 // part des documents avec un langue
-$qlive = $db->prepare( "SELECT count(*) AS count FROM document WHERE date = ? AND type = 'Text' AND lang = 'fre' AND posthum IS NULL; " );
+$qlive = $db->prepare( "SELECT count(*) AS count FROM document WHERE date = ? AND type = 'Text' AND lang = 'fre' AND posthum != 1; " );
 $qant = $db->prepare( "SELECT count(*) AS count FROM document WHERE date = ? AND type = 'Text' AND posthum=1 AND birthyear < 150; " );
 $q500 = $db->prepare( "SELECT count(*) AS count FROM document WHERE date = ? AND type = 'Text' AND posthum=1 AND birthyear >= 150 AND birthyear < 1450; " );
 $q1450 = $db->prepare( "SELECT count(*) AS count FROM document WHERE date = ? AND type = 'Text' AND posthum=1 AND birthyear >= 1450 AND birthyear < 1600; " );
@@ -117,8 +108,7 @@ for ( $date=$from; $date <= $to; $date++ ) {
         rollPeriod: <?php echo $smooth ?>,
         legend: "always",
         strokeWidth: 1,
-        logscale: <?php echo $log ?>,
-        valueRange: [0, <?php echo $max ?>],
+        valueRange: [1, <?php echo $max ?>],
         stackedGraph: true,
         series: {
           "Antiquité": {
@@ -161,22 +151,51 @@ for ( $date=$from; $date <= $to; $date++ ) {
             includeZero: true,
           },
         },
+        underlayCallback: function(canvas, area, g) {
+          canvas.fillStyle = "rgba(192, 192, 192, 0.2)";
+          var periods = [ [1562,1598],[1648,1653], [1789,1794], [1814,1815], [1830,1831], [1848,1849], [1870,1871], [1914,1919], [1939,1945], [1979, 1981]];
+          var lim = periods.length;
+          for ( var i = 0; i < lim; i++ ) {
+            var bottom_left = g.toDomCoords( periods[i][0], -20 );
+            var top_right = g.toDomCoords( periods[i][1], +20 );
+            var left = bottom_left[0];
+            var right = top_right[0];
+            canvas.fillRect(left, area.y, right - left, area.h);
+          }
+        },
       }
     );
     g.ready(function() {
       g.setAnnotations([
-        { series: "Vivants", x: "1648", shortText: "La Fronde", width: "", height: "", cssClass: "ann", },
-        { series: "Vivants", x: "1789", shortText: "1789", width: "", height: "", cssClass: "ann", },
-        { series: "Vivants", x: "1815", shortText: "1815", width: "", height: "", cssClass: "ann", },
-        { series: "Vivants", x: "1830", shortText: "1830", width: "", height: "", cssClass: "ann", },
-        { series: "Vivants", x: "1848", shortText: "1848", width: "", height: "", cssClass: "ann", },
-        { series: "Vivants", x: "1870", shortText: "1870", width: "", height: "", cssClass: "ann", },
-        { series: "Vivants", x: "1914", shortText: "1914", width: "", height: "", cssClass: "ann", },
-        { series: "Vivants", x: "1939", shortText: "1939", width: "", height: "", cssClass: "ann", },
+        { series: "Vivants", x: "1562", shortText: "Guerres de Religion", width: "", height: "", cssClass: "annl", },
+        { series: "Vivants", x: "1648", shortText: "La Fronde", width: "", height: "", cssClass: "annl", },
+        { series: "Vivants", x: "1789", shortText: "1789", width: "", height: "", cssClass: "annl", },
+        { series: "Vivants", x: "1815", shortText: "1815", width: "", height: "", cssClass: "annl", },
+        { series: "Vivants", x: "1830", shortText: "1830", width: "", height: "", cssClass: "annl", },
+        { series: "Vivants", x: "1848", shortText: "1848", width: "", height: "", cssClass: "annl", },
+        { series: "Vivants", x: "1870", shortText: "1870", width: "", height: "", cssClass: "annl", },
+        { series: "Vivants", x: "1914", shortText: "1914", width: "", height: "", cssClass: "annl", },
+        { series: "Vivants", x: "1939", shortText: "1939", width: "", height: "", cssClass: "annl", },
+        { series: "Vivants", x: "1981", shortText: "Prix unique du livre", width: "", height: "", cssClass: "annl", },
       ]);
     });
     </script>
-    <p>Une fois stabilisé, le nombre de titres d’un siècle varie assez peu, c’est-à-dire que le nombre de documents attribués à un auteur du XVII<sup>e</sup> s. est relativement stable au XIX<sup>e</sup> et au XX<sup>e</sup> s, même si le nombre de titres publiés est 10 fois plus important. L‘espace supplémentaire est occupé par les nouveautés. La réédition des titres anciens est affectée par les guerres, comme les nouveautés, on observera le profil très particulier après 1945, où la réédition reprend beaucoup plus fort qu’après 1918, politique volontariste du Conceil National de la Résistance. Le pic de 1990 résulte du “Grand Récollement”, c’est-à-dire du déménagement de la bibliothèque nationale vers le site de Tolbiac, qui a permis de retrouver beaucoup de livres qui n’étaient pas encore ou mal catalogués.</p>
+    <div class="text">
+    <p>Ce graphique projette les titres à leur date de publication, en fonction de la date de naissance de l’auteur principal (il n’est pas souvent possible de connaître la date de publication originale de l’œuvre, par exemple pour un dialogue de Platon ou une intégrale de Voltaire). Le découpage en siècles est toujours un peu arbitraire, toutefois, la tradition des histoires littéraires s’accorde assez avec les événements traumatiques qui tranchent dans les générations, comme les guerres de Religion, la fin de règne de Louis XIV, la Révolution, ou la Grande-Guerre. Les dates sont ajustées pour ne pas séparer des auteurs que l’on a coutume de ranger ensemble, comme les Lumières ou les Romantiques. Le Moyen-Âge commence très tôt, afin d’y inclure les pères de l’Église, qui forment un ensemble cohérent encore maintenant pour les éditions catholiques.</p>
+
+    <ul>
+    <li>Antiquité, né avant 150 ;</li>
+    <li>Moyen-Âge, né entre 150 et 1450, à partir de Tertullien (155–222) ;</li>
+    <li>Renaissance, né entre 1450 et 1600, à partir de Machiavel (1469–1527) ;</li>
+    <li>XVIIe s., né entre 1600 et 1680, à partir de Corneille (1606–1684) ;</li>
+    <li>XVIIIe s., né entre 1680 et 1780, à partir de Marivaux (1688–1763) ;</li>
+    <li>XIXe s., né entre 1780 et 1880, à partir de Stendhal (1783–1842) ;</li>
+    <li>XXe s., né après 1880, à partir d’Apollinaire (1880–1918).</li>
+    </ul>
+
+    <p>
+    Une fois stabilisé, le nombre de titres d’un siècle varie assez peu, c’est-à-dire que le nombre de documents publiés d’un auteur du XVII<sup>e</sup> s. reste relativement stable au XIX<sup>e</sup> et au XX<sup>e</sup> s, même si le nombre d’autres titres publiés est 10 fois plus important. L‘espace supplémentaire est occupé par les nouveautés. La réédition des titres anciens est affectée par les guerres, comme les nouveautés, on observera le profil très particulier après 1945, où la réédition reprend beaucoup plus fort qu’après 1918, politique volontariste du Conceil National de la Résistance.</p>
+    </div>
     <?php include ( dirname(__FILE__).'/footer.php' ) ?>
   </body>
 </html>

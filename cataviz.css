@@ -5,6 +5,10 @@ header { margin-bottom: 1ex; }
 form { display: block; clear: both; }
 h1 { font-size: 130%; }
 a { text-decoration: none }
+sub, sup { font-size: 75%; height: 0; line-height: 0; position: relative; vertical-align: baseline; }
+sup { bottom: 1ex; }
+sub { top: .5ex; }
+div.text { max-width: 80ex; margin: 2em auto 1em auto; }
 a:hover { text-decoration: underline; }
 footer, nav.menu { white-space: nowrap; padding: 3px 1em 1px 1em; }
 footer { position: fixed; bottom: 0; left: 0; right: 0; border-top: 1px #CCC solid; color: #999; background-color: #FFFFFF; }
@@ -22,7 +26,7 @@ nav.top { margin: 0 2em 1em 0; }
 table.data { font-size: 10pt; }
 .even { background-color: #FFFFFF; }
 
-#chart { font-family: sans-serif; background-color: #FFFFFF; padding-bottom: 1em; }
+#chart { font-family: sans-serif; background-color: #FFFFFF; padding-bottom: 1em; width:100%; height:80%; }
 .editions .gridy { border-left: 1px #CCCCCC dotted; position: absolute; height: 100%; top: 10px; }
 .editions .year { font-size: 10px; position: absolute; transform:  translateX(-50%); }
 .editions .title { text-align: right; display: inline-block; padding-right: 1ex; }
@@ -33,6 +37,15 @@ table.data { font-size: 10pt; }
 .dygraph-axis-label-x { font-size: 16pt; }
 .dygraph-label { font-size: 18pt; font-weight: bold; color: #888; }
 .ann { color: rgba( 0, 0, 0, 0.4) !important; text-shadow: 1px 1px 1px #FFF, -1px 1px 1px #FFF;  font-size: 20px !important; font-weight: bold; border: none !important; border-left: 2px solid #000 !important; line-height: 1em; background-color: rgba(255, 255, 255, 0.1) !important; }
+/* Annotation verticale */
+.annv { transform: rotateZ(-90deg); transform-origin: 0% 100%; padding-left: 1em; border: none !important; border-bottom: 1px solid #000 !important; font-size: 16pt !important; font-weight: normal; color: rgba( 0, 0, 0, 0.8) !important; background-color: rgba(255, 255, 255, 0.1) !important; }
+/* Annotation étiquette */
+.annl { font-size: 16pt !important; background-color: rgba(255, 255, 255, 0.7) !important; border: none !important; border-left: 3px solid #000 !important; padding: 0 0.5ex 0 0.2ex; color: rgba( 0, 0, 0, 0.8) !important; }
+/* Annotation 45° */
+.ann45 { transform: rotateZ(45deg); transform-origin: 10% 50%; padding: 0 0.5ex 0 0.5ex; border: none !important; border-bottom: 1px solid #000 !important; font-size: 14pt !important; font-weight: normal; background-color: rgba(255, 255, 255, 0.7); }
+.ann-45 { transform: rotateZ(-45deg); transform-origin: -1em 50%; padding: 0 0.5ex 0 0.5ex; border: none !important; border-bottom: 1px solid #000 !important; font-size: 14pt !important; font-weight: normal; background-color: rgba(255, 255, 255, 0.7); }
+
+
 .logo { position: absolute; top: 2px; right: 2px; }
 #perslist { position: absolute; visibility: hidden; display: block; z-index: 99; background-color: #FFFFFF; margin-left: 5rem; padding: 0;}
 form input, form select, form button { font-size: 14pt; outline: 0; }
