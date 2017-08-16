@@ -15,7 +15,7 @@ $db = new Cataviz( "databnf.sqlite" );
     <link rel="stylesheet" type="text/css" href="lib/dygraph.css"/>
     <link rel="stylesheet" type="text/css" href="cataviz.css"/>
     <style>
-.dygraph-legend { left: 20% !important; }
+.dygraph-legend { left: 8% !important; }
 .ann { transform: rotateZ(-90deg); transform-origin: 0% 100%; padding-left: 1em; border-left: none !important; border-bottom: 1px solid #000 !important; font-size: 16pt !important; font-weight: bold; color: rgba( 0, 0, 0, 0.8) !important; }
     </style>
   </head>
@@ -166,16 +166,19 @@ for ( $i=0; $i < $size; $i++ ) {
         { series: "Moy. pages Paris", x: "1815", shortText: "1815", width: "", height: "", cssClass: "ann", },
         { series: "Moy. pages Paris", x: "1830", shortText: "1830", width: "", height: "", cssClass: "ann", },
         { series: "Moy. pages Paris", x: "1848", shortText: "1848", width: "", height: "", cssClass: "ann", },
+        { series: "Moy. pages ailleurs", x: "1880", shortText: "1880, périodiques à l’Arsenal", width: "", height: "", cssClass: "annl", },
         { series: "Moy. pages Paris", x: "1870", shortText: "1870", width: "", height: "", cssClass: "ann", },
-        { series: "Moy. pages Paris", x: "1914", shortText: "1914", width: "", height: "", cssClass: "ann", },
+        { series: "Moy. pages ailleurs", x: "1914", shortText: "1914", width: "", height: "", cssClass: "ann", },
         { series: "Moy. pages Paris", x: "1939", shortText: "1939", width: "", height: "", cssClass: "ann", },
         { series: "Moy. pages Paris", x: "1968", shortText: "1968", width: "", height: "", cssClass: "ann", },
       ]);
     });
     </script>
-    <p>Les livres ont souvent un lieu d’édition, du moins, depuis la Révolution. Durant l’Ancien-Régime, les lieux indiqués sur les pages de titres ne sont pas très fiables, aussi les statisques commencent à valoir pour le XIX<sup>e</sup> et XX<sup>e</sup> s. Les titres en français sont massivement publiés à Paris. Les villes de Province publient non seulement moins, mais des documents avec moins de pages. Les capitales francophones, Bruxelles, Genève, puis Montréal, publient certes moins, mais peuvent au moins rivaliser avec Paris par le nombre de pages moyen. Dans ce contexte, les variations de la capitale, ainsi que des lieux inconnus, sont des indicateurs historiques, sur la centralisation et l’impact des événements. Ainsi, il résulte de la <a href="?from=1760&to=1860">Révolution</a> une régularisation et une concentration de l’édition à Paris. Les <a href="?from=1860&to=1960">guerres</a> affectent le nombre de pages, mais beaucoup plus à Paris qu’ailleurs, sauf pendant la Grande-Guerre, où Lille et Bruxelles sont occupées. La <a href="?from=1945&to=2020">période actuelle</a> se caractérise par une baisse de Paris qui tient moins à la déconcentration qu’à l’apparition de nouvelles places éditoriales, comme Arles (Actes Sud, Honoré Clair, Philippe Picquier), ou l’université de Grenoble, ainsi qu’au déménagement d’éditeurs parisiens en banlieue. Le nombre de pages moyen hors Paris reste inférieur.
+    <div class="text">
+      <p>Les livres ont souvent un lieu d’édition, du moins, depuis la Révolution. Durant l’Ancien-Régime, les lieux indiqués sur les pages de titres ne sont pas très fiables, aussi les statisques commencent à valoir pour le XIX<sup>e</sup> et XX<sup>e</sup> s. Les titres en français sont massivement publiés à Paris. Les villes de Province publient non seulement moins, mais des documents avec moins de pages. Les capitales francophones, Bruxelles, Genève, puis Montréal, publient certes moins, mais peuvent au moins rivaliser avec Paris par le nombre de pages moyen. Dans ce contexte, les variations de la capitale, ainsi que des lieux inconnus, sont des indicateurs historiques, sur la centralisation et l’impact des événements. Ainsi, il résulte de la <a href="?from=1760&to=1860">Révolution</a> une régularisation et une concentration de l’édition à Paris. Les <a href="?from=1860&to=1960">guerres</a> affectent le nombre de pages, particulièrement à Paris, sauf pendant la Grande-Guerre, où Lille et Bruxelles sont occupées, ce qui élève la part de Paris. L’incident 1880 s’explique par la <a href="http://gallica.bnf.fr/ark:/12148/bpt6k63740997/f619.image">création</a> d’un département des périodiques à la bibliothèque de l’Arsenal, qui devient la destination de feuilles provinciales qui entraient jusqu’ici au dépôt légal normal, ce qui baisse le nombre de titres pour la Province, mais élève le nombre de pages moyen. D’autres incidents s’expliquent peuvent s’expliquer par la baisse de qualité des notices (1906–1914). La <a href="?from=1945&to=2020">période actuelle</a> se caractérise par une baisse de Paris qui tient moins à la déconcentration qu’à l’apparition de nouvelles places éditoriales, comme Arles (Actes Sud, Honoré Clair, Philippe Picquier), ou l’université de Grenoble, ainsi qu’au déménagement d’éditeurs parisiens en banlieue. Le nombre de pages moyen hors Paris reste inférieur.
 
-    </p>
+      </p>
+    </div>
     <?php include ( dirname(__FILE__).'/footer.php' ) ?>
   </body>
 </html>

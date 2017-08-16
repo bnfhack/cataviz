@@ -50,14 +50,14 @@ $max = @$_REQUEST['max'];
 <?php
 // fre, eng, ger, ita, zxx ?, spa, lat, frm, ara, gre, chi
 // part des documents avec un langue
-$qlive = $db->prepare( "SELECT count(*) AS count FROM document WHERE date = ? AND type = 'Text' AND lang = 'fre' AND posthum != 1; " );
-$qant = $db->prepare( "SELECT count(*) AS count FROM document WHERE date = ? AND type = 'Text' AND posthum=1 AND birthyear < 150; " );
-$q500 = $db->prepare( "SELECT count(*) AS count FROM document WHERE date = ? AND type = 'Text' AND posthum=1 AND birthyear >= 150 AND birthyear < 1450; " );
-$q1450 = $db->prepare( "SELECT count(*) AS count FROM document WHERE date = ? AND type = 'Text' AND posthum=1 AND birthyear >= 1450 AND birthyear < 1600; " );
-$q1600 = $db->prepare( "SELECT count(*) AS count FROM document WHERE date = ? AND type = 'Text' AND lang = 'fre' AND posthum=1 AND birthyear >= 1600 AND birthyear < 1680; " );
-$q1690 = $db->prepare( "SELECT count(*) AS count FROM document WHERE date = ? AND type = 'Text' AND lang = 'fre' AND posthum=1 AND birthyear >= 1680 AND birthyear < 1780; " );
-$q1780 = $db->prepare( "SELECT count(*) AS count FROM document WHERE date = ? AND type = 'Text' AND lang = 'fre' AND posthum=1 AND birthyear >= 1780 AND birthyear < 1880; " );
-$q1880 = $db->prepare( "SELECT count(*) AS count FROM document WHERE date = ? AND type = 'Text' AND lang = 'fre' AND posthum=1 AND birthyear >= 1880 ; " );
+$qlive = $db->prepare( "SELECT count(*) AS count FROM document WHERE date = ? AND book = 1 AND lang = 'fre' AND posthum != 1; " );
+$qant = $db->prepare( "SELECT count(*) AS count FROM document WHERE date = ? AND book = 1 AND posthum=1 AND birthyear < 150; " );
+$q500 = $db->prepare( "SELECT count(*) AS count FROM document WHERE date = ? AND book = 1 AND posthum=1 AND birthyear >= 150 AND birthyear < 1450; " );
+$q1450 = $db->prepare( "SELECT count(*) AS count FROM document WHERE date = ? AND book = 1 AND posthum=1 AND birthyear >= 1450 AND birthyear < 1600; " );
+$q1600 = $db->prepare( "SELECT count(*) AS count FROM document WHERE date = ? AND book = 1 AND lang = 'fre' AND posthum=1 AND birthyear >= 1600 AND birthyear < 1680; " );
+$q1690 = $db->prepare( "SELECT count(*) AS count FROM document WHERE date = ? AND book = 1 AND lang = 'fre' AND posthum=1 AND birthyear >= 1680 AND birthyear < 1780; " );
+$q1780 = $db->prepare( "SELECT count(*) AS count FROM document WHERE date = ? AND book = 1 AND lang = 'fre' AND posthum=1 AND birthyear >= 1780 AND birthyear < 1880; " );
+$q1880 = $db->prepare( "SELECT count(*) AS count FROM document WHERE date = ? AND book = 1 AND lang = 'fre' AND posthum=1 AND birthyear >= 1880 ; " );
 
 for ( $date=$from; $date <= $to; $date++ ) {
 

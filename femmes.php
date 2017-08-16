@@ -27,10 +27,10 @@ $db = new Cataviz( "databnf.sqlite" );
     <?php include ( dirname(__FILE__).'/menu.php' ) ?>
     <header>
       <div class="links">
-        <a href="?">Livres de femmes</a> :
-        <a href="?from=1600&amp;to=1788&amp;smooth=8">1600–1789</a>,
-        <a href="?from=1760&amp;to=1960">1760–1960 guerres et révolutions</a>,
-        <a href="?from=1910&amp;to=2015">XX<sup>e</sup></a>.
+        <a href="?">Livres de femmes</a>
+        | <a href="?from=1600&amp;to=1788&amp;smooth=8">1600–1789</a>
+        | <a href="?from=1760&amp;to=1960">1760–1960 guerres et révolutions</a>
+        | <a href="?from=1910&amp;to=2015">XX<sup>e</sup></a>.
       </div>
       <form name="dates">
         <button onclick="window.location.href='?'; " type="button">Reset</button>
@@ -114,8 +114,8 @@ for ( $date=$from; $date <= $to; $date++ ) {
         },
         axes: {
           x: {
-            gridLineWidth: 2,
-            drawGrid: false,
+            gridLineWidth: 1,
+            drawGrid: true,
             independentTicks: true,
           },
           y: {
@@ -154,8 +154,8 @@ for ( $date=$from; $date <= $to; $date++ ) {
         { series: "% des femmes", x: "1830", shortText: "1830", width: "", height: "", cssClass: "ann", },
         { series: "% des femmes", x: "1848", shortText: "1848", width: "", height: "", cssClass: "ann", },
         { series: "% des femmes", x: "1870", shortText: "1870", width: "", height: "", cssClass: "ann", },
-        { series: "% des femmes", x: "1914", shortText: "1914", width: "", height: "", cssClass: "ann", },
-        { series: "% des femmes", x: "1939", shortText: "1939", width: "", height: "", cssClass: "ann", },
+        // { series: "% des femmes", x: "1914", shortText: "1914", width: "", height: "", cssClass: "ann", },
+        // { series: "% des femmes", x: "1939", shortText: "1939", width: "", height: "", cssClass: "ann", },
       ]);
     });
     var linear = document.getElementById("linear");

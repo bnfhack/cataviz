@@ -59,23 +59,23 @@ $qcount = $db->prepare( "SELECT count(*) FROM person WHERE fr = 1 AND deathyear 
 
 for ( $date=$from; $date <= $to; $date++ ) {
 
-  $sigma = 10;
-  if ( $date > 1600 ) $sigma = 5;
-  if ( $date > 1700 ) $sigma = 4;
-  if ( $date > 1789 ) $sigma = 3;
-  if ( $date > 1900 ) $sigma = 2;
-  if ( isset( $guerres[$date] ) ) $sigma = 0;
-  echo "// $sigma \n";
+  $delta = 10;
+  if ( $date > 1600 ) $delta = 5;
+  if ( $date > 1700 ) $delta = 4;
+  if ( $date > 1789 ) $delta = 3;
+  if ( $date > 1900 ) $delta = 2;
+  if ( isset( $guerres[$date] ) ) $delta = 0;
+  echo "// $delta \n";
 
-  $qcount->execute( array( $date-$sigma, $date+$sigma ) );
+  $qcount->execute( array( $date-$delta, $date+$delta ) );
   list( $count ) = $qcount->fetch( PDO::FETCH_NUM );
-  $count = $count/(1+2*$sigma);
+  $count = $count/(1+2*$delta);
 
-  $qmage->execute( array( $date-$sigma, $date+$sigma ) );
+  $qmage->execute( array( $date-$delta, $date+$delta ) );
   list( $mage ) = $qmage->fetch( PDO::FETCH_NUM );
 
-  $sigma = floor( 3 * $sigma );
-  $qfage->execute( array( $date-$sigma, $date+$sigma ) );
+  $delta = floor( 3 * $delta );
+  $qfage->execute( array( $date-$delta, $date+$delta ) );
   list( $fage ) = $qfage->fetch( PDO::FETCH_NUM );
 
 

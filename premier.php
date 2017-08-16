@@ -36,7 +36,7 @@ if ( isset( $_REQUEST['base100'] ) && $_REQUEST['base100'] >= $from && $_REQUEST
         <button onclick="window.location.href='?'; " type="button">Reset</button>
         De <input name="from" size="4" value="<?php echo $from ?>"/>
         à <input name="to" size="4" value="<?php echo  $to ?>"/>
-        Base 100 <input name="base100" size="4" value="<?php echo $base100 ?>"/>
+        Base 100 en <input name="base100" size="4" value="<?php echo $base100 ?>"/>
         Échelle
         <button id="log" <?php if( $log ) echo'disabled="true"';?> type="button">log</button>
         <button id="linear" <?php if( !$log ) echo'disabled="true"';?> type="button">linéaire</button>
@@ -210,10 +210,9 @@ for ( $date=$from; $date <= $to; $date++ ) {
         },
         axes: {
           x: {
-            gridLineWidth: 2,
-            drawGrid: false,
-            gridLineColor: "rgba( 128, 128, 128, 0.3)",
             gridLineWidth: 1,
+            drawGrid: true,
+            gridLineColor: "rgba( 128, 128, 128, 0.3)",
             independentTicks: true,
           },
           y: {

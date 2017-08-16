@@ -27,7 +27,7 @@ $db = new Cataviz( "databnf.sqlite" );
       <div class="links">
         <a href="?">Natalité des auteurs francophones</a>
         | <a href="?from=1500&amp;to=1990&amp;log=true">5 siècles</a>
-        | <a href="?from=1690&amp;to=1820">Révolution</a> 
+        | <a href="?from=1690&amp;to=1820&amp;log=false">Révolution</a> 
         | <a href="?from=1840&amp;to=1950&amp;log=true">Grande-Guerre</a> 
       </div>
       <form name="dates">
@@ -167,7 +167,7 @@ for ( $date=$from; $date <= $to; $date++ ) {
         { series: "% femmes", x: "1870", shortText: "1870", width: "", height: "", cssClass: "annl", },
         { series: "Femmes", x: "1879", shortText: "1879, lois enseignement", width: "", height: "", cssClass: "annl", },
         { series: "% femmes", x: "1914", shortText: "1914", width: "", height: "", cssClass: "annl", },
-        { series: "% femmes", x: "1939", shortText: "1939 ", width: "", height: "", cssClass: "annl", },
+        { series: "% femmes", x: "1939", shortText: "1939", width: "", height: "", cssClass: "annl", },
 
       ]);
     });
