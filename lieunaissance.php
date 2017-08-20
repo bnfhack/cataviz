@@ -24,7 +24,7 @@ if ( !$books ) $books = 10;
     <?php include ( dirname(__FILE__).'/menu.php' ) ?>
     <header>
       <div class="links">
-        <a href="" target="_new">Lieux de naissance</a>
+        <a href="?">Lieux de naissance</a>
         | <a href="?from=1760&amp;to=1860">Révolution</a> 
         | <a href="?from=1900&amp;to=1960">Guerres mondiales</a> 
       </div>

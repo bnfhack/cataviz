@@ -9,12 +9,13 @@ if ( isset( $persark ) && $persark ) $_l=$persark;
   | <a href="mortalite.php?from=<?=$from?>&amp;to=<?=$to?>&amp;log=<?=$log?>" title="Mortalité et longévité des auteurs, ration sexuel">Mortalité</a>
   | <a href="natalite.php?from=<?=$from?>&amp;to=<?=$to?>&amp;log=<?=$log?>" title="Natalité des auteurs à leur date de naissance, ratio sexuel">Natalité</a>
   | <a href="generations.php?from=<?=$from?>&amp;to=<?=$to?>" title="Génération des auteurs à la date de publication">Générations</a>
+  | <a href="ages.php?from=<?=$from?>&amp;to=<?=$to?>" title="Répartition des auteurs à la date de publication">Âges</a>
   | <a href="femmes.php?from=<?=$from?>&amp;to=<?=$to?>&amp;log=<?=$log?>" title="Proportion des titres écrits par des femmes">Livres de femmes</a>
-  | <a href="siecles.php?from=<?=$from?>&amp;to=<?=$to?>&amp;log=<?=$log?>" title="Rééditions selon le siècle de naissance de l’auteur">Siècles</a>
 <span class="plus">
     <b>+</b>
     <a href="lieumort.php?from=<?=$from?>&amp;to=<?=$to?>" title="Âge et lieu de mort (Paris/Ailleurs), à la date de mort.">Lieux de mort</a>
     <a href="lieunaissance.php?from=<?=$from?>&amp;to=<?=$to?>" title="Lieux de naissance (Paris/Ailleurs), à la date du premier livre.">Lieux de naissance</a>
+    <a href="siecles.php?from=<?=$from?>&amp;to=<?=$to?>&amp;log=<?=$log?>" title="Rééditions selon le siècle de naissance de l’auteur">Siècles</a>
     <a href="premier.php?from=<?=$from?>&amp;to=<?=$to?>&amp;log=<?=$log?>" title="Âge moyen à la publication et au premeir livre">Âge à la publication</a>
     <a href="antiq.php?from=<?=$from?>&amp;to=<?=$to?>" title="Langues anciennes et traductions classiques">Antiquité</a>
     <a href="auteur.php?persark=<?php echo $_l; ?>" title="Chronologie bibliographique pour un auteur">Auteur</a>

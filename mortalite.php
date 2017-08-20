@@ -3,6 +3,12 @@ $from = 1760;
 $to = 1960;
 include ( dirname(__FILE__).'/Cataviz.php' );
 $db = new Cataviz( "databnf.sqlite" );
+if ( !isset( $_REQUEST['books'] ) ) $books = 10;
+else $books = $_REQUEST['books'];
+if ( !$books || $books < 0 ) $books = 0;
+$gender = @$_REQUEST['gender'];
+if ( $gender != 1 && $gender != 2 ) $gender = null;
+
 
 ?><!DOCTYPE html>
 <html>
@@ -13,10 +19,7 @@ $db = new Cataviz( "databnf.sqlite" );
     <link rel="stylesheet" type="text/css" href="lib/dygraph.css"/>
     <link rel="stylesheet" type="text/css" href="cataviz.css"/>
     <style>
-    .dygraph-legend { left: 7% !important; top: 0.5em !important; }
-    .dygraph-axis-label-y2 { color: rgba( 192, 128, 192, 1 ); }
-    .dygraph-y2label { color: rgba( 192, 128, 192, 1 ); }
-    .ann { transform: rotateZ(-45deg); transform-origin: 10% 50%; padding-left: 1em; border-left: none !important; border-bottom: 1px solid #000 !important; font-size: 14pt !important; font-weight: normal; }
+    .dygraph-legend { left: 65px !important; top: 40px !important; width: 22ex !important; }
     </style>
   </head>
   <body>
@@ -24,18 +27,26 @@ $db = new Cataviz( "databnf.sqlite" );
     <header>
       <div class="links">
         <a href="" target="_new">Auteurs français, mortalité et longévité</a> 
-        | <a href="?from=1500&amp;to=2015">5 siècles</a>
+        | <a href="?from=1600&amp;to=2015&amp;log=1">4 siècles</a>
         | <a href="?from=1760&amp;to=1860">Révolutions</a>
         | <a href="?from=1860&amp;to=2020&amp;log=1">XX<sup>e</sup></a>
       </div>
       <form name="dates">
+        <button onclick="window.location.href='?'; " type="button">Reset</button>
         De <input name="from" size="4" value="<?php echo $from ?>"/>
         à <input name="to" size="4" value="<?php echo  $to ?>"/>
+        <label>Sexe
+          <select name="gender" onchange="this.form.submit()">
+            <option value=""/>
+            <option value="2" <?php if ($gender==2) echo ' selected="selected"' ?>>Femmes</option>
+            <option value="1" <?php if ($gender==1) echo ' selected="selected"' ?>>Hommes</option>
+          </select>
+        </label>
+        <label title="Nombre de livre minimum que doit avoir signé l’auteur">Seuil livres <input name="books" size="4" value="<?php echo $books ?>"/></label>
         Échelle
         <button id="log" <?php if( $log ) echo'disabled="true"';?> type="button">log</button>
         <button id="linear" <?php if( !$log ) echo'disabled="true"';?> type="button">linéaire</button>
         <button type="submit">▶</button>
-        <button onclick="window.location.href='?'; " type="button">Reset</button>
       </form>
     </header>
     <div id="chart" class="dygraph"></div>
@@ -46,94 +57,111 @@ $db = new Cataviz( "databnf.sqlite" );
 <?php
 
 // pas de moyenne pour ces dates
-$guerres = [ 1788, 1789, 1790, 1791, 1792, 1793, 1794,  1869, 1870, 1871, 1872,1913, 1914, 1915, 1916, 1917, 1918, 1919, 1939, 1940, 1941, 1942, 1943, 1944, 1945, 1946 ];
+$guerres = [ 1789, 1790, 1791, 1792, 1793, 1794,  1870, 1871, 1914, 1915, 1916, 1917, 1918, 1939, 1940, 1941, 1942, 1943, 1944, 1945 ];
 $guerres = array_flip( $guerres );
 
-$qfage = $db->prepare( "SELECT avg(age) FROM person WHERE fr = 1 AND gender = 2 AND deathyear >= ? AND deathyear <= ? " );
-// $qfcount = $db->prepare( "SELECT count(*) FROM person WHERE fr = 1 AND gender = 2 AND deathyear >= ? AND deathyear <= ? " );
+if ( $gender ) {
+  $docsq = $db->prepare( "SELECT count(*), avg(age) FROM person WHERE fr = 1 AND deathyear >= ? AND deathyear <= ? AND gender = ?" );
+  $booksq = $db->prepare( "SELECT count(*), avg(age) FROM person WHERE fr = 1 AND deathyear >= ? AND deathyear <= ? AND books > ? AND gender = ? " );
+}
+else {
+  $docsq = $db->prepare( "SELECT count(*), avg(age) FROM person WHERE fr = 1 AND deathyear >= ? AND deathyear <= ?" );
+  $booksq = $db->prepare( "SELECT count(*), avg(age) FROM person WHERE fr = 1 AND deathyear >= ? AND deathyear <= ? AND books > ?" );
+}
 
-$qmage = $db->prepare( "SELECT avg(age) FROM person WHERE fr = 1 AND gender = 1 AND deathyear >= ? AND deathyear <= ? " );
-// $qmcount = $db->prepare( "SELECT count(*) FROM person WHERE fr = 1 AND gender = 1 AND deathyear >= ? AND deathyear <= ? " );
-
-$qcount = $db->prepare( "SELECT count(*) FROM person WHERE fr = 1 AND deathyear >= ? AND deathyear <= ? " );
-
+$lastagebooks = 50;
 for ( $date=$from; $date <= $to; $date++ ) {
 
-  $delta = 10;
-  if ( $date > 1600 ) $delta = 5;
-  if ( $date > 1700 ) $delta = 4;
-  if ( $date > 1789 ) $delta = 3;
-  if ( $date > 1900 ) $delta = 2;
-  if ( isset( $guerres[$date] ) ) $delta = 0;
-  echo "// $delta \n";
+  if ( $gender == 2 ) {
+    $delta = 10;
+    if ( $date >= 1600 ) $delta = 6;
+    if ( $date >= 1700 ) $delta = 5;
+    if ( $date >= 1789 ) $delta = 4;
+    if ( $date >= 1900 ) $delta = 3;
+    if ( isset( $guerres[$date] ) ) $delta = 0;
+  }
+  else {
+    $delta = 5;
+    if ( $date >= 1600 ) $delta = 4;
+    if ( $date >= 1700 ) $delta = 3;
+    if ( $date >= 1789 ) $delta = 2;
+    if ( $date >= 1900 ) $delta = 1;
+    if ( isset( $guerres[$date] ) ) $delta = 0;
+  }
 
-  $qcount->execute( array( $date-$delta, $date+$delta ) );
-  list( $count ) = $qcount->fetch( PDO::FETCH_NUM );
-  $count = $count/(1+2*$delta);
-
-  $qmage->execute( array( $date-$delta, $date+$delta ) );
-  list( $mage ) = $qmage->fetch( PDO::FETCH_NUM );
-
-  $delta = floor( 3 * $delta );
-  $qfage->execute( array( $date-$delta, $date+$delta ) );
-  list( $fage ) = $qfage->fetch( PDO::FETCH_NUM );
-
+  $countdocs = $agedocs = 0;
+  if ( $gender ) $docsq->execute( array( $date-$delta, $date+$delta, $gender ) );
+  else $docsq->execute( array( $date-$delta, $date+$delta ) );
+  list ( $countdocs, $agedocs ) = $docsq->fetch( PDO::FETCH_NUM );
+  $countdocs = $countdocs/(1+2*$delta);
+  if ( $books ) {
+    $countbooks = $agebooks = 0;
+    if ( $gender == 2 ) $delta = 1+$delta;
+    if ( $gender ) $booksq->execute( array( $date-$delta, $date+$delta, $books, $gender ) );
+    else $booksq->execute( array( $date-$delta, $date+$delta, $books ) );
+    list ( $countbooks, $agebooks ) = $booksq->fetch( PDO::FETCH_NUM );
+    $countbooks = $countbooks/(1+2*$delta);
+    if ( !$agebooks ) $agebooks = $lastagebooks;
+    else $lastagebooks = $agebooks;
+  }
 
   echo "[".$date;
-  if ( !$fage ) echo ",";
-  else echo ",". number_format( $fage, 2, '.', '');
-  echo ",". number_format( $mage, 2, '.', '');
-  echo ",". number_format( $count, 2, '.', '');
+  echo ",". number_format( $countdocs, 2, '.', '');
+  echo ",". number_format( $agedocs, 2, '.', '');
+  if ( $books ) {
+    echo ",". number_format( $countbooks, 2, '.', '');
+    echo ",". number_format( $agebooks, 2, '.', '');
+  }
   echo "],\n";
 }
        ?>],
       {
-        labels: [ "Année", "♀ longévité", "♂ longévité", "Morts" ],
+        title : "Databnf<?php if( $gender == 1) { echo ", hommes"; } else if( $gender == 2) { echo ", femmes"; } ?>, mortalité — effectifs et âge à la date de mort",
+        titleHeight: 35,
+        labels: [ "Année",
+          "Morts", "Âge", <?php if ($books) echo " \"Morts > $books livres\", \"Âge > $books livres\", "?>
+        ],
         legend: "always",
         labelsSeparateLines: "true",
-        ylabel: "Âge à la mort",
-        y2label: "Nombre de morts",
-        showRoller: true,
-        rollPeriod: <?php echo $smooth ?>,
+        ylabel: "Nombre de morts",
+        y2label: "Âge à la mort",
+        // showRoller: true,
+        // rollPeriod: <?php echo $smooth ?>,
         <?php if ($log) echo "logscale: true,";  ?>
         series: {
-          "♀ longévité": {
-            color: "rgba( 255, 128, 128, 0.7 )",
-            strokeWidth: 4,
-          },
-          "♂ longévité": {
-            color: "rgba( 0, 0, 192, 0.7 )",
-            strokeWidth: 4,
-          },
           "Morts": {
-            axis: 'y2',
-            color: "rgba( 128, 128, 128, 1 )",
+            color: "rgba( 128, 192, 0, 0.7 )",
             fillGraph: true,
-            strokeWidth: 2,
+            strokePattern: [4,4],
+            strokeWidth: 0.5,
           },
-          "♂ morts": {
+          "Âge": {
             axis: 'y2',
-            color: "rgba( 0, 0, 192, 1 )",
-            fillGraph: true,
-            strokeWidth: 1,
+            color: "rgba( 128, 192, 0, 0.7 )",
+            strokeWidth: 4,
           },
-          "♀ morts": {
-            axis: 'y2',
-            color: "rgba( 255, 128, 128, 1 )",
-            strokeWidth: 1,
+          "Morts > <?=$books?> livres" : {
+            color: "rgba( 0, 128, 0, 0.7 )",
             fillGraph: true,
+            strokePattern: [4,4],
+            strokeWidth: 0.5,
+          },
+          "Âge > <?=$books?> livres" : {
+            color: "rgba( 0, 128, 0, 0.7 )",
+            strokeWidth: 4,
+            axis: 'y2',
           },
         },
         axes: {
           x: {
-            drawGrid: false,
+            drawGrid: true,
             independentTicks: true,
             gridLineColor: "rgba( 128, 128, 128, 0.5)",
-            gridLineWidth: 1,
+            gridLineWidth: 0.5,
           },
           y: {
             independentTicks: true,
-            drawGrid: true,
+            drawGrid: false,
             gridLineColor: "rgba( 128, 128, 128, 0.5)",
             gridLineWidth: 1,
           },
@@ -145,7 +173,7 @@ for ( $date=$from; $date <= $to; $date++ ) {
           },
         },
         underlayCallback: function(canvas, area, g) {
-          canvas.fillStyle = "rgba(255, 128, 0, 0.1)";
+          canvas.fillStyle = "rgba(192, 192, 192, 0.2)";
           var periods = [ [1789,1794], [1814,1815], [1830,1831], [1848,1849], [1870,1871], [1914,1918], [1939,1945]];
           var lim = periods.length;
           for ( var i = 0; i < lim; i++ ) {
@@ -160,14 +188,14 @@ for ( $date=$from; $date <= $to; $date++ ) {
     );
     g.ready(function() {
       g.setAnnotations([
-        { series: "Morts", x: "1648", shortText: "La Fronde", width: "", height: "", cssClass: "annv", },
-        { series: "Morts", x: "1789", shortText: "1789", width: "", height: "", cssClass: "annv", },
-        { series: "Morts", x: "1815", shortText: "1815", width: "", height: "", cssClass: "annv", },
-        { series: "Morts", x: "1830", shortText: "1830", width: "", height: "", cssClass: "annv", },
-        { series: "Morts", x: "1848", shortText: "1848", width: "", height: "", cssClass: "annv", },
-        { series: "Morts", x: "1870", shortText: "1870", width: "", height: "", cssClass: "annv", },
-        { series: "Morts", x: "1914", shortText: "1914", width: "", height: "", cssClass: "annv", },
-        { series: "Morts", x: "1939", shortText: "1939", width: "", height: "", cssClass: "annv", },
+        { series: "Morts", x: "1648", shortText: "La Fronde", width: "", height: "", cssClass: "annl", },
+        { series: "Morts", x: "1789", shortText: "1789", width: "", height: "", cssClass: "annl", },
+        { series: "Morts", x: "1815", shortText: "1815", width: "", height: "", cssClass: "annl", },
+        { series: "Morts", x: "1830", shortText: "1830", width: "", height: "", cssClass: "annl", },
+        { series: "Morts", x: "1848", shortText: "1848", width: "", height: "", cssClass: "annl", },
+        { series: "Morts", x: "1870", shortText: "1870", width: "", height: "", cssClass: "annl", },
+        { series: "Morts", x: "1914", shortText: "1914", width: "", height: "", cssClass: "annl", },
+        { series: "Morts", x: "1939", shortText: "1939", width: "", height: "", cssClass: "annl", },
       ]);
     });
     var linear = document.getElementById("linear");

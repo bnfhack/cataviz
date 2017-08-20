@@ -17,10 +17,7 @@ if ( isset( $_REQUEST['base100'] ) && $_REQUEST['base100'] >= $from && $_REQUEST
     <link rel="stylesheet" type="text/css" href="lib/dygraph.css"/>
     <link rel="stylesheet" type="text/css" href="cataviz.css"/>
     <style>
-    .dygraph-legend { left: 8% !important; top: 0.5em !important; }
-    .dygraph-ylabel { color: rgba( 0, 0, 0, 0.7 ); font-weight: normal; }
-    .dygraph-axis-label-y2 { color: rgba( 192, 128, 160, 0.9 ); }
-    .dygraph-y2label { color: rgba( 192, 128, 160, 0.6 ); }
+    .dygraph-legend { left: 8% !important; top: 40px !important;  }
     </style>
   </head>
   <body>
@@ -123,89 +120,52 @@ for ( $date=$from; $date <= $to; $date++ ) {
 }
        ?>],
       {
-        labels: [ "Année", "♀ Âge à la publication", "♀ Âge au premier livre", "♀ Titres", "♂ Âge à la publication", "♂ Âge au premier livre", "♂ Titres" ],
+        title : "Databnf, âges moyens à la date de publication (livres, base 100 en <?=$base100?>).",
+        titleHeight: 35,
+        labels: [ "Année", "♀ Âge à la publication", "♀ Âge au premier livre", "♀ Livres", "♂ Âge à la publication", "♂ Âge au premier livre", "♂ Livres" ],
         legend: "always",
         labelsSeparateLines: "true",
-        y2label: "Âge moyen",
-        ylabel: "Indice 100 en <?=$base100?>",
+        ylabel: "Âge moyen",
+        y2label: "Base 100 en <?=$base100?>",
         showRoller: true,
         rollPeriod: <?php echo $smooth ?>,
         <?php if ($log) echo "logscale: 'true',\n";  ?>
         series: {
           "♀ Âge à la publication": {
-            axis: 'y2',
-            color: "rgba( 255, 192, 192, 1 )",
-            strokeWidth: 1,
+            axis: 'y',
+            color: "rgba( 255, 128, 128, 0.5 )",
+            strokeWidth: 2,
             fillGraph: true,
           },
           "♀ Âge au premier livre": {
+            axis: 'y',
+            color: "rgba( 255, 128, 128, 1 )",
+            fillGraph: true,
+            strokeWidth: 0.5,
+          },
+          "♀ Livres": {
             axis: 'y2',
-            color: "rgba( 255, 192, 192, 1 )",
+            color: "rgba( 255, 0, 0, 0.7 )",
             strokeWidth: 3,
             strokePattern: [5,3],
           },
-          "♀ Titres": {
-            axis: 'y',
-            color: "rgba( 255, 128, 128, 1 )",
-            strokeWidth: 3,
-          },
           "♂ Âge à la publication": {
-            axis: 'y2',
-            color: "rgba( 128, 128, 192, 1 )",
-            strokeWidth: 1,
+            axis: 'y',
+            color: "rgba( 128, 128, 192, 0.5 )",
+            strokeWidth: 2,
             fillGraph: true,
           },
           "♂ Âge au premier livre": {
-            axis: 'y2',
+            axis: 'y',
             color: "rgba( 128, 128, 192, 1 )",
+            strokeWidth: 1.5,
+            fillGraph: true,
+          },
+          "♂ Livres": {
+            axis: 'y2',
+            color: "rgba( 0, 0, 128, 0.7 )",
             strokeWidth: 3,
             strokePattern: [5,3],
-          },
-          "♂ Titres": {
-            axis: 'y',
-            color: "rgba( 0, 0, 128, 1 )",
-            strokeWidth: 3,
-          },
-          "Âge à la publication" : {
-            axis: 'y2',
-            color: "rgba( 192, 192, 192, 1)",
-            strokeWidth: 1,
-            fillGraph: true,
-          },
-          "♂ âge au premier livre": {
-            axis: 'y2',
-            color: "rgba( 0, 0, 128, 0.5 )",
-            strokeWidth: 1,
-            fillGraph: true,
-          },
-          "♀ âge au premier livre": {
-            axis: 'y2',
-            color: "rgba( 255, 128, 128, 0.7 )",
-            strokeWidth: 1,
-            fillGraph: true,
-          },
-          "Livres": {
-            axis: 'y',
-            color: "rgba( 0, 0, 0, 1)",
-            strokeWidth: 3,
-          },
-          "Nouveautés": {
-            axis: 'y',
-            color: "rgba( 160, 160, 160, 1)",
-            strokeWidth: 4,
-            strokePattern: [8,4],
-            // fillGraph: true,
-          },
-          "Rééditions": {
-            axis: 'y',
-            color: "rgba( 128, 128, 128, 1)",
-            strokeWidth: 4,
-            strokePattern: [6,2],
-          },
-          "Premiers livres": {
-            axis: 'y',
-            color: "rgba( 160, 160, 160, 1)",
-            strokeWidth: 4,
           },
         },
         axes: {
@@ -224,7 +184,7 @@ for ( $date=$from; $date <= $to; $date++ ) {
           },
           y2: {
             independentTicks: true,
-            drawGrid: true,
+            drawGrid: false,
             gridLineColor: "rgba( 192, 128, 160, 0.5)",
             gridLineWidth: 1,
           },

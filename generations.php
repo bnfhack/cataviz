@@ -37,11 +37,13 @@ else if ( $from < 1700 ) $smooth = 2;
         <button onclick="window.location.href='?'; " type="button">Reset</button>
         De <input name="from" size="4" value="<?php echo $from ?>"/>
         à <input name="to" size="4" value="<?php echo  $to ?>"/>
-        Sexe <select name="gender" onchange="this.form.submit()">
-          <option value=""/>
-          <option value="2" <?php if ($gender==2) echo ' selected="selected"' ?>>Femmes</option>
-          <option value="1" <?php if ($gender==1) echo ' selected="selected"' ?>>Hommes</option>
-        </select>
+        <label>Sexe 
+          <select name="gender" onchange="this.form.submit()">
+            <option value=""/>
+            <option value="2" <?php if ($gender==2) echo ' selected="selected"' ?>>Femmes</option>
+            <option value="1" <?php if ($gender==1) echo ' selected="selected"' ?>>Hommes</option>
+          </select>
+        </label>
         <button type="submit">▶</button>
       </form>
     </header>
@@ -155,8 +157,8 @@ for ( $date=$from; $date <= $to; $date++ ) {
         },
         axes: {
           x: {
-            gridLineWidth: 1,
-            drawGrid: false,
+            gridLineWidth: 0.5,
+            drawGrid: true,
             independentTicks: true,
             gridLineColor: "rgba( 128, 128, 128, 0.5)",
           },
@@ -169,7 +171,7 @@ for ( $date=$from; $date <= $to; $date++ ) {
           },
           y2: {
             independentTicks: true,
-            drawGrid: true,
+            drawGrid: false,
             gridLinePattern: [4,4],
             gridLineColor: "rgba( 192, 192, 192, 0.3)",
             gridLineWidth: 4,
