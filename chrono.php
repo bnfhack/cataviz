@@ -16,8 +16,7 @@ if ( isset($_REQUEST['pagefloor']) ) $pagefloor = $_REQUEST['pagefloor'];
     <link rel="stylesheet" type="text/css" href="lib/dygraph.css"/>
     <link rel="stylesheet" type="text/css" href="cataviz.css"/>
     <style>
-.dygraph-legend { left: 20% !important; }
-.ann { transform: rotateZ(-90deg); transform-origin: 0% 100%; padding-left: 1em; border-left: none !important; border-bottom: 1px solid #000 !important; font-size: 14pt !important; font-weight: normal; color: rgba( 0, 0, 0, 0.8) !important; }
+.dygraph-legend { left: 8% !important; }
     </style>
   </head>
   <body>
@@ -110,6 +109,8 @@ $A = "Titres > $pagefloor p.";
 $B = "Titres <= $pagefloor p.";
        ?>],
       {
+        title : "Databnf, nombre de titres à la date de publication.",
+        titleHeight: 35,
         labels: [ "Année", "<?=$A?>", "<?=$B?>", "Titres en français" ], // "Moy. pages",
         legend: "always",
         labelsSeparateLines: "true",
@@ -169,7 +170,7 @@ $B = "Titres <= $pagefloor p.";
           },
         },
         underlayCallback: function(canvas, area, g) {
-          canvas.fillStyle = "rgba(255, 128, 0, 0.2)";
+          canvas.fillStyle = "rgba(192, 192, 192, 0.2)";
           var periods = [ [1562,1598],[1648,1653], [1789,1794], [1814,1815], [1830,1831], [1848,1849], [1870,1871], [1914,1919], [1939,1945]];
           var lim = periods.length;
           for ( var i = 0; i < lim; i++ ) {
@@ -184,16 +185,16 @@ $B = "Titres <= $pagefloor p.";
     );
     g.ready(function() {
       g.setAnnotations([
-        { series: "Titres en français", x: "1562", shortText: "Guerres de Religion", width: "", height: "", cssClass: "ann", },
-        { series: "Titres en français", x: "1648", shortText: "La Fronde", width: "", height: "", cssClass: "ann", },
-        { series: "Titres en français", x: "1789", shortText: "1789", width: "", height: "", cssClass: "ann", },
-        { series: "Titres en français", x: "1815", shortText: "1815", width: "", height: "", cssClass: "ann", },
-        { series: "Titres en français", x: "1830", shortText: "1830", width: "", height: "", cssClass: "ann", },
-        { series: "Titres en français", x: "1848", shortText: "1848", width: "", height: "", cssClass: "ann", },
-        { series: "Titres en français", x: "1870", shortText: "1870", width: "", height: "", cssClass: "ann", },
-        { series: "Titres en français", x: "1914", shortText: "1914", width: "", height: "", cssClass: "ann", },
-        { series: "Titres en français", x: "1939", shortText: "1939", width: "", height: "", cssClass: "ann", },
-        { series: "Titres en français", x: "1968", shortText: "1968", width: "", height: "", cssClass: "ann", },
+        { series: "<?=$A?>", x: "1562", shortText: "Guerres de Religion", width: "", height: "", cssClass: "annv", },
+        { series: "<?=$A?>", x: "1648", shortText: "La Fronde", width: "", height: "", cssClass: "annv", },
+        { series: "<?=$A?>", x: "1789", shortText: "1789", width: "", height: "", cssClass: "annv", },
+        { series: "<?=$A?>", x: "1815", shortText: "1815", width: "", height: "", cssClass: "annv", },
+        { series: "<?=$A?>", x: "1830", shortText: "1830", width: "", height: "", cssClass: "annv", },
+        { series: "<?=$A?>", x: "1848", shortText: "1848", width: "", height: "", cssClass: "annv", },
+        { series: "<?=$A?>", x: "1870", shortText: "1870", width: "", height: "", cssClass: "annv", },
+        { series: "<?=$A?>", x: "1914", shortText: "1914", width: "", height: "", cssClass: "annv", },
+        { series: "<?=$A?>", x: "1939", shortText: "1939", width: "", height: "", cssClass: "annv", },
+        { series: "<?=$A?>", x: "1968", shortText: "1968", width: "", height: "", cssClass: "annv", },
       ]);
     });
     var linear = document.getElementById("linear");

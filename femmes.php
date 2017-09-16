@@ -5,12 +5,14 @@ $from = 1760;
 $to = 1960;
 include ( dirname(__FILE__).'/Cataviz.php' );
 $db = new Cataviz( "databnf.sqlite" );
+$pagefloor = 50;
+if ( isset($_REQUEST['pagefloor']) ) $pagefloor = $_REQUEST['pagefloor'];
 
 ?><!DOCTYPE html>
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>Femmes, titres, Databnf.</title>
+    <title>Femmes, livres, Databnf.</title>
     <script src="lib/dygraph.min.js">//</script>
     <link rel="stylesheet" type="text/css" href="lib/dygraph.css"/>
     <link rel="stylesheet" type="text/css" href="cataviz.css"/>
@@ -36,6 +38,7 @@ $db = new Cataviz( "databnf.sqlite" );
         <button onclick="window.location.href='?'; " type="button">Reset</button>
         De <input name="from" size="4" value="<?php echo $from ?>"/>
         à <input name="to" size="4" value="<?php echo  $to ?>"/>
+        <label>Seuil pages <input name="pagefloor" size="4" value="<?php echo  $pagefloor ?>"/></label>
         Échelle
         <button id="log" <?php if( $log ) echo'disabled="true"';?> type="button">log</button>
         <button id="linear" <?php if( !$log ) echo'disabled="true"';?> type="button">linéaire</button>
@@ -86,22 +89,22 @@ for ( $date=$from; $date <= $to; $date++ ) {
 */
        ?>],
       {
-        labels: [ "Année", "♂ titres", "♀ titres", "% des femmes" ],
+        labels: [ "Année", "♂ livres", "♀ livres", "% des femmes" ],
         legend: "always",
         labelsSeparateLines: "true",
-        ylabel: "Titres",
-        y2label: "Part des titres %",
+        ylabel: "Livres",
+        y2label: "Part des livres %",
         showRoller: true,
         rollPeriod: <?php echo $smooth ?>,
         <?php if ($log) echo "logscale: true,";  ?>
         series: {
-          "♂ titres": {
+          "♂ livres": {
             // drawPoints: true,
             // pointSize: 3,
             color: "rgba( 0, 0, 192, 1 )",
             strokeWidth: 4,
           },
-          "♀ titres": {
+          "♀ livres": {
             color: "rgba( 255, 128, 128, 1 )",
             strokeWidth: 4,
           },
@@ -126,7 +129,7 @@ for ( $date=$from; $date <= $to; $date++ ) {
           },
           y2: {
             independentTicks: true,
-            drawGrid: true,
+            drawGrid: false,
             gridLineColor: "rgba( 192, 192, 192, 0.4)",
             gridLineWidth: 4,
             gridLinePattern: [6,6],
@@ -169,8 +172,8 @@ for ( $date=$from; $date <= $to; $date++ ) {
     log.onclick = function() { setLog(true); };
     </script>
     <div class="text">
-      <p>Projection par année du nombre de titres français signés par une femme vivante.
-      Le ration sexuel est très bas jusqu’au XX<sup>e</sup> s., &lt; 5%. On observe une progression sur le temps long, pour atteindre 30 %  de nos jours. La part des femmes baisse pendant les guerres et les révolutions, montrant qu’en période de restriction de papier, les hommes passent toujours avant.</p>
+      <p>Projection par année du nombre de titres > 50 p. français (livres) signés par une femme vivante.
+      Le ratio sexuel est très bas jusqu’au XX<sup>e</sup> s., &lt; 5%. On observe une progression sur le temps long, pour atteindre 30 %  de nos jours. La part des femmes baisse pendant les guerres et les révolutions, montrant qu’en période de restriction de papier, les hommes passent toujours avant.</p>
     </div>
     <?php include ( dirname(__FILE__).'/footer.php' ) ?>
   </body>

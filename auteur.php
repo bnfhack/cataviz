@@ -2,6 +2,7 @@
 include ( dirname(__FILE__).'/Cataviz.php' );
 $db = new Cataviz( "databnf.sqlite" );
 $name = "";
+$persark = null;
 if ( isset( $_REQUEST['persark'] ) ) {
   $persark=$_REQUEST['persark'];
   $person = $db->person( $persark );
@@ -58,6 +59,21 @@ if ( isset( $_REQUEST['persark'] ) ) {
           color: "rgba( 128, 128, 128, 0.3)",
           strokeWidth: 10,
         },
+      },
+      axes : {
+        y: {
+          independentTicks: true,
+          drawGrid: true,
+          // gridLineColor: "rgba( 128, 128, 128, 0.1)",
+          // gridLineWidth: 1,
+        },
+        y2: {
+          independentTicks: true,
+          drawGrid: false,
+          // gridLinePattern: [6,3],
+          gridLineColor: "rgba( 128, 128, 128, 0.2)",
+          gridLineWidth: 3,
+        },
       }
     }
   );
@@ -77,10 +93,8 @@ if ($a40) echo '{ series: "Publications", x:'.$a40.', tickHeight: 40, shortText:
   <summary>?</summary>
   <p>Distribution des publications par année (courbe fine à points), et approximation du stock (courbe large sans points). La courbe des publications permet d’observer l’actualité éditoriale d’un auteur, la courbe du stock permet de se faire une idée du nombre de titres en circulation. Cet “amortissement” est calculé sur 30 ans. Chaque nouvelle publication s’ajoute à la somme des précédentes, chaque année un livre perd 1/30 ème de sa valeur. Cette courbe évite d’interpréter une absence de nouvelles publications sur 10 ou 20 ans comme une disparition complète d’un auteur, qui reste disponible dans les bibliothèques.</p>
 </details>
-
     <?php
-
-echo $db->editions( $persark );
+echo $db->editions( $person['id'] );
 
 
     ?>

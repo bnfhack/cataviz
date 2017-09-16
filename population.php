@@ -72,12 +72,12 @@ for ( $date=$from; $date <= $to; $date++ ) {
   echo ",".( $fdoc1 );
   if ( $books ) {
     echo ",".( $fbooks );
-    echo ",". number_format( ( 100.0 * $fbooks / $fdoc1 ), 2, '.', '');
+    // echo ",". number_format( ( 100.0 * $fbooks / $fdoc1 ), 2, '.', '');
   }
   echo ",".( $mdoc1 );
   if ( $books ) {
     echo ",".( $mbooks );
-    echo ",". number_format( ( 100.0 * $mbooks / $mdoc1 ), 2, '.', '');
+    // echo ",". number_format( ( 100.0 * $mbooks / $mdoc1 ), 2, '.', '');
   }
   echo ",". number_format( ( 100.0 * $fdoc1 / ( $fdoc1+$mdoc1) ), 2, '.', '');
   if ( $books ) {
@@ -98,10 +98,10 @@ for ( $date=$from; $date <= $to; $date++ ) {
       {
         title : "Databnf, par année, population d’auteurs vivants.",
         titleHeight: 35,
-        labels: [ "Année",
-          "Femmes", <?php if ($books) echo " \"♀ > $books livres\", \"% ♀ > $books livres\", "?>
-          "Hommes", <?php if ($books) echo " \"♂ > $books livres\", \"% ♂ > $books livres\", "?>
-          "♀ % ♂", <?php if ($books) echo " \"♀ % ♂ > $books livres\"," ?>
+        labels: [ "Année"
+          , "Femmes", <?php if ($books) echo " \"♀ > $books livres\""; // , \"% ♀ > $books livres\", "?>
+          , "Hommes", <?php if ($books) echo " \"♂ > $books livres\""; // , \"% ♂ > $books livres\", "?>
+          , "♀ % ♂", <?php if ($books) echo " \"♀ % ♂ > $books livres\"" ?>
         ],
         legend: "always",
         labelsSeparateLines: "true",
@@ -126,11 +126,11 @@ for ( $date=$from; $date <= $to; $date++ ) {
             strokePattern: [4,4],
           },
           "Hommes": {
-            color: "rgba( 0, 0, 192, 0.5 )",
+            color: "rgba( 96, 96, 192, 0.5 )",
             strokeWidth: 4,
           },
           "♂ > <?=$books?> livres": {
-            color: "rgba( 96, 96, 192, 1 )",
+            color: "rgba( 0, 0, 128, 1 )",
             strokeWidth: 4,
           },
           "% ♂ > <?=$books?> livres": {
@@ -141,14 +141,16 @@ for ( $date=$from; $date <= $to; $date++ ) {
           },
           "♀ % ♂": {
             axis: 'y2',
-            color: "rgba( 192, 192, 192, 0.5 )",
+            color: "rgba( 192, 192, 192, 1 )",
             strokeWidth: 4,
+            fillGraph: true,
           },
           "♀ % ♂ > <?=$books?> livres": {
             axis: 'y2',
-            color: "rgba( 64, 64, 64, 0.7 )",
+            color: "rgba( 128, 128, 128, 0.7 )",
             strokeWidth: 4,
             strokePattern: [4,4],
+            fillGraph: true,
           },
         },
         axes: {
@@ -189,15 +191,15 @@ for ( $date=$from; $date <= $to; $date++ ) {
     );
     g.ready(function() {
       g.setAnnotations([
-        { series: "% femmes", x: "1648", shortText: "La Fronde", width: "", height: "", cssClass: "annl", },
-        { series: "% femmes", x: "1789", shortText: "1789", width: "", height: "", cssClass: "annl", },
-        { series: "% femmes", x: "1815", shortText: "1815", width: "", height: "", cssClass: "annl", },
-        { series: "% femmes", x: "1830", shortText: "1830", width: "", height: "", cssClass: "annl", },
-        { series: "% femmes", x: "1848", shortText: "1848", width: "", height: "", cssClass: "annl", },
-        { series: "% femmes", x: "1870", shortText: "1870", width: "", height: "", cssClass: "annl", },
+        { series: "♀ % ♂", x: "1648", shortText: "La Fronde", width: "", height: "", cssClass: "annl", },
+        { series: "♀ % ♂", x: "1789", shortText: "1789", width: "", height: "", cssClass: "annl", },
+        { series: "♀ % ♂", x: "1815", shortText: "1815", width: "", height: "", cssClass: "annl", },
+        { series: "♀ % ♂", x: "1830", shortText: "1830", width: "", height: "", cssClass: "annl", },
+        { series: "♀ % ♂", x: "1848", shortText: "1848", width: "", height: "", cssClass: "annl", },
+        { series: "♀ % ♂", x: "1870", shortText: "1870", width: "", height: "", cssClass: "annl", },
         // { series: "% femmes", x: "1881", shortText: "Lois J. Ferry", width: "", height: "", cssClass: "ann", },
-        { series: "% femmes", x: "1914", shortText: "1914", width: "", height: "", cssClass: "annl", },
-        { series: "% femmes", x: "1939", shortText: "1939", width: "", height: "", cssClass: "annl", },
+        { series: "♀ % ♂", x: "1914", shortText: "1914", width: "", height: "", cssClass: "annl", },
+        { series: "♀ % ♂", x: "1939", shortText: "1939", width: "", height: "", cssClass: "annl", },
       ]);
     });
     var linear = document.getElementById("linear");

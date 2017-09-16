@@ -270,12 +270,11 @@ class Cataviz
   /**
    * Chronologie des éditions selon les œuvres
    */
-  function editions( $persark )
+  function editions( $persid )
   {
-    $person = $this->person();
     // compter le nombre d’oeuvre avant d’afficher quelque chose
     $q = $this->pdo->prepare( "SELECT count(*) FROM creation WHERE person = ?" );
-    $q->execute( array( $person['id'] ) );
+    $q->execute( array( $persid ) );
     if( !current($q->fetch()) ) return;
 
     $html = array();
@@ -285,7 +284,7 @@ class Cataviz
     // prendre
     // boucler sur les œuvres d’un auteur
     $qwork = $this->pdo->prepare( "SELECT work.* FROM creation, work WHERE creation.work = work.id AND person = ? ORDER BY versions DESC;" );
-    $qwork->execute( array( $person['id'] ) );
+    $qwork->execute( array( $persid ) );
 
     // boucler sur les éditions de ces œeuvres
     $qdocument =  $this->pdo->prepare( "SELECT document.* FROM version, document WHERE version.document=document.id AND work = ? AND date > 0 " );
@@ -301,8 +300,8 @@ class Cataviz
     $html[] = ' <tr>';
     $html[] = '   <td class="nosort" width="'.$width.'">';
 
-    $q = $this->pdo->prepare( "SELECT date FROM contribution WHERE person = ? AND date > 0 ORDER BY date LIMIT 1;" );
-    $q->execute( array( $person['id'] ) );
+    $q = $this->pdo->prepare( "SELECT date FROM contribution WHERE person = ? AND date > 1482 ORDER BY date LIMIT 1;" );
+    $q->execute( array( $persid ) );
     $from = current( $q->fetch( PDO::FETCH_ASSOC ) );
     $to = 2016;
 

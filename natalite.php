@@ -140,7 +140,7 @@ for ( $date=$from; $date <= $to; $date++ ) {
           "♂ > <?=$books?> livres": {
             axis: 'y',
             color: "rgba( 0, 0, 128, 1 )",
-            strokeWidth: 4,
+            strokeWidth: 1,
           },
           "% femmes": {
             axis: 'y2',
@@ -219,8 +219,8 @@ for ( $date=$from; $date <= $to; $date++ ) {
         { series: "Femmes", x: "1850", shortText: "1850, écoles de filles", width: "", height: "", cssClass: "annl", },
         { series: "% femmes", x: "1870", shortText: "1870", width: "", height: "", cssClass: "annl", },
         { series: "Femmes", x: "1879", shortText: "1879, lois enseignement", width: "", height: "", cssClass: "annl", },
-        { series: "% femmes", x: "1914", shortText: "1914", width: "", height: "", cssClass: "annl", },
-        { series: "% femmes", x: "1939", shortText: "1939", width: "", height: "", cssClass: "annl", },
+        // { series: "% femmes", x: "1914", shortText: "1914", width: "", height: "", cssClass: "annl", },
+        // { series: "% femmes", x: "1939", shortText: "1939", width: "", height: "", cssClass: "annl", },
           ';
         }
         ?>
