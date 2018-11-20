@@ -2,11 +2,11 @@
 $datemax = 1990;
 $from = 1830;
 $to = 1950;
-include ( dirname(__FILE__).'/Cataviz.php' );
-$db = new Cataviz( "databnf.sqlite" );
-if ( !isset( $_REQUEST['books'] ) ) $books = 10;
+include (dirname(__FILE__).'/Cataviz.php');
+$db = new Cataviz("databnf.sqlite");
+if (!isset($_REQUEST['books'])) $books = 10;
 else $books = $_REQUEST['books'];
-if ( !$books || $books < 0 ) $books = 0;
+if (!$books || $books < 0) $books = 0;
 
 
 ?><!DOCTYPE html>
@@ -22,7 +22,7 @@ if ( !$books || $books < 0 ) $books = 0;
     </style>
   </head>
   <body>
-    <?php include ( dirname(__FILE__).'/menu.php' ) ?>
+    <?php include (dirname(__FILE__).'/menu.php') ?>
     <header>
       <div class="links">
         <a href="?">Natalité des auteurs francophones</a>
@@ -37,204 +37,159 @@ if ( !$books || $books < 0 ) $books = 0;
         <label title="Nombre de livre minimum que doit avoir signé l’auteur">Seuil livres <input name="books" size="4" value="<?php echo $books ?>"/></label>
 
         Échelle
-        <button id="log" <?php if( $log ) echo'disabled="true"';?> type="button">log</button>
-        <button id="linear" <?php if( !$log ) echo'disabled="true"';?> type="button">linéaire</button>
+        <button id="log" <?php if($log) echo'disabled="true"';?> type="button">log</button>
+        <button id="linear" <?php if(!$log) echo'disabled="true"';?> type="button">linéaire</button>
         <button type="submit">▶</button>
       </form>
     </header>
     <div id="chart" class="dygraph"></div>
     <script type="text/javascript">
-    g = new Dygraph(
-      document.getElementById("chart"),
-      [
+var data = [
 <?php
-$qm = $db->prepare( "SELECT count(*) AS count FROM person WHERE fr = 1 AND gender = 1  AND birthyear >= ? AND birthyear <= ?" );
-$qf = $db->prepare( "SELECT count(*) AS count FROM person WHERE fr = 1 AND gender = 2 AND birthyear >= ? AND birthyear <= ?" );
-if ( $books ) {
-  $qmbooks = $db->prepare( "SELECT count(*) AS count FROM person WHERE fr = 1 AND gender = 1 AND birthyear >= ? AND birthyear <= ? AND books >= ?" );
-  $qfbooks = $db->prepare( "SELECT count(*) AS count FROM person WHERE fr = 1 AND gender = 2 AND birthyear >= ? AND birthyear <= ? AND books >= ?" );
+$qm = $db->prepare("SELECT count(*) AS count FROM person WHERE fr = 1 AND gender = 1  AND birthyear >= ? AND birthyear <= ?");
+$qf = $db->prepare("SELECT count(*) AS count FROM person WHERE fr = 1 AND gender = 2 AND birthyear >= ? AND birthyear <= ?");
+if ($books) {
+  $qmbooks = $db->prepare("SELECT count(*) AS count FROM person WHERE fr = 1 AND gender = 1 AND birthyear >= ? AND birthyear <= ? AND books >= ?");
+  $qfbooks = $db->prepare("SELECT count(*) AS count FROM person WHERE fr = 1 AND gender = 2 AND birthyear >= ? AND birthyear <= ? AND books >= ?");
 }
 
 $msigma = 1;
 
 
-for ( $date=$from; $date <= $to; $date++ ) {
+for ($date=$from; $date <= $to; $date++) {
   $guerres = [ 1695, 1696, 1697, 1698, 1699, 1700, 1701, 1702, 1703, 1704, 1705, 1706, 1707, 1708, 1709, 1710, 1870, 1871, 1914, 1915, 1916, 1917, 1918, 1939, 1940, 1941, 1942, 1943, 1944, 1945 ];
-  $guerres = array_flip( $guerres );
+  $guerres = array_flip($guerres);
 
   $fsigma = 5;
-  if ( $date>= 1740 ) $fsigma = 3;
-  if ( $date>= 1814 ) $fsigma = 2;
-  if ( $date>= 1865 ) $fsigma = 0;
-  if ( $date > 1800 && isset( $guerres[$date] ) ) $fsigma = 0;
-  // if ( $date>= 1925 ) $fsigma = 0;
-  $qf->execute( array( $date-$fsigma, $date+$fsigma ) );
-  list( $fcount ) = $qf->fetch( PDO::FETCH_NUM );
+  if ($date>= 1740) $fsigma = 3;
+  if ($date>= 1814) $fsigma = 2;
+  if ($date>= 1865) $fsigma = 0;
+  if ($date > 1800 && isset($guerres[$date])) $fsigma = 0;
+  // if ($date>= 1925) $fsigma = 0;
+  $qf->execute(array($date-$fsigma, $date+$fsigma));
+  list($fcount) = $qf->fetch(PDO::FETCH_NUM);
   $fcount = $fcount / (1+2*$fsigma);
 
-  if ( $books) {
-    if ( $books < 5 );
-    else if ( $date < 1800 ) $fsigma = 5;
+  if ($books) {
+    if ($books < 5);
+    else if ($date < 1800) $fsigma = 5;
     else $fsigma=$fsigma+2;
-    $qfbooks->execute( array( $date-$fsigma, $date+$fsigma, $books ) );
-    list( $fbooks ) = $qfbooks->fetch( PDO::FETCH_NUM );
+    $qfbooks->execute(array($date-$fsigma, $date+$fsigma, $books));
+    list($fbooks) = $qfbooks->fetch(PDO::FETCH_NUM);
     $fbooks = $fbooks / (1+2*$fsigma);
   }
 
   $msigma = 6;
-  if ( $date>= 1700 ) $msigma = 2;
-  if ( $date>= 1755 ) $msigma = 2;
-  if ( $date>= 1796 ) $msigma = 1;
-  if ( $date>= 1850 ) $msigma = 0;
-  if ( isset( $guerres[$date] ) ) $fsigma = 0;
-  $qm->execute( array( $date-$msigma, $date+$msigma ) );
-  list( $mcount ) = $qm->fetch( PDO::FETCH_NUM );
+  if ($date>= 1700) $msigma = 2;
+  if ($date>= 1755) $msigma = 2;
+  if ($date>= 1796) $msigma = 1;
+  if ($date>= 1850) $msigma = 0;
+  if (isset($guerres[$date])) $fsigma = 0;
+  $qm->execute(array($date-$msigma, $date+$msigma));
+  list($mcount) = $qm->fetch(PDO::FETCH_NUM);
   $mcount = $mcount / (1+2*$msigma);
-  if ( $books) {
-    $qmbooks->execute( array( $date-$msigma, $date+$msigma, $books ) );
-    list( $mbooks ) = $qmbooks->fetch( PDO::FETCH_NUM );
+  if ($books) {
+    $qmbooks->execute(array($date-$msigma, $date+$msigma, $books));
+    list($mbooks) = $qmbooks->fetch(PDO::FETCH_NUM);
     $mbooks = $mbooks / (1+2*$msigma);
   }
 
-  echo "[".$date;
-  echo ",".number_format( $fcount, 2, '.', '' );
-  if ( $books) echo ",".number_format( $fbooks, 2, '.', '' );
-  echo ",".number_format( $mcount, 2, '.', '' );
-  if ( $books) echo ",".number_format( $mbooks, 2, '.', '' );
-  echo ",". number_format( 100.0 * $fcount / ($fcount + $mcount), 2, '.', '');
-  if ( $books ) echo ",". number_format( 100.0 * $fbooks / ($fbooks + $mbooks), 2, '.', '');
+  echo "  [".$date;
+  echo ",".number_format($fcount, 2, '.', '');
+  if ($books) echo ",".number_format($fbooks, 2, '.', '');
+  echo ",".number_format($mcount, 2, '.', '');
+  if ($books) echo ",".number_format($mbooks, 2, '.', '');
+  // echo ",". number_format(100.0 * $fcount / ($fcount + $mcount), 2, '.', '');
+  // if ($books) echo ",". number_format(100.0 * $fbooks / ($fbooks + $mbooks), 2, '.', '');
   echo "],\n";
-}
-       ?>],
-      {
-        title : "Databnf, par année, nombre d’auteurs qui naissent.",
-        titleHeight: 35,
-        labels: [ "Année",
-          "Femmes",<?php if ($books) echo " \"♀ > $books livres\","; ?>
-          "Hommes",<?php if ($books) echo " \"♂ > $books livres\","; ?>
-           "% femmes",<?php if ($books) echo " \"% ♀ > $books livres\","; ?>
-        ],
-        legend: "always",
-        labelsSeparateLines: "true",
-        ylabel: "Naissances d’auteurs",
-        y2label: "Part des femmes",
-        // showRoller: true,
-        rollPeriod: <?php echo $smooth ?>,
-        <?php if ($log) echo "logscale: 'true',\n";  ?>
-        series: {
-          "Femmes": {
-            axis: 'y',
-            color: "rgba( 255, 128, 128, 0.5 )",
-            strokeWidth: 4,
-          },
-          "♀ > <?=$books?> livres": {
-            axis: 'y',
-            color: "rgba( 255, 128, 128, 1 )",
-            strokeWidth: 1,
-          },
-          "Hommes": {
-            axis: 'y',
-            color: "rgba( 0, 0, 128, 0.5 )",
-            strokeWidth: 4,
-          },
-          "♂ > <?=$books?> livres": {
-            axis: 'y',
-            color: "rgba( 0, 0, 128, 1 )",
-            strokeWidth: 1,
-          },
-          "% femmes": {
-            axis: 'y2',
-            color: "rgba( 224, 224, 224, 1 )",
-            strokeWidth: 2,
-            fillGraph: true,
-          },
-          "% ♀ > <?=$books?> livres": {
-            axis: 'y2',
-            color: "rgba( 192, 192, 192, 1 )",
-            strokeWidth: 2,
-            fillGraph: true,
-          },
-        },
-        axes: {
-          x: {
-            gridLineWidth: 0.5,
-            drawGrid: true,
-            gridLineColor: "rgba( 192, 192, 192, 1 )",
-            independentTicks: true,
-          },
-          y: {
-            independentTicks: true,
-            drawGrid: true,
-            gridLineColor: "rgba( 192, 192, 192, 1 )",
-            gridLineWidth: 0.5,
-          },
-          y2: {
-            independentTicks: true,
-            drawGrid: false,
-            gridLineColor: "rgba( 128, 128, 128, 0.3)",
-            gridLineWidth: 2,
-            gridLinePattern: [4,4],
-          },
-        },
-        underlayCallback: function(canvas, area, g) {
-          canvas.fillStyle = "rgba(255, 192, 128, 0.2)";
-          var periods = [ [1789,1795], [1870,1871], [1914,1918], [1939,1945] ];
-          var lim = periods.length;
-          for ( var i = 0; i < lim; i++ ) {
-            var bottom_left = g.toDomCoords( periods[i][0], -20 );
-            var top_right = g.toDomCoords( periods[i][1], +20 );
-            var left = bottom_left[0];
-            var right = top_right[0];
-            canvas.fillRect(left, area.y, right - left, area.h);
-          }
-        },
-      }
-    );
-    g.ready(function() {
-      g.setAnnotations([
-        <?php
-        if ( $to-$from < 210 ) {
-          echo '
-        { series: "Hommes", x: "1606", shortText: "1606, Corneille", width: "", height: "", cssClass: "ann45", },
-        { series: "Hommes", x: "1622", shortText: "1622, Molière", width: "", height: "", cssClass: "ann45", },
-        { series: "Hommes", x: "1639", shortText: "1639, Racine", width: "", height: "", cssClass: "ann45", },
-        { series: "Hommes", x: "1694", shortText: "1694, Voltaire", width: "", height: "", cssClass: "ann-45", },
-        { series: "Hommes", x: "1712", shortText: "1712, Rousseau", width: "", height: "", cssClass: "ann-45", },
-        { series: "Hommes", x: "1743", shortText: "1743, Condorcet", width: "", height: "", cssClass: "ann-45", },
-        { series: "Hommes", x: "1783", shortText: "1783, Stendhal", width: "", height: "", cssClass: "ann45", },
-        { series: "Hommes", x: "1799", shortText: "1799, Balzac", width: "", height: "", cssClass: "ann45", },
-        // { series: "Hommes", x: "1821", shortText: "1821, Baudelaire", width: "", height: "", cssClass: "ann45", },
-        { series: "Hommes", x: "1854", shortText: "1854, Rimbaud", width: "", height: "", cssClass: "ann45", },
-        { series: "Hommes", x: "1887", shortText: "Mobilisables", width: "", height: "", cssClass: "ann-45", },
-        { series: "Hommes", x: "1905", shortText: "1905, Sartre", width: "", height: "", cssClass: "ann-45", },
+}  ?>
+];
+// "% femmes",<?php if ($books) echo " \"% ♀ > $books livres\",";?>
 
-        { series: "Femmes", x: "1634", shortText: "1634, La Fayette", width: "", height: "", cssClass: "ann-45", },
-        { series: "Femmes", x: "1748", shortText: "1748, de Gouges", width: "", height: "", cssClass: "ann-45", },
-        { series: "Femmes", x: "1766", shortText: "1766, de Staël", width: "", height: "", cssClass: "ann-45", },
-        // { series: "Femmes", x: "1799", shortText: "1799, de Ségur", width: "", height: "", cssClass: "ann-45", },
-        { series: "Femmes", x: "1804", shortText: "1804, Sand", width: "", height: "", cssClass: "ann-45", },
-        { series: "Femmes", x: "1908", shortText: "1908, Beauvoir", width: "", height: "", cssClass: "ann-45", },
+var attrs = {
+  title : "Databnf, par année, nombre d’auteurs qui naissent.",
+  labels: [
+    "Année",
+    "Femmes", <?php if ($books) echo " \"♀ > $books livres\",";?>
+    "Hommes",<?php if ($books) echo " \"♂ > $books livres\",";?>
+  ],
+  ylabel: "Naissances d’auteurs",
+  y2label: "Part des femmes",
+  series: {
+    "Femmes": {
+      axis: 'y',
+      color: "rgba(255, 128, 128, 1)",
+      strokeWidth: 1,
+      fillGraph: true,
+    },
+    "♀ > <?=$books?> livres": {
+      axis: 'y',
+      color: "rgba(255, 0, 0, 1)",
+      strokeWidth: 2,
+      strokePattern: [4,4],
+    },
+    "Hommes": {
+      axis: 'y',
+      color: "rgba(192, 192, 255, 1)",
+      strokeWidth: 1,
+      fillGraph: true,
+    },
+    "♂ > <?=$books?> livres": {
+      axis: 'y',
+      color: "rgba(0, 0, 128, 1)",
+      strokeWidth: 2,
+      strokePattern: [4,4],
+    },
+    "% femmes": {
+      axis: 'y2',
+      color: "rgba(192, 192, 192, 0.5)",
+      strokeWidth: 4,
+    },
+    "% ♀ > <?=$books?> livres": {
+      axis: 'y2',
+      color: "rgba(192, 192, 192, 0.7)",
+      strokeWidth: 4,
+      strokePattern: [4,4],
+    },
+  },
+};
+<?php include('dygraph-common.php') ?>
+g.ready(function() {
+  g.setAnnotations([
+    <?php
+    if ($to-$from < 210) {
+      echo '
+    { series: "Hommes", x: "1606", shortText: "1606, Corneille", width: "", height: "", cssClass: "ann45", },
+    { series: "Hommes", x: "1622", shortText: "1622, Molière", width: "", height: "", cssClass: "ann45", },
+    { series: "Hommes", x: "1639", shortText: "1639, Racine", width: "", height: "", cssClass: "ann45", },
+    { series: "Hommes", x: "1694", shortText: "1694, Voltaire", width: "", height: "", cssClass: "ann-45", },
+    { series: "Hommes", x: "1712", shortText: "1712, Rousseau", width: "", height: "", cssClass: "ann-45", },
+    { series: "Hommes", x: "1743", shortText: "1743, Condorcet", width: "", height: "", cssClass: "ann-45", },
+    { series: "Hommes", x: "1783", shortText: "1783, Stendhal", width: "", height: "", cssClass: "ann45", },
+    { series: "Hommes", x: "1799", shortText: "1799, Balzac", width: "", height: "", cssClass: "ann45", },
+    // { series: "Hommes", x: "1821", shortText: "1821, Baudelaire", width: "", height: "", cssClass: "ann45", },
+    { series: "Hommes", x: "1854", shortText: "1854, Rimbaud", width: "", height: "", cssClass: "ann45", },
+    { series: "Hommes", x: "1887", shortText: "Mobilisables", width: "", height: "", cssClass: "ann-45", },
+    { series: "Hommes", x: "1905", shortText: "1905, Sartre", width: "", height: "", cssClass: "ann-45", },
 
-        { series: "% femmes", x: "1789", shortText: "1789", width: "", height: "", cssClass: "annl", },
-        { series: "Femmes", x: "1850", shortText: "1850, écoles de filles", width: "", height: "", cssClass: "annl", },
-        { series: "% femmes", x: "1870", shortText: "1870", width: "", height: "", cssClass: "annl", },
-        { series: "Femmes", x: "1879", shortText: "1879, lois enseignement", width: "", height: "", cssClass: "annl", },
-        // { series: "% femmes", x: "1914", shortText: "1914", width: "", height: "", cssClass: "annl", },
-        // { series: "% femmes", x: "1939", shortText: "1939", width: "", height: "", cssClass: "annl", },
-          ';
-        }
-        ?>
-      ]);
-    });
-    var linear = document.getElementById("linear");
-    var log = document.getElementById("log");
-    var setLog = function(val) {
-      g.updateOptions({ logscale: val });
-      linear.disabled = !val;
-      log.disabled = val;
-    };
-    linear.onclick = function() { setLog(false); };
-    log.onclick = function() { setLog(true); };
+    { series: "Femmes", x: "1634", shortText: "1634, La Fayette", width: "", height: "", cssClass: "ann-45", },
+    { series: "Femmes", x: "1748", shortText: "1748, de Gouges", width: "", height: "", cssClass: "ann-45", },
+    { series: "Femmes", x: "1766", shortText: "1766, de Staël", width: "", height: "", cssClass: "ann-45", },
+    // { series: "Femmes", x: "1799", shortText: "1799, de Ségur", width: "", height: "", cssClass: "ann-45", },
+    { series: "Femmes", x: "1804", shortText: "1804, Sand", width: "", height: "", cssClass: "ann-45", },
+    { series: "Femmes", x: "1908", shortText: "1908, Beauvoir", width: "", height: "", cssClass: "ann-45", },
+
+    { series: "% femmes", x: "1789", shortText: "1789", width: "", height: "", cssClass: "annl", },
+    { series: "Femmes", x: "1850", shortText: "1850, écoles de filles", width: "", height: "", cssClass: "annl", },
+    { series: "% femmes", x: "1870", shortText: "1870", width: "", height: "", cssClass: "annl", },
+    { series: "Femmes", x: "1879", shortText: "1879, lois enseignement", width: "", height: "", cssClass: "annl", },
+    // { series: "% femmes", x: "1914", shortText: "1914", width: "", height: "", cssClass: "annl", },
+    // { series: "% femmes", x: "1939", shortText: "1939", width: "", height: "", cssClass: "annl", },
+      ';
+    }
+    ?>
+  ]);
+});
     </script>
     <div class="text">
     <p>Ce graphique projette l’effectif des auteurs francophones à leur date de naissance, avec le ratio sexuel. Les effectifs sont parfois très faibles selon les périodes (1600 : 1 femme et 61 hommes), agitant les courbes de bruits accidentels. Une moyenne glissante variable a été appliquée, de +/- 10 ans pour les femmes avant 1750, à rien pour le XX<sup>e</sup> siècle. Cela permet d’obtenir des courbes lisibles sur <a href="?from=1500&to=1990&log=true">5 siècles</a>. La baisse des “naissances” après 1950 s’explique par un <a target="_blank" href="premier.php?from=1900&to=2015">âge moyen au premier livre</a> qui ne cesse d’augmenter, du moins, selon les données <i>Databnf</i>. Il n’y a probablement pas moins d’auteurs qui naissent après 1950, mais ils ne sont pas encore entrés au catalogue. Remarquons aussi que les femmes publient leur premier livre plus jeunes que les hommes. La parité pour les auteurs nés dans les années 1990 (la vingtaine) pourrait ne pas durer. Sur les conseils de <a href="https://twitter.com/olivier_ritz">Olivier Ritz</a>, un champ permet de filtrer les auteurs ayant signé des livres (> 50 p.), ce qui s’avère très utile pour la période révolutionnaire, où le catalogue enregistre une grande activité politique d’écrits courts qui ne sont pas exactement des livres.</p>
@@ -243,6 +198,6 @@ for ( $date=$from; $date <= $to; $date++ ) {
 
     <p>Le traumatisme démographique de la <a href="?from=1850&to=1950&log=true">Grande-Guerre</a> crante la courbe des hommes et des femmes à naître, ce sont les auteurs qui n’ont pas été conçus pendant la mobilisation, jusque 1918 plus 9 mois (1919). Un cran similaire s’observe pour 1870, mais pas pour la guerre 1940 (exil ?). La guerre 1914 a aussi un effet sur la génération mobilisable des hommes,  ce qui explique ce faux plat dans les naissances entre 1867 et 1909, dans un contexte de croissance. Sartre explique comment il a l’impression d’arriver dans un monde sans hommes, le laissant libre d’aller à sa carrière. Pour les femmes, la cause la plus importante de la croissance s’explique certainement par les différentes lois sur l’eneignement de la 3<sup>e</sup> République : 1879, École normale de jeunes filles dans tous les départements ; 1880, ouverture de la Sorbonne aux femmes, lycée de jeunes filles ; 1881, école obligatoire pour les garçon <i>et</i> les filles.</p>
     </div>
-    <?php include ( dirname(__FILE__).'/footer.php' ) ?>
+    <?php include (dirname(__FILE__).'/footer.php') ?>
   </body>
 </html>

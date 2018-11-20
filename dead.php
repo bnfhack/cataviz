@@ -1,21 +1,9 @@
 <?php
 // header('Content-type: text/plain; charset=utf-8');
-include ( dirname(__FILE__).'/Cataviz.php' );
-$db = new Cataviz( "databnf.sqlite" );
+include (dirname(__FILE__).'/Cataviz.php');
+$db = new Cataviz("databnf.sqlite");
 $from = 1910;
-if (isset($_REQUEST['from'])) $from = $_REQUEST['from'];
-if ( $from < 1475 ) $from = 1475;
-if ( $from > 2014 ) $from = 2000;
-
 $to = 1985;
-if (isset($_REQUEST['to'])) $to = $_REQUEST['to'];
-if ( $to < 1475 ) $to = 2014;
-if ( $to > 2014 ) $to = 2014;
-
-if ( isset($_REQUEST['smooth']) ) $smooth = $_REQUEST['smooth'];
-else $smooth = 0;
-if ( $smooth < 0 ) $smooth = 0;
-if ( $smooth > 50 ) $smooth = 50;
 
 ?><!DOCTYPE html>
 <html>
@@ -28,7 +16,7 @@ if ( $smooth > 50 ) $smooth = 50;
     </style>
   </head>
   <body>
-    <?php include ( dirname(__FILE__).'/menu.php' ) ?>
+    <?php include (dirname(__FILE__).'/menu.php') ?>
     <form name="dates" style="float: right;">
       <button onclick="window.location.href='?'; " type="button">Reset</button>
       From <input name="from" size="4" value="<?php echo $from ?>"/>
@@ -52,11 +40,11 @@ if ( $smooth > 50 ) $smooth = 50;
 <?php
 
 
-$qdead = $db->prepare( "SELECT count(*) AS count FROM document WHERE date = ? AND type = 'Text' AND posthum=1 " );
-$qdeadfr = $db->prepare( "SELECT count(*) AS count FROM document WHERE date = ? AND type = 'Text' AND posthum=1 AND lang='fre' " );
-$qtot = $db->prepare( "SELECT count(*) AS count FROM document WHERE date = ? AND type = 'Text'   " );
-$qtot_p = $db->prepare( "SELECT avg(pages) FROM document WHERE date = ?  AND type = 'Text'" );
-$qdead_p = $db->prepare( "SELECT avg(pages) FROM document WHERE date = ?  AND type = 'Text' AND posthum=1 " );
+$qdead = $db->prepare("SELECT count(*) AS count FROM document WHERE date = ? AND type = 'Text' AND posthum=1 ");
+$qdeadfr = $db->prepare("SELECT count(*) AS count FROM document WHERE date = ? AND type = 'Text' AND posthum=1 AND lang='fre' ");
+$qtot = $db->prepare("SELECT count(*) AS count FROM document WHERE date = ? AND type = 'Text'   ");
+$qtot_p = $db->prepare("SELECT avg(pages) FROM document WHERE date = ?  AND type = 'Text'");
+$qdead_p = $db->prepare("SELECT avg(pages) FROM document WHERE date = ?  AND type = 'Text' AND posthum=1 ");
 
 
 $adate = array();
@@ -69,49 +57,49 @@ $atot_p = array();
 $adead_p = array();
 
 
-for ( $date=$from; $date <= $to; $date++ ) {
+for ($date=$from; $date <= $to; $date++) {
   $adate[] = $date;
 
-  $qtot->execute( array( $date ) );
-  $tot = current( $qtot->fetch( PDO::FETCH_NUM ) );
+  $qtot->execute(array($date));
+  $tot = current($qtot->fetch(PDO::FETCH_NUM));
   $atot[] = $tot;
-  $qdead->execute( array( $date ) );
-  $dead = current( $qdead->fetch( PDO::FETCH_NUM ) );
+  $qdead->execute(array($date));
+  $dead = current($qdead->fetch(PDO::FETCH_NUM));
   $adead[] = $dead;
   $arate[] = $dead / $tot;
-  // $qdeadfr->execute( array( $date ) );
-  // $adeadfr[] = current( $qdeadfr->fetch( PDO::FETCH_NUM ) );
+  // $qdeadfr->execute(array($date));
+  // $adeadfr[] = current($qdeadfr->fetch(PDO::FETCH_NUM));
 
   /*
-  $qtot_p->execute( array( $date ) );
-  $atot_p[] = current( $qtot_p->fetch( PDO::FETCH_NUM ) );
-  $qdead_p->execute( array( $date ) );
-  $adead_p[] = current( $qdead_p->fetch( PDO::FETCH_NUM ) );
+  $qtot_p->execute(array($date));
+  $atot_p[] = current($qtot_p->fetch(PDO::FETCH_NUM));
+  $qdead_p->execute(array($date));
+  $adead_p[] = current($qdead_p->fetch(PDO::FETCH_NUM));
   */
 }
-$size = count( $adate );
-$rate = array_sum( $arate ) / $size ;
-for ( $i=0; $i < $size; $i++ ) {
+$size = count($adate);
+$rate = array_sum($arate) / $size ;
+for ($i=0; $i < $size; $i++) {
   /**
   $ifrom = $i - $smooth;
-  if ( $ifrom < 0 ) $ifrom = 0;
+  if ($ifrom < 0) $ifrom = 0;
   $ito = $i + $smooth;
-  if ( $ito > $size ) $ito = $size;
+  if ($ito > $size) $ito = $size;
   $iwidth = 1+$ito-$ifrom;
 
-  $tot = array_sum( array_slice( $atot, $ifrom, $iwidth ) ) / $iwidth;
-  $dead = array_sum( array_slice( $adead, $ifrom, $iwidth ) ) / $iwidth;
-  $deadfr = array_sum( array_slice( $adeadfr, $ifrom, $iwidth ) ) / $iwidth;
-  // $tot_p = array_sum( array_slice( $atot_p, $ifrom, $iwidth ) ) / $iwidth;
-  // $dead_p = array_sum( array_slice( $adead_p, $ifrom, $iwidth ) ) / $iwidth;
+  $tot = array_sum(array_slice($atot, $ifrom, $iwidth)) / $iwidth;
+  $dead = array_sum(array_slice($adead, $ifrom, $iwidth)) / $iwidth;
+  $deadfr = array_sum(array_slice($adeadfr, $ifrom, $iwidth)) / $iwidth;
+  // $tot_p = array_sum(array_slice($atot_p, $ifrom, $iwidth)) / $iwidth;
+  // $dead_p = array_sum(array_slice($adead_p, $ifrom, $iwidth)) / $iwidth;
   */
 
   echo "[".$adate[$i]
     .", ".$adead[$i]
-     .", ".( $atot[$i] * $rate )
+     .", ".($atot[$i] * $rate)
     // .", ".$deadfr
     // .", ".$tot_p
-     .", ".number_format( ( 100*$adead[$i] / $atot[$i] ), 2, '.', '')
+     .", ".number_format((100*$adead[$i] / $atot[$i]), 2, '.', '')
   ."],\n";
 }
 
@@ -127,23 +115,23 @@ for ( $i=0; $i < $size; $i++ ) {
         series: {
           "Variation du total": {
             axis: 'y',
-            color: "rgba( 0, 0, 0, 0.8)",
+            color: "rgba(0, 0, 0, 0.8)",
             strokeWidth: 1,
             strokePattern: [4, 4],
           },
           "Posthumes": {
             axis: 'y',
             strokeWidth: 2,
-            color: "rgba( 255, 0, 0, 0.8)",
+            color: "rgba(255, 0, 0, 0.8)",
           },
           "Posthumes fr.": {
             axis: 'y',
             strokeWidth: 1,
-            color: "rgba( 0, 0, 128, 0.5)",
+            color: "rgba(0, 0, 128, 0.5)",
           },
           "% de posthumes": {
             axis: 'y2',
-            color: "rgba( 255, 0, 0, 0.1)",
+            color: "rgba(255, 0, 0, 0.1)",
             strokeWidth: 5,
           },
         },
@@ -154,12 +142,12 @@ for ( $i=0; $i < $size; $i++ ) {
           y2: {
             independentTicks: true,
             drawGrid: true,
-            gridLineColor: "rgba( 128, 128, 128, 0.1)",
+            gridLineColor: "rgba(128, 128, 128, 0.1)",
             gridLineWidth: 5,
           },
         }
       }
-    );
+   );
     g.ready(function() {
       g.setAnnotations([
         { series: "% de posthumes", x: "1789", shortText: "1789", width: "", height: "", cssClass: "ann", },

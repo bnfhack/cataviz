@@ -4,8 +4,8 @@ $from = 1865;
 $tomax = 2015;
 $smooth = 0;
 
-include ( dirname(__FILE__).'/Cataviz.php' );
-$db = new Cataviz( "databnf.sqlite" );
+include (dirname(__FILE__).'/Cataviz.php');
+$db = new Cataviz("databnf.sqlite");
 
 $max = @$_REQUEST['max'];
 
@@ -23,7 +23,7 @@ $max = @$_REQUEST['max'];
     </style>
   </head>
   <body>
-    <?php include ( dirname(__FILE__).'/menu.php' ) ?>
+    <?php include (dirname(__FILE__).'/menu.php') ?>
     <header id="header">
       <div class="links">
         <a href="?">Titres d’auteurs morts à la date de publication, colorés selon le siècle de naissance</a> |
@@ -44,52 +44,55 @@ $max = @$_REQUEST['max'];
     </header>
     <div id="chart" class="dygraph"></div>
     <script type="text/javascript">
-    g = new Dygraph(
-      document.getElementById("chart"),
-      [
+var data = [
 <?php
 // fre, eng, ger, ita, zxx ?, spa, lat, frm, ara, gre, chi
-// part des documents avec un langue
-$qlive = $db->prepare( "SELECT count(*) AS count FROM document WHERE date = ? AND book = 1 AND lang = 'fre' AND posthum != 1; " );
-$qant = $db->prepare( "SELECT count(*) AS count FROM document WHERE date = ? AND book = 1 AND posthum=1 AND birthyear < 150; " );
-$q500 = $db->prepare( "SELECT count(*) AS count FROM document WHERE date = ? AND book = 1 AND posthum=1 AND birthyear >= 150 AND birthyear < 1450; " );
-$q1450 = $db->prepare( "SELECT count(*) AS count FROM document WHERE date = ? AND book = 1 AND posthum=1 AND birthyear >= 1450 AND birthyear < 1600; " );
-$q1600 = $db->prepare( "SELECT count(*) AS count FROM document WHERE date = ? AND book = 1 AND lang = 'fre' AND posthum=1 AND birthyear >= 1600 AND birthyear < 1680; " );
-$q1690 = $db->prepare( "SELECT count(*) AS count FROM document WHERE date = ? AND book = 1 AND lang = 'fre' AND posthum=1 AND birthyear >= 1680 AND birthyear < 1780; " );
-$q1780 = $db->prepare( "SELECT count(*) AS count FROM document WHERE date = ? AND book = 1 AND lang = 'fre' AND posthum=1 AND birthyear >= 1780 AND birthyear < 1880; " );
-$q1880 = $db->prepare( "SELECT count(*) AS count FROM document WHERE date = ? AND book = 1 AND lang = 'fre' AND posthum=1 AND birthyear >= 1880 ; " );
-
-for ( $date=$from; $date <= $to; $date++ ) {
-
-  // $qtot->execute( array( $date ) );
-  // $atot[] = current( $qtot->fetch( PDO::FETCH_NUM ) ) ;
-  $qlive->execute( array( $date ) );
-  $live = current( $qlive->fetch( PDO::FETCH_NUM ) ) ;
-
-  $qant->execute( array( $date ) );
-  $ant = current( $qant->fetch( PDO::FETCH_NUM ) );
-
-  $q500->execute( array( $date ) );
-  $f500 = current( $q500->fetch( PDO::FETCH_NUM ) ) ;
-
-  $q1450->execute( array( $date ) );
-  $f1450 = current( $q1450->fetch( PDO::FETCH_NUM ) ) ;
-
-  $q1600->execute( array( $date ) );
-  $f1600 = current( $q1600->fetch( PDO::FETCH_NUM ) ) ;
-
-  $q1690->execute( array( $date ) );
-  $f1690 = current( $q1690->fetch( PDO::FETCH_NUM ) ) ;
-
-  $q1780->execute( array( $date ) );
-  $f1780 = current( $q1780->fetch( PDO::FETCH_NUM ) ) ;
-
-  $q1880->execute( array( $date ) );
-  $f1880 = current( $q1880->fetch( PDO::FETCH_NUM ) ) ;
+// hack pour un index couvrant, pour les vivants, additionner
+$qtot = $db->prepare("SELECT count(*) AS count FROM document WHERE date = ? AND book = 1 AND lang = 'fre'; ");
+$qpost = $db->prepare("SELECT count(*) AS count FROM document WHERE date = ? AND book = 1 AND lang = 'fre' AND posthum=1; ");
 
 
-  echo "[".$date
-    .", ".$live
+$qant = $db->prepare("SELECT count(*) AS count FROM document WHERE date = ? AND book = 1 AND posthum=1 AND birthyear < 150; ");
+$q500 = $db->prepare("SELECT count(*) AS count FROM document WHERE date = ? AND book = 1 AND posthum=1 AND birthyear >= 150 AND birthyear < 1450; ");
+$q1450 = $db->prepare("SELECT count(*) AS count FROM document WHERE date = ? AND book = 1 AND posthum=1 AND birthyear >= 1450 AND birthyear < 1600; ");
+$q1600 = $db->prepare("SELECT count(*) AS count FROM document WHERE date = ? AND book = 1 AND lang = 'fre' AND posthum=1 AND birthyear >= 1600 AND birthyear < 1680; ");
+$q1690 = $db->prepare("SELECT count(*) AS count FROM document WHERE date = ? AND book = 1 AND lang = 'fre' AND posthum=1 AND birthyear >= 1680 AND birthyear < 1780; ");
+$q1780 = $db->prepare("SELECT count(*) AS count FROM document WHERE date = ? AND book = 1 AND lang = 'fre' AND posthum=1 AND birthyear >= 1780 AND birthyear < 1880; ");
+$q1880 = $db->prepare("SELECT count(*) AS count FROM document WHERE date = ? AND book = 1 AND lang = 'fre' AND posthum=1 AND birthyear >= 1880 ; ");
+
+for ($date=$from; $date <= $to; $date++) {
+
+  // $qtot->execute(array($date));
+  // $atot[] = current($qtot->fetch(PDO::FETCH_NUM)) ;
+  $qtot->execute(array($date));
+  $tot = current($qtot->fetch(PDO::FETCH_NUM)) ;
+  $qpost->execute(array($date));
+  $post = current($qpost->fetch(PDO::FETCH_NUM)) ;
+
+  $qant->execute(array($date));
+  $ant = current($qant->fetch(PDO::FETCH_NUM));
+
+  $q500->execute(array($date));
+  $f500 = current($q500->fetch(PDO::FETCH_NUM)) ;
+
+  $q1450->execute(array($date));
+  $f1450 = current($q1450->fetch(PDO::FETCH_NUM)) ;
+
+  $q1600->execute(array($date));
+  $f1600 = current($q1600->fetch(PDO::FETCH_NUM)) ;
+
+  $q1690->execute(array($date));
+  $f1690 = current($q1690->fetch(PDO::FETCH_NUM)) ;
+
+  $q1780->execute(array($date));
+  $f1780 = current($q1780->fetch(PDO::FETCH_NUM)) ;
+
+  $q1880->execute(array($date));
+  $f1880 = current($q1880->fetch(PDO::FETCH_NUM)) ;
+
+
+  echo "  [".$date
+    .", ".($tot - $post)
     .", ".$f1880
     .", ".$f1780
     .", ".$f1690
@@ -99,86 +102,55 @@ for ( $date=$from; $date <= $to; $date++ ) {
     .", ".$ant
   ."],\n";
 }
-       ?>],
-      {
-        labels: [ "Année", "Vivants", "XXe","XIXe", "XVIIIe", "XVIIe", "Renaissance", "Moyen-Âge", "Antiquité" ],
-        ylabel: "Titres des morts",
-        y2label: "Titres des vivants",
-        showRoller: true,
-        rollPeriod: <?php echo $smooth ?>,
-        legend: "always",
-        strokeWidth: 1,
-        valueRange: [1, <?php echo $max ?>],
-        stackedGraph: true,
-        series: {
-          "Antiquité": {
-            color: "#00F",
-          },
-          "Moyen-Âge": {
-            color: "#80F",
-          },
-          "Renaissance": {
-            color: "#F08",
-          },
-          "XVIIe": {
-            color: "#F00",
-          },
-          "XVIIIe": {
-            color: "#F80",
-          },
-          "XIXe": {
-            color: "#080",
-          },
-          "XXe": {
-            color: "#008",
-          },
-          "Vivants": {
-            color: "#666",
-            strokeWidth: 4,
-            axis: 'y2',
-            strokePattern: [4, 1],
-          },
-        },
-        axes: {
-          y: {
-            includeZero: true,
-          },
-          y2: {
-            independentTicks: true,
-            drawGrid: true,
-            gridLineColor: "rgba( 128, 128, 128, 0.1)",
-            gridLineWidth: 5,
-            includeZero: true,
-          },
-        },
-        underlayCallback: function(canvas, area, g) {
-          canvas.fillStyle = "rgba(192, 192, 192, 0.2)";
-          var periods = [ [1562,1598],[1648,1653], [1789,1794], [1814,1815], [1830,1831], [1848,1849], [1870,1871], [1914,1919], [1939,1945], [1979, 1981]];
-          var lim = periods.length;
-          for ( var i = 0; i < lim; i++ ) {
-            var bottom_left = g.toDomCoords( periods[i][0], -20 );
-            var top_right = g.toDomCoords( periods[i][1], +20 );
-            var left = bottom_left[0];
-            var right = top_right[0];
-            canvas.fillRect(left, area.y, right - left, area.h);
-          }
-        },
-      }
-    );
-    g.ready(function() {
-      g.setAnnotations([
-        { series: "Vivants", x: "1562", shortText: "Guerres de Religion", width: "", height: "", cssClass: "annl", },
-        { series: "Vivants", x: "1648", shortText: "La Fronde", width: "", height: "", cssClass: "annl", },
-        { series: "Vivants", x: "1789", shortText: "1789", width: "", height: "", cssClass: "annl", },
-        { series: "Vivants", x: "1815", shortText: "1815", width: "", height: "", cssClass: "annl", },
-        { series: "Vivants", x: "1830", shortText: "1830", width: "", height: "", cssClass: "annl", },
-        { series: "Vivants", x: "1848", shortText: "1848", width: "", height: "", cssClass: "annl", },
-        { series: "Vivants", x: "1870", shortText: "1870", width: "", height: "", cssClass: "annl", },
-        { series: "Vivants", x: "1914", shortText: "1914", width: "", height: "", cssClass: "annl", },
-        { series: "Vivants", x: "1939", shortText: "1939", width: "", height: "", cssClass: "annl", },
-        { series: "Vivants", x: "1981", shortText: "Prix unique du livre", width: "", height: "", cssClass: "annl", },
-      ]);
-    });
+?>];
+
+var attrs = {
+  labels: [ "Année", "Vivants", "XXe","XIXe", "XVIIIe", "XVIIe", "Renaissance", "Moyen-Âge", "Antiquité" ],
+  ylabel: "Titres des morts",
+  y2label: "Titres des vivants",
+  showRoller: true,
+  legend: "always",
+  strokeWidth: 1,
+  valueRange: [1, <?php echo $max ?>],
+  stackedGraph: true,
+  series: {
+    "Antiquité": {
+      color: "#00F",
+    },
+    "Moyen-Âge": {
+      color: "#80F",
+    },
+    "Renaissance": {
+      color: "#F08",
+    },
+    "XVIIe": {
+      color: "#F00",
+    },
+    "XVIIIe": {
+      color: "#F80",
+    },
+    "XIXe": {
+      color: "#080",
+    },
+    "XXe": {
+      color: "#008",
+    },
+    "Vivants": {
+      color: "#666",
+      strokeWidth: 4,
+      axis: 'y2',
+      strokePattern: [4, 1],
+    },
+  },
+};
+var annoteSeries = "Vivants";
+<?php include('dygraph-common.php') ?>
+g.ready(function() {
+  var anns = g.annotations();
+  g.setAnnotations(anns.concat([
+    {series: "Vivants", x: "1981", shortText: "Prix unique du livre", width: "", height: "", cssClass: "annl"},
+  ]));
+});
     </script>
     <div class="text">
     <p>Ce graphique projette les titres à leur date de publication, en fonction de la date de naissance de l’auteur principal (il n’est pas souvent possible de connaître la date de publication originale de l’œuvre, par exemple pour un dialogue de Platon ou une intégrale de Voltaire). Le découpage en siècles est toujours un peu arbitraire, toutefois, la tradition des histoires littéraires s’accorde assez avec les événements traumatiques qui tranchent dans les générations, comme les guerres de Religion, la fin de règne de Louis XIV, la Révolution, ou la Grande-Guerre. Les dates sont ajustées pour ne pas séparer des auteurs que l’on a coutume de ranger ensemble, comme les Lumières ou les Romantiques. Le Moyen-Âge commence très tôt, afin d’y inclure les pères de l’Église, qui forment un ensemble cohérent encore maintenant pour les éditions catholiques.</p>
@@ -196,6 +168,6 @@ for ( $date=$from; $date <= $to; $date++ ) {
     <p>
     Une fois stabilisé, le nombre de titres d’un siècle varie assez peu, c’est-à-dire que le nombre de documents publiés d’un auteur du XVII<sup>e</sup> s. reste relativement stable au XIX<sup>e</sup> et au XX<sup>e</sup> s, même si le nombre d’autres titres publiés est 10 fois plus important. L‘espace supplémentaire est occupé par les nouveautés. La réédition des titres anciens est affectée par les guerres, comme les nouveautés, on observera le profil très particulier après 1945, où la réédition reprend beaucoup plus fort qu’après 1918, politique volontariste du Conceil National de la Résistance.</p>
     </div>
-    <?php include ( dirname(__FILE__).'/footer.php' ) ?>
+    <?php include (dirname(__FILE__).'/footer.php') ?>
   </body>
 </html>

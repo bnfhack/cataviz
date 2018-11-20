@@ -19,7 +19,7 @@ if ( $gender != 1 && $gender != 2 ) $gender = null;
     <link rel="stylesheet" type="text/css" href="lib/dygraph.css"/>
     <link rel="stylesheet" type="text/css" href="cataviz.css"/>
     <style>
-    .dygraph-legend { left: 65px !important; top: 40px !important; width: 22ex !important; }
+    .dygraph-legend {left: 65px !important; top: 40px !important; width: 22ex !important;}
     </style>
   </head>
   <body>
@@ -29,7 +29,7 @@ if ( $gender != 1 && $gender != 2 ) $gender = null;
         <a href="" target="_new">Auteurs français, mortalité et longévité</a> 
         | <a href="?from=1600&amp;to=2015&amp;log=1">4 siècles</a>
         | <a href="?from=1760&amp;to=1860">Révolutions</a>
-        | <a href="?from=1860&amp;to=2020&amp;log=1">XX<sup>e</sup></a>
+        | <a href="?from=1860&amp;to=<?=$datemax?>">XX<sup>e</sup></a>
       </div>
       <form name="dates">
         <button onclick="window.location.href='?'; " type="button">Reset</button>
@@ -51,13 +51,11 @@ if ( $gender != 1 && $gender != 2 ) $gender = null;
     </header>
     <div id="chart" class="dygraph"></div>
     <script type="text/javascript">
-    g = new Dygraph(
-      document.getElementById("chart"),
-      [
+var data = [
 <?php
 
 // pas de moyenne pour ces dates
-$guerres = [ 1789, 1790, 1791, 1792, 1793, 1794,  1870, 1871, 1914, 1915, 1916, 1917, 1918, 1939, 1940, 1941, 1942, 1943, 1944, 1945 ];
+$guerres = [1789, 1790, 1791, 1792, 1793, 1794, 1870, 1871, 1914, 1915, 1916, 1917, 1918, 1939, 1940, 1941, 1942, 1943, 1944, 1945];
 $guerres = array_flip( $guerres );
 
 if ( $gender ) {
@@ -105,111 +103,64 @@ for ( $date=$from; $date <= $to; $date++ ) {
     else $lastagebooks = $agebooks;
   }
 
-  echo "[".$date;
+  echo "  [".$date;
   echo ",". number_format( $countdocs, 2, '.', '');
+  if ( $books ) echo ",". number_format( $countbooks, 2, '.', '');
   echo ",". number_format( $agedocs, 2, '.', '');
-  if ( $books ) {
-    echo ",". number_format( $countbooks, 2, '.', '');
-    echo ",". number_format( $agebooks, 2, '.', '');
-  }
+  if ( $books ) echo ",". number_format( $agebooks, 2, '.', '');
   echo "],\n";
 }
-       ?>],
-      {
-        title : "Databnf<?php if( $gender == 1) { echo ", hommes"; } else if( $gender == 2) { echo ", femmes"; } ?>, mortalité — effectifs et âge à la date de mort",
-        titleHeight: 35,
-        labels: [ "Année",
-          "Morts", "Âge", <?php if ($books) echo " \"Morts > $books livres\", \"Âge > $books livres\", "?>
-        ],
-        legend: "always",
-        labelsSeparateLines: "true",
-        ylabel: "Nombre de morts",
-        y2label: "Âge à la mort",
-        // showRoller: true,
-        // rollPeriod: <?php echo $smooth ?>,
-        <?php if ($log) echo "logscale: true,";  ?>
-        series: {
-          "Morts": {
-            color: "rgba( 128, 192, 0, 0.7 )",
-            fillGraph: true,
-            strokePattern: [4,4],
-            strokeWidth: 0.5,
-          },
-          "Âge": {
-            axis: 'y2',
-            color: "rgba( 128, 192, 0, 0.7 )",
-            strokeWidth: 4,
-          },
-          "Morts > <?=$books?> livres" : {
-            color: "rgba( 0, 128, 0, 0.7 )",
-            fillGraph: true,
-            strokePattern: [4,4],
-            strokeWidth: 0.5,
-          },
-          "Âge > <?=$books?> livres" : {
-            color: "rgba( 0, 128, 0, 0.7 )",
-            strokeWidth: 4,
-            axis: 'y2',
-          },
-        },
-        axes: {
-          x: {
-            drawGrid: true,
-            independentTicks: true,
-            gridLineColor: "rgba( 128, 128, 128, 0.5)",
-            gridLineWidth: 0.5,
-          },
-          y: {
-            independentTicks: true,
-            drawGrid: false,
-            gridLineColor: "rgba( 128, 128, 128, 0.5)",
-            gridLineWidth: 1,
-          },
-          y2: {
-            independentTicks: true,
-            drawGrid: true,
-            gridLineColor: "rgba( 192, 128, 160, 1 )",
-            gridLineWidth: 1,
-          },
-        },
-        underlayCallback: function(canvas, area, g) {
-          canvas.fillStyle = "rgba(192, 192, 192, 0.2)";
-          var periods = [ [1789,1794], [1814,1815], [1830,1831], [1848,1849], [1870,1871], [1914,1918], [1939,1945]];
-          var lim = periods.length;
-          for ( var i = 0; i < lim; i++ ) {
-            var bottom_left = g.toDomCoords( periods[i][0], -20 );
-            var top_right = g.toDomCoords( periods[i][1], +20 );
-            var left = bottom_left[0];
-            var right = top_right[0];
-            canvas.fillRect(left, area.y, right - left, area.h);
-          }
-        },
-      }
-    );
-    g.ready(function() {
-      g.setAnnotations([
-        { series: "Morts", x: "1648", shortText: "La Fronde", width: "", height: "", cssClass: "annl", },
-        { series: "Morts", x: "1789", shortText: "1789", width: "", height: "", cssClass: "annl", },
-        { series: "Morts", x: "1815", shortText: "1815", width: "", height: "", cssClass: "annl", },
-        { series: "Morts", x: "1830", shortText: "1830", width: "", height: "", cssClass: "annl", },
-        { series: "Morts", x: "1848", shortText: "1848", width: "", height: "", cssClass: "annl", },
-        { series: "Morts", x: "1870", shortText: "1870", width: "", height: "", cssClass: "annl", },
-        { series: "Morts", x: "1914", shortText: "1914", width: "", height: "", cssClass: "annl", },
-        { series: "Morts", x: "1939", shortText: "1939", width: "", height: "", cssClass: "annl", },
-      ]);
-    });
-    var linear = document.getElementById("linear");
-    var log = document.getElementById("log");
-    var setLog = function(val) {
-      g.updateOptions({ logscale: val });
-      linear.disabled = !val;
-      log.disabled = val;
-    };
-    linear.onclick = function() { setLog(false); };
-    log.onclick = function() { setLog(true); };
+?>];
+<?php
+if ($gender == 1) {
+  $dark = '"rgba(96, 96, 192, 1)"';
+  $light = '"rgba(128, 128, 128, 0.7)"';
+}
+else if ($gender == 2) {
+  $dark = '"rgba(255, 128, 148, 1)"';
+  $light = '"rgba(128, 128, 128, 0.7)"';
+}
+else {
+  $dark = '"rgba(128, 192, 128, 1)"';
+  $light = '"rgba(128, 128, 128, 0.5)"';
+}
+?>
+var attrs = {
+  title : "Databnf<?php if( $gender == 1) { echo ", hommes"; } else if( $gender == 2) { echo ", femmes"; } ?>, mortalité — effectifs et âge à la date de mort",
+  labels: [ "Année",
+    "Morts", <?php if ($books) echo " \"Morts > $books livres\","?> "Âge",  <?php if ($books) echo "\"Âge > $books livres\", "?>
+  ],
+  ylabel: "Nombre de morts",
+  y2label: "Âge à la mort",
+  series: {
+    "Morts": {
+      color: <?=$dark?>,
+      fillGraph: true,
+      strokeWidth: 0.5,
+    },
+    "Morts > <?=$books?> livres" : {
+      color: <?=$light?>,
+      fillGraph: false,
+      strokeWidth: 2,
+    },
+    "Âge": {
+      axis: 'y2',
+      color: <?=$dark?>,
+      strokeWidth: 2,
+    },
+    "Âge > <?=$books?> livres" : {
+      color: <?=$light?>,
+      strokeWidth: 4,
+      strokePattern: [4,4],
+      axis: 'y2',
+    },
+  },
+};
+var annoteSeries = "Morts";
+<?php include('dygraph-common.php') ?>
     </script>
     <div class="text">
-    <p>Pour chaque année, ce graphique projette les auteurs francophones d’un livre (plus de 50 pages) à leur date de mort, avec leur âge à la mort. </p>
+    <p>Pour chaque année, ce graphique projette les auteurs francophones d’un livre (plus de 50 pages) à leur date de mort, avec l'âge moyen à la mort. </p>
     </div>
     <?php include ( dirname(__FILE__).'/footer.php' ) ?>
   </body>
