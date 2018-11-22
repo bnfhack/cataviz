@@ -1,6 +1,7 @@
 <?php
 $from = 1770;
 $to = 1970;
+$datemax = 1960;
 include (dirname(__FILE__).'/Cataviz.php');
 $db = new Cataviz("databnf.sqlite");
 $gender = @$_REQUEST['gender'];
@@ -23,10 +24,7 @@ if ($gender != 1 && $gender != 2) $gender = null;
     <header>
       <div class="links">
         <a href="?">Générations</a>
-        | <a href="?from=1770&amp;to=1970">2 siècles</a> 
-        | <a href="?from=1770&amp;to=1913&amp;gender=1">♂ Révolutions</a> 
-        | <a href="?from=1860&amp;to=1970&amp;gender=1">♂ Guerres mondiales</a> 
-        | <a href="?from=1900&amp;to=<?=$datemax?>">XX<sup>e</sup></a> 
+        | <a href="?from=1760&amp;to=1970">2 siècles</a> 
       </div>
       <form name="dates">
         <button onclick="window.location.href='?'; " type="button">Reset</button>
@@ -105,7 +103,7 @@ for ($date=$from; $date <= $to; $date++) {
 }?>
 ];
 var attrs = {
-  title : "Databnf<?php if($gender == 1) { echo ", hommes"; } else if($gender == 2) { echo ", femmes"; } ?>, âge à la date de publication.",
+  title : "Databnf<?php if($gender == 1) { echo ", hommes"; } else if($gender == 2) { echo ", femmes"; } ?>, âge de l'auteur principal à la date de publication.",
   labels: [ "Année", "Premier livre", "100–…", "90–99", "80–89", "70–79", "60–69", "50–59", "40–49", "30–39", "20–29", "10–19" ],
   y2label: "Âge au premier livre",
   ylabel: "% de livres",
@@ -132,17 +130,12 @@ var attrs = {
 
   },
 };
+var annoteSeries = "20–29";
 <?php include('dygraph-common.php') ?>
 g.updateOptions({legend: null, axes: {y: {valueRange: [0,101]}}});
 g.ready(function() {
-  g.setAnnotations([
-    { series: "40–49", x: "1789", shortText: "1789", width: "", height: "", cssClass: "annl", },
-    { series: "40–49", x: "1815", shortText: "1815", width: "", height: "", cssClass: "annl", },
-    { series: "40–49", x: "1830", shortText: "1830", width: "", height: "", cssClass: "annl", },
-    { series: "40–49", x: "1848", shortText: "1848", width: "", height: "", cssClass: "annl", },
-    { series: "40–49", x: "1870", shortText: "1870", width: "", height: "", cssClass: "annl", },
-    { series: "40–49", x: "1914", shortText: "1914", width: "", height: "", cssClass: "annl", },
-    { series: "40–49", x: "1939", shortText: "1939", width: "", height: "", cssClass: "annl", },
+  var anns = g.annotations();
+  g.setAnnotations(anns.concat([
 
     { series: "30–39", x: "1601", shortText: "30–39", width: "", height: "", cssClass: "annb", },
     { series: "40–49", x: "1601", shortText: "40–49", width: "", height: "", cssClass: "annb", },
@@ -180,11 +173,16 @@ g.ready(function() {
     { series: "60–69", x: "2001", shortText: "60–69", width: "", height: "", cssClass: "annb", },
     { series: "70–79", x: "2001", shortText: "70–79", width: "", height: "", cssClass: "annb", },
     { series: "80–89", x: "2001", shortText: "80–89", width: "", height: "", cssClass: "annb", },
-  ]);
+  ]));
 });
     </script>
     <div class="text">
-    <p>Ce graphique projette l'âge de l'auteur principal à la date de publication d'un livre, pour établir la proportion </p>
+    <p>Ce graphique projette l'âge de l'auteur principal à la date de publication d'un livre, pour établir la proportion des générations. Attention, les chiffres sont de moins en moins fiables au fur et à mesure que l'on s'approche du présent,
+    car les dates de naissance ne sont pas encore renseignées pour les auteurs récents
+    (voir la projection des auteurs à leur date de naissance, la <a href="natalite.php?from=1900&to=2016&books=10">«natalité»</a>).
+    Cette vue est une sorte de pyramide des âges montrant une grande importance des auteurs les plus vieux,
+    longtemos réédités de leur vivant. L'âge moyen au premier livre est une indication du renouvellement des générations littéraires.
+  </p>
     </div>
     <?php include (dirname(__FILE__).'/footer.php') ?>
   </body>

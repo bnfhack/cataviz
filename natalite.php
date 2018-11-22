@@ -1,8 +1,6 @@
 <?php
-$datemax = 1990;
 $from = 1830;
 $to = 1950;
-$log = 1;
 include (dirname(__FILE__).'/Cataviz.php');
 $db = new Cataviz("databnf.sqlite");
 if (!isset($_REQUEST['books'])) $books = 10;

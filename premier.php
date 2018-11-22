@@ -1,7 +1,7 @@
 <?php
-$from = 1750;
-$to = 1865;
-$datemax = 2014;
+$from = 1760;
+$to = 1960;
+$datemax = 1960;
 include (dirname(__FILE__).'/Cataviz.php');
 $db = new Cataviz("databnf.sqlite");
 // pour indice 100, même delta pour toutes les lignes ?
@@ -53,15 +53,17 @@ $firstmq = $db->prepare("SELECT avg(age1) FROM person WHERE fr = 1 AND gender=1 
 $countmq = $db->prepare("SELECT count(*) AS count FROM document WHERE lang='fre' AND book=1 AND posthum = 0 AND gender = 1 AND document.date >= ? AND document.date <= ? ");
 
 
-$delta100 = 3;
-if ($from >= 1700) $delta100 = 1;
-if ($from >= 1800) $delta100 = 0;
-if ($from >= 1900) $delta100 = 0;
-
-$countfq->execute(array($base100-$delta100, $base100+$delta100));
+$delta = Cataviz::delta(2, $base100);
+$d = floor($delta * 0.5);
+$countfq->execute(array($base100 - $d, $base100 + $d));
 list($countf100) = $countfq->fetch(PDO::FETCH_NUM);
-$countmq->execute(array($base100-$delta100, $base100+$delta100));
+$countf100 = $countf100 / (1 + 2 * $d);
+
+$delta = Cataviz::delta(1, $base100);
+$d = floor($delta * 0.5);
+$countmq->execute(array($base100 - $d, $base100 + $d));
 list($countm100) = $countmq->fetch(PDO::FETCH_NUM);
+$countm100 = $countm100 / (1 + 2 * $d);
 
 
 
@@ -72,45 +74,49 @@ for ($date=$from; $date <= $to; $date++) {
   list($age) = $ageq->fetch(PDO::FETCH_NUM);
   */
 
-  $deltamod = 20;
-  if ($date >= 1700) $deltamod = 20;
-  if ($date >= 1800) $deltamod = 10;
-  if ($date >= 1900) $deltamod = 3;
+  $delta = Cataviz::delta(2, $date);
 
-  $delta = floor(0.3*$deltamod);
-  $agefq->execute(array($date-$delta, $date+$delta));
+  $d = floor($delta);
+  $agefq->execute(array($date - $d, $date + $d));
   list($agef) = $agefq->fetch(PDO::FETCH_NUM);
 
-  $delta = floor(0.8*$deltamod);
-  $firstfq->execute(array($date-$delta, $date+$delta));
-  list($firstf) = $firstfq->fetch(PDO::FETCH_NUM);
+  $d = floor($delta * 2);
+  $firstfq->execute(array($date - $d, $date + $d));
+  list($f) = $firstfq->fetch(PDO::FETCH_NUM);
+  if ($f) $firstf = $f;
 
-  $delta = floor(0.1*$deltamod);
-  $agemq->execute(array($date-$delta, $date+$delta));
+  $d = floor($delta * 0.3);
+  $countfq->execute(array($date - $d, $date + $d));
+  list($countf) = $countfq->fetch(PDO::FETCH_NUM);
+  $countf = $countf / (1 + 2 * $d);
+
+  $delta = Cataviz::delta(1, $date);
+
+  $d = floor($delta * 0.6);
+  $agemq->execute(array($date - $d, $date + $d));
   list($agem) = $agemq->fetch(PDO::FETCH_NUM);
-  $delta = floor(0.1*$deltamod);
-  $firstmq->execute(array($date-$delta, $date+$delta));
+
+  $d = floor($delta * 0.8);
+  $firstmq->execute(array($date - $d, $date + $d));
   list($firstm) = $firstmq->fetch(PDO::FETCH_NUM);
 
-  $countfq->execute(array($date-$delta100, $date+$delta100));
-  list($countf) = $countfq->fetch(PDO::FETCH_NUM);
-  $countmq->execute(array($date-$delta100, $date+$delta100));
+  $d = floor($delta * 0.3);
+  $countmq->execute(array($date - $d, $date + $d));
   list($countm) = $countmq->fetch(PDO::FETCH_NUM);
+  $countm = $countm / (1 + 2 * $d);
 
 
   echo "  [".$date;
 
-  if (!$agef) echo ',';
-  else echo ",".number_format($agef, 2, '.', '');
-  echo ",".number_format($firstf, 2, '.', '');
-  echo ",". number_format(100.0* $countf  / $countf100, 2, '.', '');
+  if (!$agef) echo ', ';
+  else echo ", ".number_format($agef, 2, '.', '');
+  echo ", ".number_format($firstf, 2, '.', '');
+  echo ", ". number_format(100.0* $countf  / $countf100, 2, '.', '');
 
   if (!$agem) echo ',';
-  else echo ",".number_format($agem, 2, '.', '');
-  echo ",".number_format($firstm, 2, '.', '');
-  echo ",". number_format(100.0* $countm  / $countm100, 2, '.', '');
-
-
+  else echo ", ".number_format($agem, 2, '.', '');
+  echo ", ".number_format($firstm, 2, '.', '');
+  echo ", ". number_format(100.0* $countm  / $countm100, 2, '.', '');
 
   echo "],\n";
 
@@ -118,7 +124,10 @@ for ($date=$from; $date <= $to; $date++) {
 ?>];
 attrs = {
   title : "Databnf, âges moyens à la date de publication (livres, base 100 en <?=$base100?>).",
-  labels: [ "Année", "♀ Âge à la publication", "♀ Âge au 1er livre", "♀ Livres", "♂ Âge à la publication", "♂ Âge au 1er livre", "♂ Livres" ],
+  labels: [ "Année",
+    "♀ Âge à la publication", "♀ Âge au 1er livre", "♀ Livres",
+    "♂ Âge à la publication", "♂ Âge au 1er livre", "♂ Livres",
+  ],
   ylabel: "Âge moyen",
   y2label: "Livres, base 100 en <?=$base100?>",
   series: {
@@ -173,6 +182,9 @@ g.ready(function() {
       Ce graphique agrège des informations pour comprendre l’âge moyen à la publication d’un livre selon le sexe de l'auteur principal.
       En démographie, cette donnée pourrait correspondre à l'âge moyen à la naissance d'un enfant.
       L'âge est une variable d'ajustement du marché lorsque les débouchés à la vente augmentent ou diminuent.
+      Attention, les chiffres sont de moins en moins fiables au fur et à mesure que l'on s'approche du présent,
+      car les dates de naissance ne sont pas encore renseignées pour les auteurs récents
+      (voir la projection des auteurs à leur date de naissance, la <a href="natalite.php?from=1900&to=2016&books=10">«natalité»</a>).
     </p>
     <p>
       Ainsi, autour de la <a href="?from=1750&to=1840">Révolution</a>, on peut observer plusieurs phénomènes.
@@ -189,15 +201,6 @@ g.ready(function() {
       se bousculent mais ne peuvent pas rentrer sur un marché de plus en plus concurrentiel, tenu par les plus anciens,
       l'âge à la publication augmente.
       La fin de Napoléon libère la prospérité économique, l'industrialisation, ouvrant le marché des titres à la génération romantique.
-    </p>
-    <p>
-      Le <a href="?from=1910&to=2014">XX<sup>e</sup></a> siècle, outre les crans des deux guerres mondiales, montre surtout l'augmentation
-      globale de l'espérance de vie et du niveau scolaire des femmes.
-      L'âge moyen à la publication atteint des sommets affolants, entre 75 et 80 ans,
-      ce qui s'explique par les réédition massives de succès déjà éprouvés,
-      par exemple les Astérix.
-      On notera une croissance bien plus rapide des titres signés par les femmes (même s'ls n'atteignent encore que <a href="femmes.php?from=1910&to=2014&log=" target="_blank">30%</a>),
-      et un âge moyen plus jeune que les hommes pour le premier livre.
     </p>
     </div>
     <?php include (dirname(__FILE__).'/footer.php') ?>

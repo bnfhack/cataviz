@@ -28,8 +28,8 @@ if (isset($_REQUEST['books']) && is_numeric($_REQUEST['books'])) $books = $_REQU
       <div class="links">
         <a href="?">Auteurs français, mortalité et longévité</a> 
         | <a href="?from=1600&amp;to=2015&amp;log=1">4 siècles</a>
-        | <a href="?from=1760&amp;to=1860">Révolutions</a>
-        | <a href="?from=1860&amp;to=<?=$datemax?>">XX<sup>e</sup></a>
+        | <a href="?from=1760&amp;to=1880">Révolutions</a>
+        | <a href="?from=1880&amp;to=<?=$datemax?>">XX<sup>e</sup></a>
       </div>
       <form name="dates">
         <button onclick="window.location.href='?'; " type="button">Reset</button>
@@ -47,45 +47,32 @@ if (isset($_REQUEST['books']) && is_numeric($_REQUEST['books'])) $books = $_REQU
 var data = [
 <?php
 
-// pas de moyenne pour ces dates
-$guerres = [1789, 1790, 1791, 1792, 1793, 1794, 1870, 1871, 1914, 1915, 1916, 1917, 1918, 1939, 1940, 1941, 1942, 1943, 1944, 1945];
-$guerres = array_flip($guerres);
 $sql = "SELECT count(*), avg(age) FROM person WHERE fr = 1 AND gender = ? AND deathyear >= ? AND deathyear <= ? ";
 
 if ($books > 0) $sql .= " AND books >= $books";
 //
 $deathq = $db->prepare($sql);
 
-$delta100 = 3;
-if ($from >= 1700) $delta100 = 1;
-if ($from >= 1800) $delta100 = 0;
-if ($from >= 1900) $delta100 = 0;
 
-$deathq->execute(array(2, $base100-$delta100, $base100+$delta100));
+$delta = Cataviz::delta(2, $base100);
+$deathq->execute(array(2, $base100 - $delta, $base100 + $delta));
 list($countf100) = $deathq->fetch(PDO::FETCH_NUM);
-$deathq->execute(array(1, $base100-$delta100, $base100+$delta100));
+$countf100 = $countf100 / (1 + 2 * $delta);
+
+$delta = Cataviz::delta(1, $base100);
+$deathq->execute(array(1, $base100 - $delta, $base100 + $delta));
 list($countm100) = $deathq->fetch(PDO::FETCH_NUM);
+$countm100 = $countm100 / (1 + 2 * $delta);
 
 for ($date=$from; $date <= $to; $date++) {
 
-  // femmes
-  $delta = 10;
-  if ($date >= 1600) $delta = 8;
-  if ($date >= 1700) $delta = 6;
-  if ($date >= 1789) $delta = 4;
-  if ($date >= 1900) $delta = 3;
-  if (isset($guerres[$date])) $delta = 0;
 
+  $delta = Cataviz::delta(2, $date);
   $deathq->execute(array(2, $date - $delta, $date + $delta));
   list($countf, $agef) = $deathq->fetch(PDO::FETCH_NUM);
   $countf = $countf / (1 + 2 * $delta);
 
-  $delta = 5;
-  if ($date >= 1600) $delta = 4;
-  if ($date >= 1700) $delta = 3;
-  if ($date >= 1789) $delta = 2;
-  if ($date >= 1900) $delta = 1;
-  if (isset($guerres[$date])) $delta = 0;
+  $delta = Cataviz::delta(1, $date);
   $deathq->execute(array(1, $date - $delta, $date + $delta));
   list($countm, $agem) = $deathq->fetch(PDO::FETCH_NUM);
   $countm = $countm / (1 + 2 * $delta);

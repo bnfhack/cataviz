@@ -351,6 +351,32 @@ class Cataviz
    public static function ark2id($ark) {
      return 0+substr($ark, 2, -1);
    }
+   public static function delta($gender, $date) {
+     // pas de moyenne pour ces dates
+     $guerres = [1914, 1915, 1916, 1917, 1918, 1939, 1940, 1941, 1942, 1943, 1944, 1945];
+     $guerres = array_flip($guerres);
+     if (isset($guerres[$date])) return 0;
+     $revolutions = [1789, 1790, 1791, 1792, 1793, 1794, 1814, 1815, 1830, 1831, 1848, 1870, 1871];
+     if ($gender == 1 && isset($revolutions[$date])) return 0;
+     if ($date >= 1900) {
+       if ($gender == 2) return 3;
+       return 1;
+     }
+     if ($date >= 1789) {
+       if ($gender == 2) return 5;
+       return 2;
+     }
+     if ($date >= 1700) {
+       if ($gender == 2) return 8;
+       return 3;
+     }
+     if ($date >= 1600) {
+       if ($gender == 2) return 10;
+       return 4;
+     }
+     if ($gender == 2) return 12;
+     return 5;
+   }
 
 }
 

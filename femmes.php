@@ -1,5 +1,4 @@
 <?php
-$log = true;
 $smooth = 0;
 $from = 1760;
 $to = 1960;
@@ -17,12 +16,7 @@ if (isset($_REQUEST['pagefloor'])) $pagefloor = $_REQUEST['pagefloor'];
     <link rel="stylesheet" type="text/css" href="lib/dygraph.css"/>
     <link rel="stylesheet" type="text/css" href="cataviz.css"/>
     <style>
-.dygraph-legend { left: 9% !important; top: 1ex !important; }
-.dygraph-ylabel { color: rgba(0, 0, 0, 0.7); font-weight: normal; }
-.dygraph-axis-label-y1 { color: #000; }
-.dygraph-y2label { color: rgba(128, 128, 128, 0.5); }
-.dygraph-axis-label-y2 { color: rgba(192, 192, 192, 1); font-weight: bold; font-size: 20px;}
-.ann { transform: rotateZ(-90deg); transform-origin: 0% 100%; padding-left: 1em; border-left: none !important; border-bottom: 1px solid #000 !important; font-size: 14pt !important; font-weight: normal; color: rgba(0, 0, 0, 0.8) !important; }
+    .dygraph-legend {left: 8% !important; top: 40px !important; width: 12em;}
     </style>
   </head>
   <body>
@@ -38,7 +32,6 @@ if (isset($_REQUEST['pagefloor'])) $pagefloor = $_REQUEST['pagefloor'];
         <button onclick="window.location.href='?'; " type="button">Reset</button>
         De <input name="from" size="4" value="<?php echo $from ?>"/>
         à <input name="to" size="4" value="<?php echo  $to ?>"/>
-        <label>Seuil pages <input name="pagefloor" size="4" value="<?php echo  $pagefloor ?>"/></label>
         Échelle
         <button id="log" <?php if($log) echo'disabled="true"';?> type="button">log</button>
         <button id="linear" <?php if(!$log) echo'disabled="true"';?> type="button">linéaire</button>
@@ -52,12 +45,6 @@ data = [
 // 844653 document 'fre' mais pas 'Text' (albums illustrés…)
 $qtitf = $db->prepare("SELECT count(*) AS count FROM document WHERE lang='fre' AND book=1 AND posthum = 0 AND gender = 2 AND document.date >= ? AND document.date <= ? ");
 $qtith = $db->prepare("SELECT count(*) AS count FROM document WHERE lang='fre' AND book=1 AND posthum = 0 AND gender = 1 AND document.date = ? ");
-// logique un peu bizarre, mais permet de profiter de l’index birthyear au max, gens entre 20 et 70 ans (mais pas morts)
-// après expérience, pas très intéressant
-// $qautf = $db->prepare("SELECT count(*) FROM person WHERE gender = 2 AND writes = 1 AND lang = 'fre' AND birthyear <= (? - 20) AND birthyear >= (?-70) AND deathyear > ? ");
-// $qpagesf = $db->prepare("SELECT avg(pages) FROM document WHERE date = ?  AND type = 'Text' AND lang='fre' AND gender=2 ");
-// $qpages = $db->prepare("SELECT avg(pages) FROM document WHERE date = ?  AND type = 'Text' AND lang='fre' ");
-
 
 for ($date=$from; $date <= $to; $date++) {
   $sigma = 0;
@@ -88,6 +75,7 @@ for ($date=$from; $date <= $to; $date++) {
 ?>]; // data
 
 attrs = {
+  title : "Nombre de livres (> 50 p.) signés par une femme ou un homme vivant·e·s",
   labels: [ "Année", "♂ livres", "♀ livres", "% des femmes" ],
   legend: "always",
   ylabel: "Livres",
