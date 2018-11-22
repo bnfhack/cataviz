@@ -8,15 +8,15 @@ if (!isset($from)) $from = 1900;
 if (!isset($to)) $to = $datemax;
 if (!isset($smooth)) $smooth = 0;
 
-if (isset($_REQUEST['from']) &&  0+$_REQUEST['from']) $from = $_REQUEST['from'];
+if (isset($_REQUEST['from']) &&  is_numeric($_REQUEST['from'])) $from = $_REQUEST['from'];
 if ($from < 1452) $from = 1452;
 if ($from > $datemax) $from = $datemax;
 
-if (isset($_REQUEST['to']) && 0+isset($_REQUEST['to'])) $to = $_REQUEST['to'];
+if (isset($_REQUEST['to']) && is_numeric($_REQUEST['to'])) $to = $_REQUEST['to'];
 if ($to < 1475) $to = $datemax;
 if ($to > $datemax) $to = $datemax;
 
-if (isset($_REQUEST['smooth']) && 0+isset($_REQUEST['smooth'])) $smooth = $_REQUEST['smooth'];
+if (isset($_REQUEST['smooth']) && is_numeric($_REQUEST['smooth'])) $smooth = $_REQUEST['smooth'];
 if ($smooth < 0) $smooth = 0;
 if ($smooth > 50) $smooth = 50;
 

@@ -53,9 +53,9 @@ $qlatant = $db->prepare("SELECT count(*) AS count FROM document WHERE type = 'Te
 $qlatmed = $db->prepare("SELECT count(*) AS count FROM document WHERE type = 'Text' AND  lang = 'lat' AND birthyear >= 150 AND birthyear < 1450 AND date = ? ");
 $qlatmod = $db->prepare("SELECT count(*) AS count FROM document WHERE type = 'Text' AND  lang = 'lat' AND birthyear >= 1450 AND date = ?");
 $qlatmisc = $db->prepare("SELECT count(*) AS count FROM document WHERE type = 'Text' AND  lang = 'lat' AND birthyear IS NULL AND date = ?");
-$qtrad = $db->prepare("SELECT count(*) AS count FROM document WHERE  type = 'Text' AND (lang = 'frm' OR lang = 'fre') AND birthyear < 1400 AND date = ?");
+$qtrad = $db->prepare("SELECT count(*) AS count FROM document WHERE  type = 'Text' AND lang IN ('frm', 'fre') AND birthyear < 1400 AND date = ?");
 // il y a des images, des partitions ou des disques en latin
-$qmulti = $db->prepare("SELECT count(*) AS count FROM document WHERE  (type = 'Score' OR type = 'Image' OR type = 'Sound' OR type = 'MovingImage' OR type='StillImage') AND (lang = 'lat' OR lang = 'grc') AND date = ?");
+$qmulti = $db->prepare("SELECT count(*) AS count FROM document WHERE type IN ('Score', 'Image', 'Sound', 'MovingImage', 'StillImage') AND lang IN ('lat', 'grc') AND date = ?");
 
 $qtext = $db->prepare("SELECT count(*) AS count FROM document WHERE  type = 'Text' AND date = ?");
 $qnolang = $db->prepare("SELECT count(*) AS count FROM document WHERE  type = 'Text' AND lang IS NULL AND date = ?");
@@ -109,7 +109,6 @@ var attrs = {
   labels: [ "Année", "Multimédia", "Latin moderne", "Latin médiéval", "Autres latins", "Latin ancien", "Traductions", "Grec ancien", "% sans langue" ],
   ylabel: "Nombre de titres",
   showRoller: true,
-  legend: "always",
   stackedGraph: true,
   fillGraph: true,
   strokeWidth: 1,
