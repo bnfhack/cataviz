@@ -106,6 +106,7 @@ for ($date=$from; $date <= $to; $date++) {
 
 var attrs = {
   labels: [ "Année", "Vivants", "XXe","XIXe", "XVIIIe", "XVIIe", "Renaissance", "Moyen-Âge", "Antiquité" ],
+  title : "Databnf, rééditions du patrimoine",
   ylabel: "Titres des morts",
   y2label: "Titres des vivants",
   showRoller: true,
@@ -149,6 +150,7 @@ g.ready(function() {
   var anns = g.annotations();
   g.setAnnotations(anns.concat([
     {series: "Vivants", x: "1981", shortText: "Prix unique du livre", width: "", height: "", cssClass: "annl"},
+    {series: "Vivants", x: "2009", shortText: "Crise 2008", width: "", height: "", cssClass: "annl"},
   ]));
 });
     </script>
