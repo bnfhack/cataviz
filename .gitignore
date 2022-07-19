@@ -3,3 +3,4 @@
 *.sqold
 
 test.php
+*.db
