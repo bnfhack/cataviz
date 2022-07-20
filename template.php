@@ -56,7 +56,7 @@ function menu_item($url, $label, $title=null, $pars=['from', 'to'])
                     <?php Route::main(); ?>
                 </div>
             </div>
-            <footer id="footer"><a href="#top" style="float: right; ">▲</a>Données <a href="ftp://databnf:databnf@echanges.bnf.fr/" target="_blank">data.bnf.fr</a> (2018), développements <a onmouseover="this.href='mailto'+'\x3A'+'frederic.glorieux'+'\x40'+'fictif.org'" href="#">Frédéric Glorieux</a>. </footer>
+            <footer id="footer"><a href="#top" style="float: right; ">▲</a>Données BnF, <a href="https://api.bnf.fr/fr/BnF-Catalogue-general" target="_blank">catalogue général</a> (2020), développements <a onmouseover="this.href='mailto'+'\x3A'+'frederic.glorieux'+'\x40'+'fictif.org'" href="#">Frédéric Glorieux</a>. </footer>
         </div>
         <script type="text/javascript" 
         src="<?= Route::home_href() ?>theme/cataviz.js">//</script>
