@@ -2,7 +2,7 @@
 
 function title()
 {
-    return "BnF, Catalogue général, titres en français par an";
+    return "BnF, Catalogue général, titres par année";
 }
 
 function main()
@@ -34,57 +34,22 @@ function main()
     <div id="chart" class="dygraph"></div>
 </div>
 <script type="text/javascript">
-let data = [<?php
+attrs.title = "<?= title() ?>";
+attrs.ylabel = "Titres";
 
-$qdoc = Cataviz::prepare("SELECT count(*) AS count FROM doc WHERE year = ? AND type = 'txt'");
-$qgdp = Cataviz::prepare("SELECT gdppc FROM gdppc WHERE year = ?");
-// TODO pages
-// $qpages = $db->prepare("SELECT avg(pages) FROM document WHERE date = ?  AND type = 'Text' AND lang='fre'");
+// attrs.stackedGraph = true;
+// attrs.plotter = Dygraph.plotHistory;
+// attrs.strokeWidth = 10;
+attrs.strokeWidth = 1;
+// attrs.logscale = true;
 
-
-$lastpages = 0;
-for ($date = Cataviz::$p['from']; $date <= Cataviz::$p['to']; $date++) {
-    $qdoc->execute(array($date));
-    list($doc) = $qdoc->fetch(PDO::FETCH_NUM);
-    $qgdp->execute(array($date));
-    list($gdp) = $qgdp->fetch(PDO::FETCH_NUM);
-    echo "\n[" . $date;
-    echo ", " . $doc;
-    echo ", " . $gdp;
-    echo "],";
-}
-// nom de colonnes
-// $A = "Titres > $pagefloor p.";
-// $B = "Titres <= $pagefloor p.";
-?>
-]; // data
-let attrs = {
-    title: "<?= title() ?>",
-    labels: [ "Année", "Titres", "PNB/h"],
-    legend: "always",
-    ylabel: "Titres",
-    y2label: "PNB/h",
-    stackedGraph: true,
-    showRoller: true,
-    logscale: true,
-    // valueRange: [500, null],
-    series: {
-        "Titres ? p.": {
-            color: "rgba(1, 1, 1, 1)",
-            strokeWidth: 1,
-            fillGraph: false,
-        },
-        "PNB/h": {
-            axis: 'y2',
-            color: "rgba(255, 128, 128, 1)",
-            strokeWidth: 2,
-            strokePattern: [4,4],
-            stackedGraph: false,
-            fillGraph: false,
-        },
-    },
-};
-var annoteSeries = "Titres"; // period anotations
+let url = "data/doc_pages.php";
+url += "?from=<?= Cataviz::$p['from']?>&to=<?= Cataviz::$p['to']?>";
+Formajax.loadJson(url, function(json) {
+    // var annoteSeries = json.meta.labels[1]; // period anotations
+    attrs.labels = json.meta.labels;
+    g = new Dygraph(document.getElementById("chart"), json.data, attrs);
+});
 </script>
 <div class="text">
     <p>

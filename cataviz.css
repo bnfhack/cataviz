@@ -199,9 +199,22 @@ table.data {
 .dygraph-title {
     color: #000;
     padding-top: 3px;
+    padding-left: 55px;
     font-weight: 100;
+    font-size: 35px;
 }
 
+.dygraph-legend {
+    text-align: center;
+    font-size: 14pt;
+    top: 45px !important;
+    left: 57px !important;
+    right: 7px;
+    width: auto;
+}
+
+
+/*
 .dygraph-legend {
     background-color: rgba(255, 255, 255, 0.6) !important;
     padding: 4px;
@@ -211,7 +224,9 @@ table.data {
     pointer-events: none;
     font-size: 14pt !important;
     line-height: 100%;
+    left: 70px !important;
 }
+*/
 
 .dygraph-axis-label-x {
     font-size: 16pt;

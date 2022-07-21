@@ -38,8 +38,11 @@ function menu_item($url, $label, $title=null, $pars=['from', 'to'])
     <head>
         <meta charset="utf-8"/>
         <title><?= Route::title(I18n::_('title')) ?></title>
-        <script src="lib/dygraph.min.js">//</script>
-        <link rel="stylesheet" type="text/css" href="lib/dygraph.css"/>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/dygraph/2.1.0/dygraph.min.js">//</script>
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/dygraph/2.1.0/dygraph.min.css"/>
+        <script src="vendor/dygraphPlotHistory.js">//</script>
+        <script src="vendor/formajax.js">//</script>
+        <script type="text/javascript" src="<?= Route::home_href() ?>theme/cataviz.js">//</script>
         <link rel="stylesheet" type="text/css" href="cataviz.css"/>
     </head>
     <body class="<?= $body_class ?>">
@@ -58,9 +61,7 @@ function menu_item($url, $label, $title=null, $pars=['from', 'to'])
             </div>
             <footer id="footer"><a href="#top" style="float: right; ">▲</a>Données BnF, <a href="https://api.bnf.fr/fr/BnF-Catalogue-general" target="_blank">catalogue général</a> (2020), développements <a onmouseover="this.href='mailto'+'\x3A'+'frederic.glorieux'+'\x40'+'fictif.org'" href="#">Frédéric Glorieux</a>. </footer>
         </div>
-        <script type="text/javascript" 
-        src="<?= Route::home_href() ?>theme/cataviz.js">//</script>
-        <script type="text/javascript" src="<?= Route::home_href() ?>lib/Sortable.js">//</script>
+        <script type="text/javascript" src="<?= Route::home_href() ?>vendor/Sortable.js">//</script>
         <script type="text/javascript" src="<?= Route::home_href() ?>forms.js">//</script>
     </body>
 </html>

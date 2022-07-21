@@ -5,6 +5,11 @@ include_once(__DIR__ . '/php/autoload.php');
 set_time_limit(-1);
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
+// Some default values for this installation
+Cataviz::$p['from'] = 1685;
+Cataviz::$p['to'] = 1914;
+Cataviz::pars();
+Cataviz::connect(__DIR__.'/cataviz.db');
 
 
 /**
@@ -17,7 +22,7 @@ class Cataviz
     /** parameters */
     static public $p = array(
         'date_min' => 1452,
-        'date_max' => 2020,
+        'date_max' => 2019,
     );
 
 
@@ -77,7 +82,7 @@ class Cataviz
         $from = null;
         if (isset($_REQUEST['from']) &&  is_numeric($_REQUEST['from'])) {
             $from = $_REQUEST['from'];
-            if ($from < self::$p['date_min']) $from = null;
+            if ($from < self::$p['date_min']) $from = self::$p['date_min'];
             if ($from > self::$p['date_max']) $from = null;
         }
         if ($from !== null) {
@@ -87,7 +92,7 @@ class Cataviz
         if (isset($_REQUEST['to']) &&  is_numeric($_REQUEST['to'])) {
             $to = $_REQUEST['to'];
             if ($to < self::$p['date_min']) $to = null;
-            if ($to > self::$p['date_max']) $to = null;
+            if ($to > self::$p['date_max']) $to = self::$p['date_max'];
         }
         if ($to !== null) {
             self::$p['to'] = $to;
