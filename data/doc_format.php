@@ -3,14 +3,16 @@ require_once(__DIR__ . "/../Cataviz.php");
 header("Access-Control-Allow-Origin:*");
 header("Content-Type: application/json");
 
-$sql = "SELECT count(*) AS count FROM doc WHERE year = ? AND ";
+$min = 200;
+$sql = "SELECT count(*) AS c FROM doc WHERE year = ? AND ";
 
 $queries = array(
-    // "2 p." => Cataviz::prepare($sql."pages <= 2"),
-    "? p." => Cataviz::prepare($sql."pages IS NULL"),
-    "]1, 64] p." => Cataviz::prepare($sql."pages <= 64"),
-    "]64, 192] p." => Cataviz::prepare($sql."pages > 64 AND pages <= 192"),
-    "]192, …] p." => Cataviz::prepare($sql."pages > 192"),
+    "In-?°" => Cataviz::prepare($sql."format IS NULL"),
+    "in-2°" => Cataviz::prepare($sql."format = 2"),
+    "in-4°" => Cataviz::prepare($sql."format = 4"),
+    "in-8°" => Cataviz::prepare($sql."format = 8"),
+    "in-12°" => Cataviz::prepare($sql."format = 12"),
+    "in-16+°" => Cataviz::prepare($sql."format >= 16"),
     // "]512, …] p." => Cataviz::prepare($sql."pages > 512"),
 );
 
@@ -25,6 +27,10 @@ for ($year = Cataviz::$p['from']; $year <= Cataviz::$p['to']; $year++) {
     foreach ($queries as $label => $q) {
         $q->execute(array($year));
         list($val) = $q->fetch(PDO::FETCH_NUM);
+        /*
+        if ($val >= $min) echo ", " . $val;
+        else echo ", null";
+        */
         echo ", " . $val;
     }
     echo "]";

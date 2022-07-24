@@ -9,7 +9,7 @@
     }
 
     function plotHistory(e) {
-
+        const pointSize = e.dygraph.getOption('pointSize', e.setName);
         var ctx = e.drawingContext;
         var points = e.points;
         ctx.fillStyle = e.color;
@@ -18,25 +18,31 @@
         const smoothYear = [
             [-1, 3],
             [1648, 0],
-            [1654, 1],
+            [1654, 2],
             [1788, 0],
-            [1802, 1],
+            [1802, 2],
             [1829, 0],
             [1832, 2],
             [1846, 0],
             [1851, 2],
             [1868, 0],
             [1874, 2],
+            [1913, 0],
+            [1919, 2],
+            [1938, 0],
+            [1946, 2],
             [2030, 0],
         ];
 
         // Do the actual plotting.
         ctx.globalAlpha = 1;
-        for (var i = 0; i < points.length; i++) {
-            var p = points[i];
-            ctx.beginPath();
-            ctx.arc(p.canvasx, p.canvasy, 2, 0, 2 * Math.PI, false);
-            ctx.fill();
+        if (pointSize > 0) {
+            for (var i = 0; i < points.length; i++) {
+                var p = points[i];
+                ctx.beginPath();
+                ctx.arc(p.canvasx, p.canvasy, pointSize, 0, 2 * Math.PI, false);
+                ctx.fill();
+            }
         }
         ctx.globalAlpha = 0.15;
 

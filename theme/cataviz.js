@@ -3,9 +3,11 @@ let attrs = {
     // labelsSeparateLines: true,
     showRoller: false,
     titleHeight: 75,
+    pointSize: 2,
 };
 
 attrs.colors = [
+    'hsla(0, 0%, 50%, 1)', // 1
     'hsla(0, 50%, 50%, 1)', // 1
     'hsla(225, 50%, 50%, 1)', // 2
     'hsla(90, 60%, 30%, 1)', // 3
@@ -44,7 +46,6 @@ attrs.underlayCallback = function(canvas, area, g) {
 
 
 
-attrs.legend = "always";
 attrs.axes = {
     x: {
         gridLineWidth: 1,

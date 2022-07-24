@@ -3,11 +3,16 @@ require_once(__DIR__ . "/../Cataviz.php");
 
 header("Access-Control-Allow-Origin:*");
 header("Content-Type: application/json");
-$langs = array(
-    "fre" => "Français",
-    "lat" => "Latin",
-    "eng" => "Anglais",
-    "ger" => "Allemand",
+
+$sql = "SELECT count(*) AS count FROM doc WHERE year = ? AND ";
+
+
+$queries = array(
+    // "?" => Cataviz::prepare($sql."lang IS NULL"),
+    "Français" => Cataviz::prepare($sql."lang = 'fre'"),
+    "Latin" => Cataviz::prepare($sql."lang = 'lat'"),
+    "Anglais" => Cataviz::prepare($sql."lang = 'eng'"),
+    "Allemand" => Cataviz::prepare($sql."lang = 'ger'"),
     // "ita" => "Italien",
     // "spa" => "Espagnol",
     // "dut" => "Néerlandais",
@@ -24,9 +29,9 @@ for ($year = Cataviz::$p['from']; $year <= Cataviz::$p['to']; $year++) {
     if ($first) $first = false;
     else echo ","; 
     echo "\n        [" . $year;
-    foreach ($langs as $lang => $label) {
-        $qdoc->execute(array($year, $lang));
-        list($val) = $qdoc->fetch(PDO::FETCH_NUM);
+    foreach ($queries as $label => $q) {
+        $q->execute(array($year));
+        list($val) = $q->fetch(PDO::FETCH_NUM);
         echo ", " . $val;
     }
     echo "]";
@@ -36,7 +41,7 @@ echo '    "meta":{'."\n";
 
 //    labels: [ "Année", "Titres", "PNB/h"],
 echo '        "labels": ["Année"';
-foreach ($langs as $lang => $label) {
+foreach ($queries as $label => $q) {
     echo ', "' . $label . '"';
 }
 echo "]";

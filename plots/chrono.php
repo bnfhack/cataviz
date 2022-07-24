@@ -38,16 +38,20 @@ attrs.title = "<?= title() ?>";
 attrs.ylabel = "Titres";
 
 // attrs.stackedGraph = true;
-// attrs.plotter = Dygraph.plotHistory;
-// attrs.strokeWidth = 10;
-attrs.strokeWidth = 1;
-// attrs.logscale = true;
+attrs.plotter = Dygraph.plotHistory;
+attrs.strokeWidth = 10;
+// attrs.strokeWidth = 1;
+attrs.logscale = true;
 
-let url = "data/doc_pages.php";
+
+let url = "data/doc_lang.php";
 url += "?from=<?= Cataviz::$p['from']?>&to=<?= Cataviz::$p['to']?>";
 Formajax.loadJson(url, function(json) {
     // var annoteSeries = json.meta.labels[1]; // period anotations
     attrs.labels = json.meta.labels;
+    if (json.meta.attrs) {
+        Object.assign(attrs, json.meta.attrs);
+    }
     g = new Dygraph(document.getElementById("chart"), json.data, attrs);
 });
 </script>
