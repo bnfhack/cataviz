@@ -38,7 +38,9 @@ class Cataviz
                 $errors= error_get_last();
                 echo "COPY ERROR: ".$errors['type'];
                 echo "<br />\n".$errors['message'];
-                die ("Rights error, PHP server is not allowed to copy _config.php as config.php, you should do it by hand.");
+                die ("Rights error, PHP server is not allowed to copy _config.php as config.php, you should do it by hand.
+                <pre>cataviz$ cp _config.php config.php</pre>");
+
             }
         }
         self::$config = include($config_file);
@@ -69,6 +71,8 @@ class Cataviz
         self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
         self::$pdo->exec("pragma synchronous = off;");
         self::$pdo->exec("pragma journal_mode=MEMORY;");
+        self::$pdo->exec("PRAGMA temp_store = 2;");
+        self::$pdo->exec("PRAGMA mmap_size = 1073741824");
     }
 
     /**
