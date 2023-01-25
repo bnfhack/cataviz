@@ -13,14 +13,9 @@ require_once($home_dir . "Cataviz.php");
 use Oeuvres\Kit\{Route,I18n};
 
 
-// Some default values for this installation
-Cataviz::$p['from'] = 1685;
-Cataviz::$p['to'] = 1914;
-Cataviz::pars();
-Cataviz::connect(__DIR__.'/cataviz.db');
 
 // Default title for pages
-I18n::put('title', 'Cataviz');
+I18n::put(['title'=>'Cataviz']);
 // register the template in which include content
 Route::template($home_dir . 'template.php');
 

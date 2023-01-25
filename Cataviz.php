@@ -1,5 +1,5 @@
 <?php
-include_once(__DIR__ . '/php/autoload.php');
+include_once(__DIR__ . '/vendor/autoload.php');
 
 
 set_time_limit(-1);
@@ -7,7 +7,7 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 // Some default values for this installation
 Cataviz::$p['from'] = 1685;
-Cataviz::$p['to'] = 1914;
+Cataviz::$p['to'] = 1913;
 Cataviz::pars();
 Cataviz::connect(__DIR__.'/cataviz.db');
 

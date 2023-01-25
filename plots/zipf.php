@@ -24,7 +24,7 @@ $db = new Cataviz("databnf.sqlite");
     </div>
     <h1>Le canon et l'archive, rééditions et hiérarchie des auteurs</h1>
     <p>
-      Quelques auteurs sont édités et réédités, Beaucoup d'auteur ne signent que un ou deux documents.
+      Quelques auteurs sont édités et réédités, beaucoup d'auteurs ne signent que un ou deux documents.
       En <a href="?log=scale">échelle</a> logarithmique, le rapport
       entre le nombre de documents signés d'un auteur, et son rang selon le nombre de documents qu'il signe,
       suit exactement <a href="https://en.wikipedia.org/wiki/Zipf's_law">la droite de Zipf</a>.

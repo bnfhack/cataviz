@@ -4,16 +4,16 @@ header("Access-Control-Allow-Origin:*");
 header("Content-Type: application/json");
 
 $min = 200;
-$sql = "SELECT count(*) AS c FROM doc WHERE year = ? AND ";
+$sql = "SELECT count(*) AS c FROM doc WHERE year = ? ";
 
 $queries = array(
-    "In-?°" => Cataviz::prepare($sql."format IS NULL"),
-    "in-2°" => Cataviz::prepare($sql."format = 2"),
-    "in-4°" => Cataviz::prepare($sql."format = 4"),
-    "in-8°" => Cataviz::prepare($sql."format = 8"),
-    "in-12°" => Cataviz::prepare($sql."format = 12"),
-    "in-16+°" => Cataviz::prepare($sql."format >= 16"),
-    // "]512, …] p." => Cataviz::prepare($sql."pages > 512"),
+    "Tout" => Cataviz::prepare($sql),
+    "in-2°" => Cataviz::prepare($sql." AND format = 2"),
+    "in-4°" => Cataviz::prepare($sql." AND format = 4"),
+    "in-8°" => Cataviz::prepare($sql." AND format = 8"),
+    "in-12°" => Cataviz::prepare($sql." AND format = 12"),
+    "in-16+°" => Cataviz::prepare($sql." AND format >= 16"),
+    "In-?°" => Cataviz::prepare($sql . " AND  format IS NULL"),
 );
 
 
@@ -44,17 +44,34 @@ foreach ($queries as $label => $q) {
     echo ', "' . $label . '"';
 }
 echo "]";
-// attrs.series:
+
+// per series infos
 echo ',
         "attrs": {
             "series": {
-                "? p.": {
+                "in-2°": {
+                    "plotter": "Dygraph.plotHistory"
+                },
+                "in-4°": {
+                    "plotter": "Dygraph.plotHistory"
+                },
+                "in-8°": {
+                    "plotter": "Dygraph.plotHistory"
+                },
+                "in-12°": {
+                    "plotter": "Dygraph.plotHistory"
+                },
+                "in-16+°": {
+                    "plotter": "Dygraph.plotHistory"
+                },
+                "In-?°": {
                     "pointSize": 0,
-                    "color": "hsla(0, 0%, 0%, 1)",
-                    "strokeWidth": 4
+                    "color": "#ccc",
+                    "strokeWidth": 1
                 }
             }
         }';
+
 
 echo "\n    }\n";
 echo "}\n";

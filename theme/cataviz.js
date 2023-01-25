@@ -100,24 +100,19 @@ attrs.axes = {
 attrs.rollPeriod = <? php echo $smooth ?>;
 */
 
-
-/* todo
-if (window.annoteSeries) {
-    g.ready(function() {
-        g.setAnnotations([
-            { series: annoteSeries, x: "1562", shortText: "Guerres de Religion", width: "", height: "", cssClass: "annv" },
-            { series: annoteSeries, x: "1648", shortText: "La Fronde", width: "", height: "", cssClass: "annv" },
-            { series: annoteSeries, x: "1789", shortText: "1789", width: "", height: "", cssClass: "annv" },
-            { series: annoteSeries, x: "1815", shortText: "1815", width: "", height: "", cssClass: "annv" },
-            { series: annoteSeries, x: "1830", shortText: "1830", width: "", height: "", cssClass: "annv" },
-            { series: annoteSeries, x: "1848", shortText: "1848", width: "", height: "", cssClass: "annv" },
-            { series: annoteSeries, x: "1870", shortText: "1870", width: "", height: "", cssClass: "annv" },
-            { series: annoteSeries, x: "1914", shortText: "1914", width: "", height: "", cssClass: "annv" },
-            { series: annoteSeries, x: "1939", shortText: "1939", width: "", height: "", cssClass: "annv" },
-        ]);
-    });
+attrs.annotations = function(aseries) {
+    return [
+        { series: aseries, x: "1562", shortText: "Guerres de Religion", width: "", height: "", cssClass: "annv" },
+        { series: aseries, x: "1648", shortText: "La Fronde", width: "", height: "", cssClass: "annv" },
+        { series: aseries, x: "1789", shortText: "1789", width: "", height: "", cssClass: "annv" },
+        { series: aseries, x: "1815", shortText: "1815", width: "", height: "", cssClass: "annv" },
+        { series: aseries, x: "1830", shortText: "1830", width: "", height: "", cssClass: "annv" },
+        { series: aseries, x: "1848", shortText: "1848", width: "", height: "", cssClass: "annv" },
+        { series: aseries, x: "1870", shortText: "1870", width: "", height: "", cssClass: "annv" },
+        { series: aseries, x: "1914", shortText: "1914", width: "", height: "", cssClass: "annv" },
+        { series: aseries, x: "1939", shortText: "1939", width: "", height: "", cssClass: "annv" },
+    ];
 }
-*/
 /*
 var linear = document.getElementById("linear");
 var log = document.getElementById("log");

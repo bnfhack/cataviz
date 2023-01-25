@@ -1,22 +1,23 @@
 <?php
-// header('Content-type: text/plain; charset=utf-8');
-include (dirname(__FILE__).'/Cataviz.php');
-$db = new Cataviz("databnf.sqlite");
-$from = 1910;
-$to = 1985;
 
-?><!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8" />
-    <script src="lib/dygraph.min.js">//</script>
-    <link rel="stylesheet" type="text/css" href="lib/dygraph.css"/>
-    <link rel="stylesheet" type="text/css" href="cataviz.css"/>
-    <style>
-    </style>
-  </head>
-  <body>
-    <?php include (dirname(__FILE__).'/menu.php') ?>
+function title()
+{
+    return "Documents d‘un auteur mort (toutes langues confondues)";
+}
+
+function main()
+{
+?>
+<div class="form_chart">
+    <form name="dates">
+        <button onclick="window.location.href='?'; " type="button">Reset</button>
+        De <input name="from" size="4" value="<?= Cataviz::$p['from'] ?>" />
+        à <input name="to" size="4" value="<?= Cataviz::$p['to'] ?>" />
+        <button type="submit">▶</button>
+    </form>
+    <div id="chart" class="dygraph"></div>
+</div>
+
     <form name="dates" style="float: right;">
       <button onclick="window.location.href='?'; " type="button">Reset</button>
       From <input name="from" size="4" value="<?php echo $from ?>"/>

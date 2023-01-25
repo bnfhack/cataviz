@@ -1,0 +1,22 @@
+{
+    "name": "modern/cataviz",
+    "description": "BNF catalog visualisations for Enlightment",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Frédéric Glorieux",
+            "email": "frederic.glorieux@fictif.org",
+            "role": "Developer"
+        }
+    ],
+    "funding": [
+        {
+            "type": "other",
+            "url": "https://modern.sorbonne-universite.fr/"
+        }
+    ],
+    "require": {
+        "oeuvres/kit": "dev-main"
+    },
+    "minimum-stability": "dev"
+}
