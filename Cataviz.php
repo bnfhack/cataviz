@@ -34,7 +34,12 @@ class Cataviz
         $config_file = __DIR__ . '/config.php';
         // help installation
         if (!is_file($config_file)) {
-            copy ( __DIR__ . '/_config.php', $config_file);
+            if (!copy( __DIR__ . '/_config.php', $config_file)) {
+                $errors= error_get_last();
+                echo "COPY ERROR: ".$errors['type'];
+                echo "<br />\n".$errors['message'];
+                die ("Rights error, PHP server is not allowed to copy _config.php as config.php, you should do it by hand.");
+            }
         }
         self::$config = include($config_file);
         set_time_limit(-1);
