@@ -35,6 +35,7 @@ for ($year = Cataviz::$p['from']; $year <= Cataviz::$p['to']; $year++) {
     foreach ($queries as $label => $q) {
         $q->execute(array($year));
         list($val) = $q->fetch(PDO::FETCH_NUM);
+        if (!$val) $val = 'null';
         echo ", " . $val;
     }
     echo "]";

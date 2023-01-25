@@ -1,5 +1,7 @@
 <?php
 require_once(__DIR__ . "/../Cataviz.php");
+
+$start_time = microtime(true);
 header("Access-Control-Allow-Origin:*");
 header("Content-Type: application/json");
 
@@ -27,6 +29,7 @@ for ($year = Cataviz::$p['from']; $year <= Cataviz::$p['to']; $year++) {
     foreach ($queries as $label => $q) {
         $q->execute(array($year));
         list($val) = $q->fetch(PDO::FETCH_NUM);
+        if (!$val) $val = 'null';
         echo ", " . $val;
     }
     echo "]";
@@ -40,7 +43,7 @@ foreach ($queries as $label => $q) {
     echo ', "' . $label . '"';
 }
 echo "]";
-// attrs.series:
+// per series infos
 echo ',
         "attrs": {
             "y2label":"Moyenne nb de pages",
@@ -68,5 +71,7 @@ echo ',
                 }
             }
         }';
+echo ', 
+        "time": "'. (microtime(true) - $start_time) * 1000 . 'ms."';
 echo "\n    }\n";
 echo "}\n";

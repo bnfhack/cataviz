@@ -2,21 +2,13 @@
 include_once(__DIR__ . '/vendor/autoload.php');
 
 
-set_time_limit(-1);
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
-// Some default values for this installation
-Cataviz::$p['from'] = 1685;
-Cataviz::$p['to'] = 1913;
-Cataviz::pars();
-Cataviz::connect(__DIR__.'/cataviz.db');
-
-
 /**
  *
  */
 class Cataviz
 {
+    /** configuration parameters */
+    static public $config;
     /** Connexion à la base de données */
     static private $pdo;
     /** parameters */
@@ -32,46 +24,46 @@ class Cataviz
     private $person;
     /** Graphe, nombre de personnes par document */
     private $persByDocLimit = 5;
-    /** Type de rôles */
-    public static $roles = array(
-        "edition" => "(360, 540, 550)",
-        "traduction" => "(680)",
-        "spectacle" => "(1010, 1011, 1013, 1017, 1018, 1020, 1050, 1060, 1080, 1090)",
-        "musique" => "(220, 221, 222, 223, 510, 1030, 1031, 1033, 1039, 1040, 1100, 1101, 1103, 1108, 1120, 1129, 1130, 1139, 1140, 1149, 1150, 1159, 1160, 1169, 1170, 1179, 1180, 1189, 1190, 1197, 1199, 1200, 1210, 1217, 1218, 1219, 1220, 1229, 1230, 1239, 1240, 1249, 1250, 1257, 1258, 1260, 1268, 1270, 1277, 1278, 1280, 1287, 1288, 1289, 1290, 1299, 1300, 1309, 1310, 1317, 1318, 1320, 1330, 1337, 1340, 1350, 1357, 1358, 1360, 1367, 1368, 1370, 1377, 1378, 1380, 1387, 1388, 1389, 1390, 1400, 1407, 1410, 1418, 1420, 1427, 1428, 1430, 1437, 1438, 1440, 1450, 1459, 1460, 1470, 1477, 1478, 1480, 1490, 1500, 1510, 1520, 1527, 1530, 1537, 1540, 1550, 1557, 1558, 1560, 1567, 1569, 1570, 1580, 1587, 1590, 1597, 1598, 1599, 1600, 1607, 1610, 1620, 1630, 1637, 1638, 1640, 1649, 1650, 1651, 1653, 1657, 1658, 1659, 1660, 1667, 1668, 1670, 1680, 1688, 1690, 1700, 1707, 1710, 1717, 1718, 1720, 1728, 1730, 1738, 1740, 1747, 1748, 1750, 1760, 1767, 1770, 1777, 1780, 1787, 1790, 1797, 1798, 1800, 1807, 1810, 1817, 1818, 1820, 1827, 1828, 1830, 1837, 1840, 1850, 1860, 1870, 1878, 1880, 1888, 1890, 1898, 1900, 1910, 1920, 1930, 1937, 1938, 1940, 1947, 1948)",
-        "illustration" => "(440, 520, 521, 522, 523, 524, 530, 531, 532, 533, 534)",
-        "auteur" => "(70, 71, 72, 73, 980, 990)",
-    );
-    /* intitulés pour les types de documents */
-    public static $types = array(
-        "Archive" => "[archive]",
-        "Image" => "[image]",
-        "InteractiveResource" => "[autre]",
-        "MovingImage" => "[film]",
-        "PhysicalObject" => "[objet]",
-        "Score" => "[partition]",
-        "Sound" => "[son]",
-        "StillImage" => "[image]",
-        "Text" => "[texte]",
-    );
-    /** Rôles principaux */
-    public static $creator = array(
-        70 => "Auteur",
-        71 => "Auteur présumé",
-        72 => "Auteur adapté",
-        73 => "Auteur prétendu",
-        980 => "Auteur",
-        990 => "Auteur",
-        4020 => "Auteur de l’envoi",
-    );
+
+
+    /**
+     * init static props
+     */
+    static function init()
+    {
+        $config_file = __DIR__ . '/config.php';
+        // help installation
+        if (!is_file($config_file)) {
+            copy ( __DIR__ . '/_config.php', $config_file);
+        }
+        self::$config = include($config_file);
+        set_time_limit(-1);
+        ini_set('display_errors', 1);
+        error_reporting(E_ALL);
+        // Some default values for this installation
+        self::$p['from'] = 1685;
+        self::$p['to'] = 1913;
+        Cataviz::pars();
+        self::connect(self::$config['db_file']);
+    }
 
     /**
      *
      */
     static function connect($cataviz_db)
     {
-        self::$pdo = new PDO('sqlite:' . $cataviz_db);
+        if (!file_exists($cataviz_db)) exit(
+            "Impossible to connect to " . $cataviz_db
+        );
+        self::$pdo = new PDO(
+            'sqlite:' . $cataviz_db,
+            null,
+            null,
+            array(PDO::ATTR_PERSISTENT => true)
+        );
         self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
         self::$pdo->exec("pragma synchronous = off;");
+        self::$pdo->exec("pragma journal_mode=MEMORY;");
     }
 
     /**
@@ -427,3 +419,4 @@ class Cataviz
         return 5;
     }
 }
+Cataviz::init();
