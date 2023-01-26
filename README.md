@@ -17,7 +17,17 @@ cd cataviz
 git clone https://github.com/bnfhack/cataviz.git .
 # installer les librairies PHP avec composer
 composer u
-# installer les modules Apache nécessaires
+# copier et mettre à jour le fichier de configuration
+cp _config.php config.php
+# TODO, un lien pérenne pour télécharger la base de données SQLite
+```
+
+### Compléments pour serveur Apache incomplet
+```bash
+# en cas d’installation déportée
+cd /var/www/html
+sudo ln -s /data/cataviz/ cataviz
+# si le serveur Apache n’est pas encore bien installé, les modules nécessaires
 sudo a2enmod rewrite
 # installer les extensions php nécessaires
 sudo apt install php-sqlite3
@@ -33,11 +43,7 @@ sudo vi /etc/apache2/sites-enabled/???.conf
 
 # redémarrer Apache pour que ces modifcations soient prises en compte
 sudo service apache2 restart
-# TODO, un lien pérenne pour télécharger la base de données SQLite
 
-# en cas d’installation déportée
-cd /var/www/html
-sudo ln -s /data/cataviz/ cataviz
 ```
 
 

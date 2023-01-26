@@ -58,6 +58,7 @@ nav.menu {
 
 #page {
     position: relative;
+    overflow: hidden;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -191,13 +192,13 @@ table.data {
 }
 
 .form_chart form {
-    padding-bottom: 1rem;
 }
 
 #row {
     position: relative;
     display: flex;
     height: 99%;
+    padding: 1em 0;
     flex-grow: 0;
 }
 #row #doc {
