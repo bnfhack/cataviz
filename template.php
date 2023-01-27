@@ -43,7 +43,7 @@ function menu_item($url, $label, $title=null, $pars=['from', 'to'])
         <script src="<?= Route::home_href() ?>theme/dygraphPlotHistory.js">//</script>
         <script src="<?= Route::home_href() ?>theme/formajax.js">//</script>
         <script type="text/javascript" src="<?= Route::home_href() ?>theme/cataviz.js">//</script>
-        <link rel="stylesheet" type="text/css" href="cataviz.css"/>
+        <link rel="stylesheet" type="text/css" href="<?= Route::home_href() ?>theme/cataviz.css"/>
     </head>
     <body class="<?= $body_class ?>">
         <div id="page">
