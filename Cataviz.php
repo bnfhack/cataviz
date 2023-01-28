@@ -1,6 +1,7 @@
 <?php
 include_once(__DIR__ . '/vendor/autoload.php');
 
+use Oeuvres\Kit\{Http};
 
 /**
  *
@@ -98,7 +99,6 @@ class Cataviz
         if ($to !== null) {
             self::$p['to'] = $to;
         }
-
 
         /*
         $pagefloor = 50;

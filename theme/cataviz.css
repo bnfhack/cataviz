@@ -54,8 +54,17 @@ nav.menu {
     white-space: nowrap;
     padding: 3px 1em 1px 1em;
     background-color: rgba(255, 255, 255, 0.4);
+    display: flex;
 }
 
+nav.menu > a {
+    padding: 0 2ex;
+
+}
+
+nav.menu > a:hover {
+    text-decoration: none;
+}
 #page {
     position: relative;
     overflow: hidden;
@@ -142,6 +151,19 @@ table.data {
     font-size: 10pt;
 }
 
+table.data caption {
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+table.data td {
+    padding: 2px 1ex;
+}
+
+table.data tr:hover {
+    background-color: #FFFFFF;
+}
+
 .even {
     background-color: #FFFFFF;
 }
@@ -200,6 +222,7 @@ table.data {
     height: 99%;
     padding: 1em 0;
     flex-grow: 0;
+    overflow: auto;
 }
 #row #doc {
     position: relative;

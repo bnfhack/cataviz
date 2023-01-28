@@ -38,8 +38,8 @@ function menu_item($url, $label, $title=null, $pars=['from', 'to'])
     <head>
         <meta charset="utf-8"/>
         <title><?= Route::title(I18n::_('title')) ?></title>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/dygraph/2.1.0/dygraph.min.js">//</script>
-        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/dygraph/2.1.0/dygraph.min.css"/>
+        <script src="<?= Route::home_href() ?>theme/dygraph.min.js">//</script>
+        <link rel="stylesheet" type="text/css" href="<?= Route::home_href() ?>theme/dygraph.min.css"/>
         <script src="<?= Route::home_href() ?>theme/dygraphPlotHistory.js">//</script>
         <script src="<?= Route::home_href() ?>theme/formajax.js">//</script>
         <script type="text/javascript" src="<?= Route::home_href() ?>theme/cataviz.js">//</script>
@@ -49,10 +49,11 @@ function menu_item($url, $label, $title=null, $pars=['from', 'to'])
         <div id="page">
             <header id="header">
                 <nav class="menu" id="top">
-<a style="float:left" href="." class="plus">◀ Cataviz</a>
-<?= 
-menu_item('titres', 'Titres', 'Chronologie générale des publications', ['from', 'to']);
-menu_item('demographie', 'Démographie', 'Mortalité, “Natalité”, générations…', ['from', 'to']);
+<a href="." class="plus">◀ Cataviz</a>
+<?php
+echo menu_item('titres', 'Titres', 'Chronologie générale des publications', ['from', 'to']);
+echo menu_item('top-auteurs', '“Top” auteurs', 'Auteurs les plus publiés d’une période', ['from', 'to']);
+echo menu_item('demographie', 'Démographie', 'Mortalité, “Natalité”, générations…', ['from', 'to']);
 
 ?>
 

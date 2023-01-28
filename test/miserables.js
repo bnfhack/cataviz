@@ -13,14 +13,14 @@ const container = document.getElementById("sigma-container");
 const graph = new graphology.Graph();
 graph.import(data);
 
-GraphologyLayout.circular.assign(graph, {scale:100});
+console.log(GraphologyLayout);
 
-console.log(GraphologyLayoutForceatlas2);
+GraphologyLayout.random.assign(graph, {scale:100});
 
 GraphologyLayoutForceatlas2.assign(
     graph,
     {
-        iterations: 50,
+        iterations: 100,
         settings: {
           gravity: 10
         }
@@ -30,13 +30,12 @@ GraphologyLayoutForceatlas2.assign(
 GraphologyLayoutNoverlap.assign(
     graph,
     {
-        maxIterations: 1,
+        maxIterations: 20,
         settings: {
-          ratio: 1
+          ratio: 0.2
         }
     }
 )
 */
-
 const renderer = new Sigma(graph, container);
 
