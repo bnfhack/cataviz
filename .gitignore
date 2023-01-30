@@ -7,3 +7,4 @@ test.php
 vendor/
 package-lock.json
 config.php
+composer.lock
