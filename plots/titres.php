@@ -1,5 +1,5 @@
 <?php
-use Oeuvres\Kit\{Select};
+use Oeuvres\Kit\{Route, Select};
 
 function title()
 {
@@ -30,18 +30,22 @@ echo $select;
         </div>
     </div>
 </div>
+
+<script type="text/javascript" src="<?= Route::home_href() ?>theme/cataviz.js">//</script>
+
 <script type="text/javascript">
 attrs.title = "<?= title() ?>";
 attrs.ylabel = "Titres par an";
 
-// attrs.stackedGraph = true;
-// attrs.plotter = Dygraph.plotHistory;
+
+attrs.drawPoints = true;
+attrs.pointSize = 1.5;
 attrs.strokeWidth = 10;
-attrs.pointSize = 1;
-// attrs.strokeWidth = 1;
 attrs.logscale = true;
 
-
+const from = <?= Cataviz::$p['from'] ?>;
+if (from < 1788) attrs.historySmooth = 2;
+else if (from < 1914) attrs.historySmooth = 1;
 const form = document.forms['form'];
 form.chart = document.getElementById("chart");
 form.dygraph = function() {
@@ -75,10 +79,10 @@ form.dygraph = function() {
                 fun = fun[methods[i]];
             }
             attrs.series[key]['plotter'] = fun;
-            console.log(attrs.series[key]['plotter']);
         }
         attrs.series["Tout"]= {
-            "pointSize": 0,
+            "pointSize" : 1.5,
+            "drawPoints": true,
             "color": "#ccc",
         };
 

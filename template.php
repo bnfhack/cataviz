@@ -42,7 +42,6 @@ function menu_item($url, $label, $title=null, $pars=['from', 'to'])
         <link rel="stylesheet" type="text/css" href="<?= Route::home_href() ?>theme/dygraph.css"/>
         <script src="<?= Route::home_href() ?>theme/dygraphPlotHistory.js">//</script>
         <script src="<?= Route::home_href() ?>theme/formajax.js">//</script>
-        <script type="text/javascript" src="<?= Route::home_href() ?>theme/cataviz.js">//</script>
         <link rel="stylesheet" type="text/css" href="<?= Route::home_href() ?>theme/cataviz.css"/>
     </head>
     <body class="<?= $body_class ?>">
@@ -52,7 +51,8 @@ function menu_item($url, $label, $title=null, $pars=['from', 'to'])
 <a href="." class="plus">◀ Cataviz</a>
 <?php
 echo menu_item('titres', 'Titres', 'Chronologie générale des publications', ['from', 'to']);
-echo menu_item('top-auteurs', '“Top” auteurs', 'Auteurs les plus publiés d’une période', ['from', 'to']);
+echo menu_item('auteurs-top', 'Auteurs, palmarès', 'Auteurs les plus publiés d’une période', ['from', 'to']);
+echo menu_item('auteurs-chrono', 'Auteurs, chrono', 'Rythme de publication d’auteurs sur une période', ['from', 'to']);
 // echo menu_item('demographie', 'Démographie', 'Mortalité, “Natalité”, générations…', ['from', 'to']);
 
 ?>

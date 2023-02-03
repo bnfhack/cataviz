@@ -53,9 +53,11 @@ echo ',
                     "strokeWidth": 0.1,
                     "stackedGraph": true,
                     "fillGraph": true,
+                    "drawPoints": false,
                     "color": "#aaf"
                 },
                 "? p.": {
+                    "drawPoints": false,
                     "pointSize": 0,
                     "color": "#ccc",
                     "strokeWidth": 1

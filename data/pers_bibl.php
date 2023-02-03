@@ -28,18 +28,7 @@ $pers_q->execute([$pers_id]);
 $pers_row = $pers_q->fetch(PDO::FETCH_ASSOC);
 
 print "<h1>";
-print $pers_row['name'];
-if ($pers_row['given']) print ", " . $pers_row['given'];
-if ($pers_row['role']) print ", " . $pers_row['role'];
-if ($pers_row['birthyear'] || $pers_row['deathyear']) {
-  print " (";
-  if ($pers_row['birthyear']) print $pers_row['birthyear'];
-  else print " ";
-  print " – ";
-  if ($pers_row['deathyear']) print $pers_row['deathyear'];
-  else print " ";
-  print ")";
-}
+print Cataviz::pers_label($pers_row);
 print "</h1>";
 print "<p>";
 print $pers_row['note'];
@@ -55,10 +44,11 @@ $contrib_q = Cataviz::prepare($sql);
 $contrib_q->execute([$pers_id]);
 
 $n = 0;
+print '<nav>' . "\n";
 while ($contrib_row = $contrib_q->fetch(PDO::FETCH_ASSOC)) {
     $doc_q->execute([$contrib_row['doc']]);
     $doc_row = $doc_q->fetch(PDO::FETCH_ASSOC);
-    print '<div class="bibl">';
+    print '<a target="_blank" class="bibl" href="' . $doc_row['url'] . '">';
     print ++$n . ". ";
     print $doc_row['title'];
     print ' (';
@@ -66,8 +56,9 @@ while ($contrib_row = $contrib_q->fetch(PDO::FETCH_ASSOC)) {
     print $doc_row['place'];
     print ", " . $doc_row['publisher'];
     print ')';
-    print '</div>' . "\n";
+    print '</a>' . "\n";
 }
+print '</nav>' . "\n";
 
 ?>
     <body>

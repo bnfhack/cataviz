@@ -1,3 +1,25 @@
+@charset "UTF-8";
+:root {
+    --bg: #fff;
+    --text: #000000;
+    --bghi: #808078;
+    --texthi: #fff;
+    --bglo: #ccc;
+    --textlo: #666;
+    --textlo2: #aaa;
+    --border: #eee;
+    --borderlo: #fff;
+    --textinv: #000;
+    --link: #404080;
+    --bghover: rgba(255, 255, 255, 0.3);
+    --bg2: #404080;
+    --text2: #000;
+    --texthi2: #fff;
+    --textinv2: #fff;
+    --bg3: #ddd;
+    --text3: #333;
+}
+
 * {
     box-sizing: border-box;
 }
@@ -47,7 +69,7 @@ sub {
 
 
 a:hover {
-    text-decoration: underline;
+    /* text-decoration: underline; */
 }
 
 nav.menu {
@@ -156,6 +178,14 @@ nav.top-table {
     padding-right: 1rem;
 }
 
+nav .bibl {
+    display: block;
+    max-width: 40rem;
+    color: #000;
+    padding: 2px 0;
+    text-align: justify;
+}
+
 .top-row {
     display: flex;
     justify-content: space-between;
@@ -241,7 +271,7 @@ table.data tr:hover {
     display: flex;
     flex-direction: column;
     width: 100%;
-    padding: 0 0 1rem 1rem;
+    padding: 0 1rem 1rem 1rem;
     position: relative;
 }
 
@@ -252,7 +282,7 @@ table.data tr:hover {
     display: flex;
     justify-content: space-between;
     height: 100%;
-    padding: 1em 0;
+    padding: 1rem;
     flex-grow: 0;
     overflow: auto;
 }
@@ -283,7 +313,7 @@ table.data tr:hover {
 }
 
 .dygraph-title {
-    color: #000;
+    /* color: #000; */
     padding-top: 3px;
     padding-left: 55px;
     font-weight: 100;
@@ -291,6 +321,7 @@ table.data tr:hover {
 }
 
 .dygraph-legend {
+    background-color: transparent;
     text-align: center;
     font-size: 14pt;
     top: 45px !important;
@@ -313,9 +344,13 @@ table.data tr:hover {
     left: 70px !important;
 }
 */
+.dygraph-axis-label {
+    color:inherit;
+}
+
 
 .dygraph-axis-label-x {
-    font-size: 16pt;
+    font-size: 14pt;
 }
 
 
@@ -334,7 +369,7 @@ table.data tr:hover {
     border-bottom: 1px solid #000 !important;
     font-size: 16pt !important;
     font-weight: normal;
-    color: rgba(0, 0, 0, 0.8) !important;
+    color: rgba(128, 128, 128, 0.8) !important;
     background-color: rgba(255, 255, 255, 0.4) !important;
 }
 
@@ -417,6 +452,10 @@ form button {
     outline: 0;
 }
 
+form input  {
+    border: none;
+}
+
 label span {
     width: 5rem;
     display: inline-block;
@@ -474,4 +513,72 @@ details[open].help summary {
 
 details p {
     margin: 0;
+}
+
+/* Suggest */
+div.suggest {
+    background: var(--bg);
+    color: var(--textlo);
+    border-top: none;
+    display: none;
+    text-align: left;
+    position: absolute;
+    padding: 5px 1rem;
+    z-index: 2;
+    border: 1px solid var(--bg);
+    border-radius: 10px;
+    box-shadow: 0 4px 4px #888;
+    /*
+    right: 30px;
+    left: 30px;
+    */
+}
+div.suggest {
+    left: 0;
+    right: 0;
+    padding-left: 0;
+    padding-right: 0;
+    border-left: none;
+    border-right: none;
+    z-index: 100;
+}
+
+div.suggest div {
+    cursor: pointer;
+    margin: 0;
+    border: none;
+    border-bottom: 1px solid var(--border);
+    padding-top: 2px;
+    padding-bottom: 2px;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    width: 100%;
+}
+
+div.suggest div:hover {
+    background: var(--bghi);
+    color: var(--texthi);
+}
+
+div.suggest div:hover mark {
+    color: var(--texthi);
+}
+
+div.suggest.auteur {
+    width: 25rem;
+}
+
+label.pers {
+    cursor: pointer;
+    display: inline-block;
+    white-space: nowrap;
+    width: 15ex;
+    margin: 0 2px;
+    background-color: var(--bg);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: left;
+    color: var(--text);
+    border-radius: 0.5em;
+    padding: 2px 1ex;
 }

@@ -67,7 +67,7 @@ class Cataviz
             'sqlite:' . $cataviz_db,
             null,
             null,
-            array(PDO::ATTR_PERSISTENT => true)
+            // array(PDO::ATTR_PERSISTENT => true)
         );
         self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
         self::$pdo->exec("pragma synchronous = off;");
@@ -134,6 +134,33 @@ class Cataviz
     {
         return self::$pdo->prepare($sql);
     }
+
+
+    /**
+     * Cette méthode doit être identique à celle utilisée à l’indexation
+     */
+    public static function deform($s)
+    {
+        // bas de casse
+        $s = mb_convert_case($s, MB_CASE_FOLD, "UTF-8");
+        // décomposer lettres et accents
+        $s = Normalizer::normalize($s, Normalizer::FORM_D);
+        // ne conserver que les lettres et les espaces, et les traits d’union
+        $s = preg_replace("/[^\p{L}\-\s]/u", '', $s);
+        // ligatures
+        $s = strtr(
+            $s,
+            array(
+                'œ' => 'oe',
+                'æ' => 'ae',
+            )
+        );
+        // normaliser les espaces
+        $s = preg_replace('/[\s\-]+/', ' ', trim($s));
+        return $s;
+    }
+
+
     /**
      * Renvoyer les informations sur une personne, met en cache le résultat
      */
@@ -145,19 +172,27 @@ class Cataviz
         $this->person = self::$pdo->query("SELECT * FROM person WHERE ark = " . self::$pdo->quote($persark))->fetch(PDO::FETCH_ASSOC);
         return $this->person;
     }
+
+
     /**
-     * Met en forme un nom de personne avec un rang de la base de données
+     * Build a string about a pers from an sql row
      */
-    static function perstitle($persark)
+    static function pers_label($pers_row)
     {
-        $person = $this->person($persark);
-        $html = array();
-        $html[] = $person['family'];
-        if ($person['given']) $html[] = ", " . $person['given'];
-        if ($person['deathyear'] < 0) $html[] = " (" . $person['birthyear'] . "/" . $person['deathyear'] . ")";
-        else if ($person['deathyear'] > 0) $html[] = " (" . $person['birthyear'] . "–" . $person['deathyear'] . ")";
-        else if ($person['birthyear'] > 0) $html[] = " (" . $person['birthyear'] . "–…)";
-        return implode("", $html);
+        $label = '';
+        $label .= $pers_row['name'];
+        if ($pers_row['given']) $label .= ", " . $pers_row['given'];
+        if ($pers_row['role']) $label .= ", " . $pers_row['role'];
+        if ($pers_row['birthyear'] || $pers_row['deathyear']) {
+            $label .= " (";
+            if ($pers_row['birthyear']) $label .= $pers_row['birthyear'];
+            else $label .= " ";
+            $label .= '/';
+            if ($pers_row['deathyear']) $label .= $pers_row['deathyear'];
+            else  $label .= " ";
+            $label .= ")";
+        }
+        return $label;
     }
 
     /**

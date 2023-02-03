@@ -1,43 +1,51 @@
 <?php
 require_once(__DIR__ . "/../Cataviz.php");
 
+use Oeuvres\Kit\{Http};
+
 $start_time = microtime(true);
 header("Access-Control-Allow-Origin:*");
 header("Content-Type: application/json");
 
-$sql = "SELECT count(*) AS count FROM pers WHERE doc1 = ? ";
+// have one ore more person nb, by ark ()
 
-$tout = "Tout";
-$femmes = "Femmes";
-$hommes = "Hommes";
-$inconnu = "?";
-$doc1ratio = "Part de premiers livres";
+$pers_http = Http::pars('pers');
+// filter non existent ids
+$sql = "SELECT * FROM pers WHERE id = ?";
+$pers_q = Cataviz::prepare($sql);
+$pers_ids = [];
+// check pers list
+for ($i=0, $len=count($pers_http); $i < $len; $i++) {
+    $id = $pers_http[$i];
+    $pers_q->execute([$id]);
+    $pers_row = $pers_q->fetch();
+    if (!$pers_row) continue;
+    $label = $pers_row['name'];
+    if ($pers_row['birthyear'] || $pers_row['deathyear']) {
+        $label .= " (";
+        if ($pers_row['birthyear']) $label .= $pers_row['birthyear'];
+        $label .= ' / ';
+        if ($pers_row['deathyear']) $label .= $pers_row['deathyear'];
+        $label .= ")";
+    }
+    $pers_ids[$id] = $label;
+}
 
-$queries = array(
-    $tout => Cataviz::prepare($sql),
-    $femmes  => Cataviz::prepare($sql." AND gender = 2"),
-    $hommes => Cataviz::prepare($sql." AND gender = 1"),
-    $inconnu => Cataviz::prepare($sql." AND gender IS NULL"),
-    $doc1ratio => Cataviz::prepare("SELECT count(*) AS count FROM doc WHERE year = ?"),
-);
-
+$sql = "SELECT count(*) AS count FROM contrib WHERE pers = ? AND year = ?";
+$pers_q = Cataviz::prepare($sql);
 
 echo "{\n";
 echo '    "data":[';
 $first = true;
-$row = [];
+$row = []; // maybe used to build a value from others
 for ($year = Cataviz::$p['from']; $year <= Cataviz::$p['to']; $year++) {
     if ($first) $first = false;
     else echo ","; 
     echo "\n        [" . $year;
-    foreach ($queries as $label => $q) {
-        $q->execute(array($year));
-        list($val) = $q->fetch(PDO::FETCH_NUM);
-        if (!$val) $val = 'null';
-        else if ($label == $doc1ratio) {
-            $val = round(10000.0 * $row[$tout] / $val) / 100.0;
-        }
-
+    foreach ($pers_ids as $id => $label) {
+        $pers_q->execute([$id, $year]);
+        list($val) = $pers_q->fetch(PDO::FETCH_NUM);
+        if (!$val) $val = 0;
         $row[$label] = $val;
         echo ", " . $val;
     }
@@ -48,10 +56,11 @@ echo '    "meta":{'."\n";
 
 //    labels: [ "Année", "Titres", "PNB/h"],
 echo '        "labels": ["Année"';
-foreach ($queries as $label => $q) {
+foreach ($pers_ids as $id => $label) {
     echo ', "' . $label . '"';
 }
 echo "]";
+/*
 // per series infos
 echo ',
         "attrs": {
@@ -77,6 +86,7 @@ echo ',
                 }
             }
         }';
+*/
 echo ', 
         "time": "'. (microtime(true) - $start_time) * 1000 . 'ms."';
 echo "\n    }\n";

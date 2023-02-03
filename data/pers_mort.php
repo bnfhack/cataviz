@@ -40,7 +40,8 @@ foreach ($queries as $label => $q) {
     echo ', "' . $label . '"';
 }
 echo "]";
-// attrs.series:
+/*
+// per series infos
 echo ',
         "attrs": {
             "y2label":"Moyenne nb de pages",
@@ -68,5 +69,6 @@ echo ',
                 }
             }
         }';
+*/
 echo "\n    }\n";
 echo "}\n";

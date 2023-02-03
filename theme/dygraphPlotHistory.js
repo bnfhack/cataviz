@@ -15,24 +15,7 @@
         ctx.fillStyle = e.color;
 
         // define the smooth level by year
-        const smoothYear = [
-            [-1, 3],
-            [1648, 0],
-            [1654, 2],
-            [1788, 0],
-            [1802, 2],
-            [1829, 0],
-            [1832, 2],
-            [1846, 0],
-            [1851, 2],
-            [1868, 0],
-            [1874, 2],
-            [1913, 0],
-            [1919, 2],
-            [1938, 0],
-            [1946, 2],
-            [2030, 0],
-        ];
+        const smooth = e.dygraph.getOption('historySmooth', 0);
 
         // Do the actual plotting.
         ctx.globalAlpha = 1;
@@ -44,7 +27,18 @@
                 ctx.fill();
             }
         }
-        ctx.globalAlpha = 0.15;
+
+        // change alpha according to line width
+        // console.log(ctx.lineWidth);
+
+        // if (ctx.lineWidth >= 2) ctx.globalAlpha = 0.5;
+        if (ctx.lineWidth >= 5) ctx.globalAlpha = 0.3;
+        if (ctx.lineWidth >= 10) ctx.globalAlpha = 0.15;
+        if (ctx.lineWidth <= 2) {
+            ctx.shadowColor = "#fff";
+            ctx.shadowBlur = 15;
+            ctx.lineJoin = "round";
+        }
 
         // verify points
         for (var i = 0; i < points.length; i++) {
@@ -55,18 +49,10 @@
 
         ctx.beginPath();
         let max = points.length - 1;
-        let smoothCursor = 0;
-        let smooth = smoothYear[smoothCursor][1];
-        smoothCursor++
         for (var i = 0; i <= max; i++) {
             let p = points[i];
             if (!p) continue;
-            // console.log(p);
             const year = p.xval;
-            if (year >= smoothYear[smoothCursor][0]) {
-                smooth = smoothYear[smoothCursor][1];
-                smoothCursor++;
-            }
             let pos = i;
             let from = Math.max(0, i - smooth);
             let to = Math.min(max, i + smooth);
