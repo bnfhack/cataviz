@@ -9,15 +9,13 @@ function title()
 function main()
 {
 
-    $start = Http::int('start', 1685, 1452, 2020);
-    $end = Http::int('end', 1913, 1452, 2020);
 ?>
 <div class="form_chart">
     <form name="form">
 
-        <label>De <input name="start" size="4" value="<?= $start ?>" /></label>
-        <label>à <input name="end" size="4" value="<?= $end ?>" /></label>
-        <input placeholder="Chercher un auteur" type="text" class="suggest" data-url="data/suggest_pers.php" id="pers" data-name="pers"/>
+        <label>De <input name="from" size="4" value="<?= Cataviz::$p['from'] ?>" /></label>
+        <label>à <input name="to" size="4" value="<?= Cataviz::$p['to'] ?>" /></label>
+        <input placeholder="Chercher un auteur" type="text" class="suggest" data-url="data/pers_suggest.php" id="pers" data-name="pers"/>
 <?php
 $pers_http = Http::pars('pers');
 $sql = "SELECT * FROM pers WHERE id = ?";
@@ -62,7 +60,7 @@ const chartUp = function() {
     url.search = pars;
     window.history.pushState({}, '', url);
 
-    url = new URL('data/curve_docs.php', document.location);
+    url = new URL('data/pers_docs.php', document.location);
     url.search = pars;
 
     Suggest.loadJson(url, function(json) {
@@ -88,8 +86,8 @@ const chartUp = function() {
         g = new Dygraph(form.chart, json.data, attrs);
     });
 }
-form.start.onchange = chartUp;
-form.end.onchange = chartUp;
+form.from.onchange = chartUp;
+form.to.onchange = chartUp;
 chartUp();
 
 </script>

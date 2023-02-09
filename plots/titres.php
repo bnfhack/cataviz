@@ -25,9 +25,10 @@ echo $select;
     </form>
     <div id="row">
         <div id="chart" class="dygraph"></div>
+        <!--
         <div id="doc">
-           <?php include(dirname(__DIR__) . '/html/titres.html') ; ?>
         </div>
+        -->
     </div>
 </div>
 
@@ -92,8 +93,8 @@ form.dygraph = function() {
         });
     });
 }
-form.from.onchange = form.dygraph;
-form.to.onchange = form.dygraph;
+form.start.onchange = form.dygraph;
+form.end.onchange = form.dygraph;
 form.data.onchange = form.dygraph;
 form.dygraph();
 

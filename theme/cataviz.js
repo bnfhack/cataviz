@@ -154,27 +154,39 @@ const Suggest = function() {
     }
 }();
 
-Suggest.persAdd = function(e) {
+Suggest.addInput = function(e) {
     const line = e.currentTarget;
-    const name = line.input.id;
-    const value = line.dataset.id;
+    const name = line.dataset.name;
+    const value = line.dataset.value;
     const label = line.textContent;
     // point from where insert before the field
     const beforeId = 'submit';
     const before = document.getElementById(beforeId);
     if (!before) {
-        console.log('Suggest, insert point not found, before id="' + id +'"');
+        console.log('Suggest, insert point not found, before id="' + beforeId +'"');
         return;
     }
 
+    let el = Suggest.input(name, value, label, chartUp);
+    before.parentNode.insertBefore(el, before);
+    // quite hard coded
+    chartUp();
+    if (line.input) {
+        line.input.focus();
+        line.input.dropdown.hide();
+    }
+}
+
+Suggest.input = function(name, value, text, callback)
+{
     const el = document.createElement("label");
     el.addEventListener('click', function(e){
-        const label = e.currentTarget;
-        label.parentNode.removeChild(label);
-        chartUp();
+        const el = e.currentTarget;
+        el.parentNode.removeChild(el);
+        callback(e);
     });
-    el.className = 'pers';
-    el.title = label;
+    el.className = 'sugg';
+    el.title = text;
     const a = document.createElement("a");
     a.innerText = '🞭';
     a.className = 'inputDel';
@@ -184,29 +196,36 @@ Suggest.persAdd = function(e) {
     input.type = 'hidden';
     input.value = value;
     el.appendChild(input);
-    el.appendChild(document.createTextNode(label));
-    before.parentNode.insertBefore(el, before);
-    chartUp();
-
-    line.input.focus();
-    line.input.dropdown.hide();
+    el.appendChild(document.createTextNode(text));
+    return el;
 }
 
-
+Suggest.line = function(name, record, callback) {
+    let line = document.createElement('div');
+    line.className = "sugg";
+    line.dataset.name = name;
+    line.dataset.value = record.value;
+    let html = '';
+    if (record.n) html += "<small>" + record.n + ".</small> " 
+    html += record.label;
+    if (record.count) {
+        html += ' (' + record.count + ')';
+    }
+    line.innerHTML = html;
+    line.addEventListener('click', callback);
+    return line;
+}
 
 /**
  * Append 
  * @param {Event} e 
  */
-Suggest.persLoad = function (e) {
+Suggest.load = function (e) {
     const input = e.currentTarget;
     const dropdown = input.dropdown;
     // get forms params ? dates ?
-    /*
     const formData = new FormData(input.form);
     const pars = new URLSearchParams(formData);
-    */
-    const pars = new URLSearchParams();
     pars.set("q", input.value); // add the suggest query
     const url = input.dataset.url + "?" + pars;
     dropdown.innerText = ''; // clean
@@ -215,23 +234,20 @@ Suggest.persLoad = function (e) {
         if (!json.data) return;
         if (!json.data.length) return;
         for (let i=0, len = json.data.length; i < len; i++) {
-            let pers = json.data[i];
-            let line = document.createElement('div');
-            line.className = "pers";
-            line.dataset.id = pers.id;
-            line.innerHTML = pers.label;
+            let line = Suggest.line(input.id, json.data[i], Suggest.addInput);
             line.input = input;
-            line.addEventListener('click', Suggest.persAdd);
             dropdown.appendChild(line);
         }
     });
 }
 
 
+
+
 // 
 const els = document.querySelectorAll('input.suggest');
 for (let i = 0, len = els.length; i < len; i++) {
-    Suggest.init(els[i], Suggest.persLoad);
+    Suggest.init(els[i], Suggest.load);
 }
 
 /**
@@ -247,11 +263,11 @@ let attrs = {
 };
 
 attrs.colors = [
-    'hsla(0, 0%, 50%, 1)', // 1
-    'hsla(0, 50%, 50%, 1)', // 1
-    'hsla(225, 50%, 50%, 1)', // 2
-    'hsla(90, 60%, 30%, 1)', // 3
-    'hsla(45, 80%, 50%, 1)', // 4
+    'hsla(0, 0%, 50%, 1)', // grey
+    'hsla(0, 50%, 50%, 1)', // red
+    'hsla(225, 50%, 50%, 1)', // blue
+    'hsla(45, 80%, 50%, 1)', // yellow
+    'hsla(90, 60%, 30%, 1)', // green
     'hsla(180, 50%, 40%, 1)', // 5
     'hsla(270, 50%, 50%, 1)', // 6
     'hsla(135, 70%, 50%, 1)',
@@ -289,7 +305,7 @@ attrs.underlayCallback = function(canvas, area, g) {
 attrs.axes = {
     x: {
         gridLineWidth: 1,
-        gridLineColor: "rgba(192, 192, 192, 0.7)",
+        gridLineColor: "rgba(192, 192, 192, 0.3)",
         drawGrid: true,
         independentTicks: true,
         /*
@@ -335,10 +351,7 @@ attrs.axes = {
     },
 };
 
-/*
-<? php if ($log) echo "attrs.logscale = true;"; ?>
-attrs.rollPeriod = <? php echo $smooth ?>;
-*/
+
 
 attrs.annotations = function(aseries) {
     return [

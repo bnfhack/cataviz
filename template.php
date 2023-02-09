@@ -5,11 +5,11 @@ require_once(__DIR__ . "/Cataviz.php");
 $db = new Cataviz("cataviz.db");
 
 
-use Oeuvres\Kit\{I18n, Route, Web};
+use Oeuvres\Kit\{Http, I18n, Route, Web};
 
 $body_class = 'plot';
 
-function menu_item($url, $label, $title=null, $pars=['from', 'to'])
+function menu_item($url, $label, $title=null, $pars=['start', 'end'])
 {
     $html = '<a href="';
     $html .= Route::home_href();
@@ -24,7 +24,7 @@ function menu_item($url, $label, $title=null, $pars=['from', 'to'])
             else {
                 $html .= '&amp;';
             }
-            $html .= $key . '=' . Cataviz::$p[$key];
+            $html .= $key . '=' . Http::par($key);
         }
     }
     $html .= '"';
@@ -50,10 +50,12 @@ function menu_item($url, $label, $title=null, $pars=['from', 'to'])
                 <nav class="menu" id="top">
 <a href="." class="plus">◀ Cataviz</a>
 <?php
-echo menu_item('titres', 'Titres', 'Chronologie générale des publications', ['from', 'to']);
-echo menu_item('auteurs-top', 'Auteurs, palmarès', 'Auteurs les plus publiés d’une période', ['from', 'to']);
-echo menu_item('auteurs-chrono', 'Auteurs, chrono', 'Rythme de publication d’auteurs sur une période', ['from', 'to']);
+echo menu_item('titres', 'Titres', 'Chronologie générale des publications', ['start', 'end']);
+echo menu_item('auteurs-top', 'Auteurs, palmarès', 'Auteurs les plus publiés d’une période', ['start', 'end']);
+echo menu_item('auteurs-chrono', 'Auteurs, chrono', 'Rythme de publication d’auteurs sur une période', ['start', 'end']);
 // echo menu_item('demographie', 'Démographie', 'Mortalité, “Natalité”, générations…', ['from', 'to']);
+echo menu_item('clement', 'Classement Clément', 'Plan de calssement selon la cote Clément (1647 / 1712)', ['start', 'end']);
+echo menu_item('edition-chrono', 'Lieux d’édition', 'Lieux d’édition', ['start', 'end']);
 
 ?>
 

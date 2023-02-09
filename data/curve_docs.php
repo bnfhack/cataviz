@@ -7,6 +7,9 @@ $start_time = microtime(true);
 header("Access-Control-Allow-Origin:*");
 header("Content-Type: application/json");
 
+$start = Http::int('start', 1685, 1452, 2020);
+$end = Http::int('end', 1913, 1452, 2020);
+
 // have one ore more person nb, by ark ()
 
 $pers_http = Http::pars('pers');
@@ -31,6 +34,7 @@ for ($i=0, $len=count($pers_http); $i < $len; $i++) {
     $pers_ids[$id] = $label;
 }
 
+
 $sql = "SELECT count(*) AS count FROM contrib WHERE pers = ? AND year = ?";
 $pers_q = Cataviz::prepare($sql);
 
@@ -38,11 +42,12 @@ echo "{\n";
 echo '    "data":[';
 $first = true;
 $row = []; // maybe used to build a value from others
-for ($year = Cataviz::$p['from']; $year <= Cataviz::$p['to']; $year++) {
+for ($year = $start; $year <= $end; $year++) {
     if ($first) $first = false;
     else echo ","; 
     echo "\n        [" . $year;
     foreach ($pers_ids as $id => $label) {
+
         $pers_q->execute([$id, $year]);
         list($val) = $pers_q->fetch(PDO::FETCH_NUM);
         if (!$val) $val = 0;

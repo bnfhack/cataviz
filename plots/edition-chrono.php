@@ -3,7 +3,7 @@ use Oeuvres\Kit\{Http, Route, Select};
 
 function title()
 {
-    return "BnF, Catalogue général, auteurs, titres par année";
+    return "BnF, Catalogue général, lieux d’édition";
 }
 
 function main()
@@ -11,26 +11,14 @@ function main()
 
     $start = Http::int('start', 1685, 1452, 2020);
     $end = Http::int('end', 1913, 1452, 2020);
+
 ?>
 <div class="form_chart">
     <form name="form">
 
         <label>De <input name="start" size="4" value="<?= $start ?>" /></label>
         <label>à <input name="end" size="4" value="<?= $end ?>" /></label>
-        <input placeholder="Chercher un auteur" type="text" class="suggest" data-url="data/suggest_pers.php" id="pers" data-name="pers"/>
-<?php
-$pers_http = Http::pars('pers');
-$sql = "SELECT * FROM pers WHERE id = ?";
-$pers_q = Cataviz::prepare($sql);
-for ($i=0, $len=count($pers_http); $i < $len; $i++) {
-    $id = $pers_http[$i];
-    $pers_q->execute([$id]);
-    $pers_row = $pers_q->fetch();
-    if (!$pers_row) continue;
-    $label = Cataviz::pers_label($pers_row);
-    echo '<label onclick="this.parentNode.removeChild(this); chartUp();" class="pers" title="' . $label .'"><a class="inputDel">🞭</a><input name="pers" type="hidden" value="' . $id .'">' . $label . '</label>';
-}
-?>
+        <input placeholder="Chercher un terme" type="text" class="suggest" data-url="data/suggest_edition.php" id="t" data-name="t"/>
         <button id="submit" type="submit">▶</button>
     </form>
     <div id="row" style="background-color: #000; color: rgba(255, 255, 255, 0.6)" >
@@ -51,6 +39,7 @@ attrs.historySmooth = 3;
 attrs.strokeWidth = 2;
 attrs.plotter = Dygraph.plotHistory;
 
+attrs.logscale = true;
 
 const form = document.forms['form'];
 form.chart = document.getElementById("chart");
@@ -62,7 +51,7 @@ const chartUp = function() {
     url.search = pars;
     window.history.pushState({}, '', url);
 
-    url = new URL('data/curve_docs.php', document.location);
+    url = new URL('data/curve_edition.php', document.location);
     url.search = pars;
 
     Suggest.loadJson(url, function(json) {
@@ -72,24 +61,18 @@ const chartUp = function() {
         if (json.meta.attrs) {
             Object.assign(attrs, json.meta.attrs);
         }
-        // set plotter
-        for(var key in attrs.series){
-            let serie = attrs.series[key];
-            if (!serie['plotter'] || typeof serie['plotter'] !== 'string') continue;
-            // string 2 function, recursive
-            let fun = window;
-            const methods = serie['plotter'].split(".");
-            for(var i in methods) {
-                fun = fun[methods[i]];
-            }
-            attrs.series[key]['plotter'] = fun;
-        }
-
         g = new Dygraph(form.chart, json.data, attrs);
     });
 }
 form.start.onchange = chartUp;
 form.end.onchange = chartUp;
+const beforeId = 'submit';
+const before = document.getElementById(beforeId);
+const url = new URL(window.location.href); 
+for (const name of url.searchParams.getAll('name')) {
+    let el = Suggest.input('name', name, name, chartUp);
+    before.parentNode.insertBefore(el, before);
+}
 chartUp();
 
 </script>

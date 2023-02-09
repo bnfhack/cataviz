@@ -80,7 +80,7 @@ nav.menu {
 }
 
 nav.menu>a {
-    padding: 0 2ex;
+    padding: 0 1ex;
 
 }
 
@@ -275,6 +275,8 @@ table.data tr:hover {
     position: relative;
 }
 
+
+
 .form_chart form {}
 
 #row {
@@ -282,7 +284,7 @@ table.data tr:hover {
     display: flex;
     justify-content: space-between;
     height: 100%;
-    padding: 1rem;
+    padding: 1rem 0;
     flex-grow: 0;
     overflow: auto;
 }
@@ -292,7 +294,10 @@ table.data tr:hover {
     overflow: auto;
 }
 
-
+#row #terms {
+    flex-basis: 20rem;
+    overflow: auto;
+}
 
 #row #doc {
     position: relative;
@@ -300,9 +305,15 @@ table.data tr:hover {
     padding: 0 1rem 0 1rem;
     overflow: auto;
 }
-
+#chart_frame {
+    position: relative;
+    background-color: #000;
+    color: rgba(255, 255, 255, 0.6);
+    padding: 1rem;
+    width: 100%;
+    height: 100%;
+}
 #chart {
-    background-color: #FFFFFF;
     width: 100%;
     height: 100%;
 }
@@ -543,6 +554,7 @@ div.suggest {
     z-index: 100;
 }
 
+#terms > div,
 div.suggest div {
     cursor: pointer;
     margin: 0;
@@ -555,6 +567,7 @@ div.suggest div {
     width: 100%;
 }
 
+#terms > div:hover,
 div.suggest div:hover {
     background: var(--bghi);
     color: var(--texthi);
@@ -568,7 +581,7 @@ div.suggest.auteur {
     width: 25rem;
 }
 
-label.pers {
+label.sugg {
     cursor: pointer;
     display: inline-block;
     white-space: nowrap;
