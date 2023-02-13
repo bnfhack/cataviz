@@ -19,6 +19,8 @@ $q_null = Cataviz::prepare($sql);
 
 // the grouping values
 $terms = Http::pars('t');
+// value if no point
+$none = 1; // log
 
 echo "{\n";
 echo '    "data":[';
@@ -38,8 +40,7 @@ for ($year = $start; $year <= $end; $year++) {
             $q->execute([$year, $t]);
             list($count) = $q->fetch(PDO::FETCH_NUM);
         }
-        // 0 ? 1 ? Null ?
-        if (!$count) $count = 0;
+        if (!$count) $count = $none;
         $line[] = intval($count);
     }
     echo json_encode($line, JSON_UNESCAPED_UNICODE);

@@ -1,9 +1,13 @@
 <?php
+if (!isset($table)) $table = 'contrib';
+if (!isset($cumul)) $cumul = false;
+
+
+$start_time = microtime(true);
+
 require_once(__DIR__ . "/../Cataviz.php");
 
 use Oeuvres\Kit\{Http};
-
-$start_time = microtime(true);
 header("Access-Control-Allow-Origin:*");
 header("Content-Type: application/json");
 
@@ -35,23 +39,27 @@ for ($i=0, $len=count($pers_http); $i < $len; $i++) {
 }
 
 
-$sql = "SELECT count(*) AS count FROM contrib WHERE pers = ? AND year = ?";
+$sql = "SELECT count(*) AS count FROM $table WHERE pers = ? AND year = ?";
 $pers_q = Cataviz::prepare($sql);
 
 echo "{\n";
 echo '    "data":[';
 $first = true;
-$row = []; // maybe used to build a value from others
+$sum = [];
+foreach ($pers_ids as $id => $label) $sum[$id] = 0;
 for ($year = $start; $year <= $end; $year++) {
     if ($first) $first = false;
     else echo ","; 
     echo "\n        [" . $year;
     foreach ($pers_ids as $id => $label) {
-
         $pers_q->execute([$id, $year]);
-        list($val) = $pers_q->fetch(PDO::FETCH_NUM);
-        if (!$val) $val = 0;
-        $row[$label] = $val;
+        list($count) = $pers_q->fetch(PDO::FETCH_NUM);
+        $sum[$id] += $count;
+
+        if ($cumul) $val = $sum[$id]; 
+        else if (!$count) $val = 0;
+        else $val = $count;
+
         echo ", " . $val;
     }
     echo "]";

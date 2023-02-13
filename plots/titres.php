@@ -1,5 +1,5 @@
 <?php
-use Oeuvres\Kit\{Route, Select};
+use Oeuvres\Kit\{Http, Route, Select};
 
 function title()
 {
@@ -8,23 +8,27 @@ function title()
 
 function main()
 {
+    $start = Http::int('start', 1685, 1452, 2020);
+    $end = Http::int('end', 1913, 1452, 2020);
 
 ?>
 <div class="form_chart">
     <form name="form">
-        De <input name="from" size="4" value="<?= Cataviz::$p['from'] ?>" />
-        à <input name="to" size="4" value="<?= Cataviz::$p['to'] ?>" />
+        De <input name="start" size="4" value="<?= $start ?>" />
+        à <input name="end" size="4" value="<?= $end ?>" />
         <?php 
 $select = new Select('data', 'select_data');
-$select->add('doc_pages', 'Pages');
-$select->add('doc_langue', 'Langues');
-$select->add('doc_format', 'Formats');
+$select->add('curve_pages', 'Pages');
+$select->add('curve_lang', 'Langues');
+$select->add('curve_format', 'Formats');
 echo $select;
         ?>
         <button type="submit">▶</button>
     </form>
     <div id="row">
-        <div id="chart" class="dygraph"></div>
+        <div id="chart_frame">
+            <div id="chart" class="dygraph" data-url="data/curve_pages.php"></div>
+        </div>
         <!--
         <div id="doc">
         </div>
@@ -35,53 +39,21 @@ echo $select;
 <script type="text/javascript" src="<?= Route::home_href() ?>theme/cataviz.js">//</script>
 
 <script type="text/javascript">
-attrs.title = "<?= title() ?>";
-attrs.ylabel = "Titres par an";
 
 
-attrs.drawPoints = true;
-attrs.pointSize = 1.5;
-attrs.strokeWidth = 10;
-attrs.logscale = true;
+Cataviz.dypars.title = "<?= title() ?>";
+Cataviz.dypars.ylabel = "Titres par an";
+Cataviz.dypars.drawPoints = true;
+Cataviz.dypars.pointSize = 2;
+Cataviz.dypars.strokeWidth = 1;
+Cataviz.dypars.logscale = true;
 
-const from = <?= Cataviz::$p['from'] ?>;
-if (from < 1788) attrs.historySmooth = 2;
-else if (from < 1914) attrs.historySmooth = 1;
-const form = document.forms['form'];
-form.chart = document.getElementById("chart");
-form.dygraph = function() {
-    // update url params
-    const locbar = new URL(window.location);
-    locbar.searchParams.set('from', form.from.value);
-    locbar.searchParams.set('to', form.to.value);
-    locbar.searchParams.set('data', form.data.value);
-    window.history.pushState({}, '', locbar);
+const start = <?= $start ?>;
+if (start < 1788) Cataviz.dypars.historySmooth = 2;
+else if (start < 1914) Cataviz.dypars.historySmooth = 1;
 
-    let src = form.data.value;
-    if (!src) src = 'doc_lang'; 
-    let url = 'data/' + src + '.php';
-    url += "?from=" + form.from.value + "&to=" + form.to.value;
-
-    Formajax.loadJson(url, function(json) {
-        if (!attrs.series) attrs.series = {};
-        // var annoteSeries = json.meta.labels[1]; // period anotations
-        attrs.labels = json.meta.labels;
-        if (json.meta.attrs) {
-            Object.assign(attrs, json.meta.attrs);
-        }
-        // set plotter
-        for(var key in attrs.series){
-            let serie = attrs.series[key];
-            if (!serie['plotter'] || typeof serie['plotter'] !== 'string') continue;
-            // string 2 function, recursive
-            let fun = window;
-            const methods = serie['plotter'].split(".");
-            for(var i in methods) {
-                fun = fun[methods[i]];
-            }
-            attrs.series[key]['plotter'] = fun;
-        }
-        attrs.series["Tout"]= {
+/*
+attrs.series["Tout"]= {
             "pointSize" : 1.5,
             "drawPoints": true,
             "color": "#ccc",
@@ -91,13 +63,13 @@ form.dygraph = function() {
         g.ready(function() {
             g.setAnnotations(attrs.annotations("Tout"));
         });
-    });
-}
-form.start.onchange = form.dygraph;
-form.end.onchange = form.dygraph;
-form.data.onchange = form.dygraph;
-form.dygraph();
-
+*/
+Cataviz.chartInit('chart', 'form');
+Cataviz.chart.form.data.addEventListener('change', function(e) {
+    Cataviz.chart.dataset.url = 'data/' + this.value + '.php';
+    Cataviz.chartUp();
+});
+Cataviz.chartUp();
 
 </script>
 <?php

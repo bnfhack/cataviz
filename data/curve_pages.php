@@ -1,9 +1,14 @@
 <?php
 require_once(__DIR__ . "/../Cataviz.php");
+use Oeuvres\Kit\{Http};
+
 
 $start_time = microtime(true);
 header("Access-Control-Allow-Origin:*");
 header("Content-Type: application/json");
+
+$start = Http::int('start', 1685, 1452, 2020);
+$end = Http::int('end', 1913, 1452, 2020);
 
 $sql = "SELECT count(*) AS count FROM doc WHERE year = ? ";
 
@@ -22,7 +27,7 @@ $queries = array(
 echo "{\n";
 echo '    "data":[';
 $first = true;
-for ($year = Cataviz::$p['from']; $year <= Cataviz::$p['to']; $year++) {
+for ($year = $start; $year <= $end; $year++) {
     if ($first) $first = false;
     else echo ","; 
     echo "\n        [" . $year;
@@ -54,7 +59,7 @@ echo ',
                     "stackedGraph": true,
                     "fillGraph": true,
                     "drawPoints": false,
-                    "color": "#aaf"
+                    "color": "#fff"
                 },
                 "? p.": {
                     "drawPoints": false,

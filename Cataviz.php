@@ -15,7 +15,7 @@ class Cataviz
     /** parameters */
     static public $p = array(
         'date_min' => 1452,
-        'date_max' => 2019,
+        'date_max' => 2020,
     );
 
 
@@ -49,7 +49,7 @@ class Cataviz
         ini_set('display_errors', 1);
         error_reporting(E_ALL);
         // Some default values for this installation
-        self::$p['from'] = 1685;
+        self::$p['start'] = 1685;
         self::$p['to'] = 1913;
         Cataviz::pars();
         self::connect(self::$config['db_file']);
@@ -76,12 +76,38 @@ class Cataviz
         self::$pdo->exec("PRAGMA mmap_size = 1073741824");
     }
 
+
+    /**
+     * Produce some js code with SQL label to update chart form with url params
+     */
+    static function url_pers()
+    {
+        $js = '';
+        $js .= "const point = Cataviz.chart.form.lastElementChild;\n";
+        $js .= "let el = null;\n";
+        $terms = http::pars('pers');
+        $sql = "SELECT * FROM pers WHERE id = ?";
+        $stmt = Cataviz::prepare($sql);
+        foreach($terms as $pers_id) {
+            $stmt->execute([$pers_id]);
+            $pers_row = $stmt->fetch();
+            if (!$pers_row) continue;
+            $label = addslashes(Cataviz::pers_label($pers_row));
+            $js .= "el = Suggest.input('pers', '$pers_id', '$label', Cataviz.chartUp);\n";
+            $js .= "point.parentNode.insertBefore(el, point);\n";
+        }
+        return $js;
+    }
+
+
     /**
      * Get parameters
      */
     static function pars()
     {
-        $from = null;
+
+        /*
+        $start = null;
         if (isset($_REQUEST['from']) &&  is_numeric($_REQUEST['from'])) {
             $from = $_REQUEST['from'];
             if ($from < self::$p['date_min']) $from = self::$p['date_min'];
@@ -99,8 +125,6 @@ class Cataviz
         if ($to !== null) {
             self::$p['to'] = $to;
         }
-
-        /*
         $pagefloor = 50;
         if (isset($_REQUEST['pagefloor'])) $pagefloor = $_REQUEST['pagefloor'];
 

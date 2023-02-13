@@ -7,30 +7,35 @@ const Suggest = function() {
      * @param {function} callback 
      * @returns 
      */
-    function loadJson(url, callback) {
-        return new Promise(function(resolve, reject) {
-            let xhr = new XMLHttpRequest();
-            xhr.responseType = 'json';
-            xhr.onprogress = function() {
-                // do something ? is it send by chunks ?
-                if (xhr.response) console.log("progress " + xhr.response.length);
-            };
-            xhr.onload = function() {
-                var status = xhr.status;
-                if (status !== 200) {
-                    // error ? do what ?
-                    callback(xhr.response);
-                    reject(Error(status + " " + url));
-                }
+    function load(url, callback, type='text') {
+        let timeStart = new Date();
+        let xhr = new XMLHttpRequest();
+        xhr.responseType = type;
+        xhr.onprogress = function() {
+            // if sended by chunks, not seen for suggest
+        };
+        xhr.onload = function() {
+            var status = xhr.status;
+            if (status !== 200) {
+                // error ? do what ?
                 callback(xhr.response);
-                resolve();
-            };
-            xhr.onerror = function() {
-                reject(Error('Connection failed'));
-            };
-            xhr.open('GET', url);
-            xhr.send();
-        });
+                reject(Error(status + " " + url));
+            }
+            callback(xhr.response);
+            //
+        };
+        // loadend (load|error|abort)
+        xhr.onerror = function() {
+            console.log('[' + xhr.status + '] ' + url);
+        };
+        xhr.open('GET', url);
+        xhr.send();
+        return xhr;
+    }
+
+
+    function loadJson(url, callback) {
+        return load(url, callback, 'json');
     }
     
     /**
@@ -158,19 +163,14 @@ Suggest.addInput = function(e) {
     const line = e.currentTarget;
     const name = line.dataset.name;
     const value = line.dataset.value;
-    const label = line.textContent;
+    const label = (line.dataset.label)? line.dataset.label
+        :line.textContent;
     // point from where insert before the field
-    const beforeId = 'submit';
-    const before = document.getElementById(beforeId);
-    if (!before) {
-        console.log('Suggest, insert point not found, before id="' + beforeId +'"');
-        return;
-    }
-
-    let el = Suggest.input(name, value, label, chartUp);
-    before.parentNode.insertBefore(el, before);
+    const before =  Cataviz.chart.form.lastElementChild;
+    let input = Suggest.input(name, value, label, Cataviz.chartUp);
+    before.parentNode.insertBefore(input, before);
     // quite hard coded
-    chartUp();
+    Cataviz.chartUp();
     if (line.input) {
         line.input.focus();
         line.input.dropdown.hide();
@@ -200,19 +200,20 @@ Suggest.input = function(name, value, text, callback)
     return el;
 }
 
-Suggest.line = function(name, record, callback) {
+Suggest.line = function(name, record) 
+{
     let line = document.createElement('div');
     line.className = "sugg";
     line.dataset.name = name;
+    line.dataset.label = record.label;
     line.dataset.value = record.value;
     let html = '';
     if (record.n) html += "<small>" + record.n + ".</small> " 
     html += record.label;
     if (record.count) {
-        html += ' (' + record.count + ')';
+        html += ', <small>' + record.count + '</small>';
     }
     line.innerHTML = html;
-    line.addEventListener('click', callback);
     return line;
 }
 
@@ -229,20 +230,23 @@ Suggest.load = function (e) {
     pars.set("q", input.value); // add the suggest query
     const url = input.dataset.url + "?" + pars;
     dropdown.innerText = ''; // clean
-    Suggest.loadJson(url, function(json) {
+    // abort possible request still working
+    if (input.loader) {
+        if (input.loader.readyState != 4) input.loader.abort();
+    }
+    input.loader = Suggest.loadJson(url, function(json) {
         if (!json) return;
         if (!json.data) return;
         if (!json.data.length) return;
+        timeStart = new Date();
         for (let i=0, len = json.data.length; i < len; i++) {
             let line = Suggest.line(input.id, json.data[i], Suggest.addInput);
+
             line.input = input;
             dropdown.appendChild(line);
         }
     });
 }
-
-
-
 
 // 
 const els = document.querySelectorAll('input.suggest');
@@ -250,19 +254,27 @@ for (let i = 0, len = els.length; i < len; i++) {
     Suggest.init(els[i], Suggest.load);
 }
 
+
+/** Specific to this app */
+
+const Cataviz = {
+    conf:{},
+    dypars: {},
+};
+
 /**
  * Dygraph parameters
  */
-
-let attrs = {
+Cataviz.dypars = {
     legend: "always",
     // labelsSeparateLines: true,
     showRoller: false,
     titleHeight: 75,
     pointSize: 2,
-};
+    connectSeparatedPoints: false,
+}
 
-attrs.colors = [
+Cataviz.dypars.colors = [
     'hsla(0, 0%, 50%, 1)', // grey
     'hsla(0, 50%, 50%, 1)', // red
     'hsla(225, 50%, 50%, 1)', // blue
@@ -277,7 +289,7 @@ attrs.colors = [
 
 
 
-attrs.underlayCallback = function(canvas, area, g) {
+Cataviz.dypars.underlayCallback = function(canvas, area, g) {
     canvas.fillStyle = "rgba(192, 192, 192, 0.2)";
     var periods = [
         [1562, 1598],
@@ -299,10 +311,7 @@ attrs.underlayCallback = function(canvas, area, g) {
         canvas.fillRect(left, area.y, right - left, area.h);
     }
 };
-
-
-
-attrs.axes = {
+Cataviz.dypars.axes = {
     x: {
         gridLineWidth: 1,
         gridLineColor: "rgba(192, 192, 192, 0.3)",
@@ -353,7 +362,7 @@ attrs.axes = {
 
 
 
-attrs.annotations = function(aseries) {
+Cataviz.dypars.annotations = function(aseries) {
     return [
         { series: aseries, x: "1562", shortText: "Guerres de Religion", width: "", height: "", cssClass: "annv" },
         { series: aseries, x: "1648", shortText: "La Fronde", width: "", height: "", cssClass: "annv" },
@@ -377,3 +386,175 @@ var setLog = function(val) {
 if (linear) linear.onclick = function() { setLog(false); };
 if (log) log.onclick = function() { setLog(true); };
 */
+
+Cataviz.chartUp = function() {
+    // update url params
+    const pars = Suggest.pars(Cataviz.chart.form);
+    let url = new URL(window.location);
+    url.search = pars;
+    window.history.pushState({}, '', url);
+
+    url = new URL(Cataviz.chart.dataset.url, document.location);
+    url.search = pars;
+    Suggest.loadJson(url, function(json) {
+        let attrs = Cataviz.dypars;
+        if (!attrs.series) attrs.series = {};
+        // var annoteSeries = json.meta.labels[1]; // period anotations
+        attrs.labels = json.meta.labels;
+        if (json.meta.attrs) {
+            Object.assign(attrs, json.meta.attrs);
+        }
+        // set plotter
+        for(var key in attrs.series){
+            let serie = attrs.series[key];
+            if (!serie['plotter'] || typeof serie['plotter'] !== 'string') continue;
+            // string 2 function, recursive
+            let fun = window;
+            const methods = serie['plotter'].split(".");
+            for(var i in methods) {
+                fun = fun[methods[i]];
+            }
+            attrs.series[key]['plotter'] = fun;
+        }
+        g = new Dygraph(Cataviz.chart, json.data, attrs);
+    });
+}
+
+Cataviz.chartInit = function(chartId, formName) {
+    let ok = true;
+    Cataviz.chart = document.getElementById(chartId);
+    if (!Cataviz.chart) {
+        console.log('[chartInit] <div id="' + chartId + '"> not found' );
+        ok = false;
+    }
+    else if (!Cataviz.chart.dataset.url) {
+        console.log('[chartInit] <div id="' + chartId + '"> @data-url not found' );
+        ok = false;
+    }
+    form = document.forms[formName];
+    if (!form) {
+        console.log('[chartInit] <form name="' + formName + '"> not found' );
+        ok = false;
+    }
+    if (!ok) return;
+    Cataviz.chart.form = form;
+    form.onsubmit = function(event) {
+        event.preventDefault();
+        Cataviz.chartUp();
+        return false;
+    }
+
+    if (form.start) {
+        form.start.addEventListener('change', Cataviz.chartUp);
+    }
+    if (form.end) {
+        form.end.addEventListener('change', Cataviz.chartUp);
+    }
+}
+
+Cataviz.suggUp = function() {
+    let url = new URL(Cataviz.sugg.dataset.url, document.location);
+    let formData = new FormData(Cataviz.chart.form);
+    // loop on sugg form control
+    if (Cataviz.sugg.form) {
+        let formData2 = new FormData(Cataviz.sugg.form);
+        for(const pair of formData2.entries()){
+            formData.append(pair[0], pair[1]);
+        }
+    }
+    url.search = new URLSearchParams(formData);
+    Cataviz.sugg.nav.innerText = '';
+    let img = document.createElement("img");
+    img.src = 'theme/waiting.svg';
+    Cataviz.sugg.nav.append(img);
+    // loading 
+    const name = Cataviz.sugg.dataset.name;    
+    Suggest.loadJson(url, function(json) {
+        img.remove();
+        if (!json || !json.data || !json.data.length) {
+            Cataviz.sugg.nav.innerText = '';
+            return;
+        }
+        for (let i=0, len = json.data.length; i < len; i++) {
+            let line = Suggest.line(name, json.data[i]);
+            line.addEventListener('click', Suggest.addInput);
+            line.addEventListener('click', Suggest.chartUp);
+            Cataviz.sugg.nav.appendChild(line);
+        }
+    });
+}
+
+Cataviz.suggInit = function(id) {
+    ok = true;
+    if (!Cataviz.chart || !Cataviz.chart.form) {
+        console.log('[suggInit] call Cataviz.chartInit(chartId, formName) before' );
+        ok = false;
+    }
+    Cataviz.sugg = document.getElementById(id);
+    if (!Cataviz.sugg) {
+        console.log('[suggInit] <div id="' + id + '"> not found' );
+        ok = false;
+    }
+    if (!ok) return;
+    if (!Cataviz.sugg.dataset.url) {
+        console.log('[suggInit] <div id="' + id + '"> @data-url not found for data source' );
+        ok = false;
+    }
+    const name = Cataviz.sugg.dataset.name;
+    if (!name) {
+        console.log('[suggInit] <div id="' + id + '"> @data-name not found for name param' );
+        ok = false;
+    }
+    if (!ok) return;
+    if (Cataviz.chart.form) {
+        if (Cataviz.chart.form.start) {
+            Cataviz.chart.form.start.addEventListener('change', Cataviz.suggUp);
+        }
+        if (Cataviz.chart.form.end) {
+            Cataviz.chart.form.end.addEventListener('change', Cataviz.suggUp);
+        }
+    }
+    Cataviz.sugg.form = Cataviz.sugg.querySelector('form');
+    if (Cataviz.sugg.form) {
+        const form = Cataviz.sugg.form;
+        form.onsubmit = function(event) {
+            event.preventDefault();
+            Cataviz.suggUp();
+            return false;
+        }
+        if (form.q) {
+            form.q.autocomplete = 'off';
+            form.q.addEventListener('input', Cataviz.suggUp);
+        }
+        console.log(typeof form.popo);
+        /*
+        if (form.after) {
+            form.after.autocomplete = 'off';
+            form.after.addEventListener('change', Cataviz.suggUp);
+        }
+        console.log(form.before);
+        if (form.before) {
+            form.before.autocomplete = 'off';
+            form.before.addEventListener('change', Cataviz.suggUp);
+        }
+        */
+    }
+
+
+    Cataviz.sugg.nav = Cataviz.sugg.querySelector('nav');
+
+    // filter.addEventListener('input', suggUp);
+
+}
+
+Cataviz.suggInputs = function(name)
+{
+    // add fields from 
+    const point = Cataviz.chart.form.lastElementChild;
+    const url = new URL(window.location.href);
+    for (const value of url.searchParams.getAll(name)) {
+        let el = Suggest.input(name, value, value, Cataviz.chartUp);
+        point.parentNode.insertBefore(el, point);
+    }
+    
+}

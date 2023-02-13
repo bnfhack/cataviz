@@ -51,11 +51,11 @@ function menu_item($url, $label, $title=null, $pars=['start', 'end'])
 <a href="." class="plus">◀ Cataviz</a>
 <?php
 echo menu_item('titres', 'Titres', 'Chronologie générale des publications', ['start', 'end']);
-echo menu_item('auteurs-top', 'Auteurs, palmarès', 'Auteurs les plus publiés d’une période', ['start', 'end']);
-echo menu_item('auteurs-chrono', 'Auteurs, chrono', 'Rythme de publication d’auteurs sur une période', ['start', 'end']);
+echo menu_item('auteurs', 'Auteurs', 'Auteurs, rythme chronologique de publication', ['start', 'end']);
 // echo menu_item('demographie', 'Démographie', 'Mortalité, “Natalité”, générations…', ['from', 'to']);
-echo menu_item('clement', 'Classement Clément', 'Plan de calssement selon la cote Clément (1647 / 1712)', ['start', 'end']);
-echo menu_item('edition-chrono', 'Lieux d’édition', 'Lieux d’édition', ['start', 'end']);
+echo menu_item('clement', 'Classement Clément', 'Plan de classement selon la cote Clément (1647 / 1712)', ['start', 'end']);
+echo menu_item('lieux', 'Lieux d’édition', 'Lieux d’édition', ['start', 'end']);
+echo menu_item('sujets', 'Personnes sujet', 'Personnes sujet d’un titre', ['start', 'end']);
 
 ?>
 

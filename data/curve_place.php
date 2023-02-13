@@ -37,7 +37,7 @@ for ($year = $start; $year <= $end; $year++) {
             $q->execute([$year, $t]);
             list($count) = $q->fetch(PDO::FETCH_NUM);
         }
-        if (!$count) $count = 0;
+        if (!$count) $count = 1;
         $row[$t] = $count;
         echo ", " . $count;
     }

@@ -1,34 +1,31 @@
 <?php
 require_once(__DIR__ . "/../Cataviz.php");
+use Oeuvres\Kit\{Http};
 
 header("Access-Control-Allow-Origin:*");
 header("Content-Type: application/json");
 
-$sql = "SELECT count(*) AS count FROM doc WHERE year = ? ";
+$start = Http::int('start', 1685, 1452, 2020);
+$end = Http::int('end', 1913, 1452, 2020);
 
+$min = 200;
+$sql = "SELECT count(*) AS c FROM doc WHERE year = ? ";
 
 $queries = array(
     "Tout" => Cataviz::prepare($sql),
-    "Français" => Cataviz::prepare($sql . " AND lang = 'fre'"),
-    "Latin" => Cataviz::prepare($sql . " AND lang = 'lat'"),
-    "Anglais" => Cataviz::prepare($sql . " AND lang = 'eng'"),
-    "Allemand" => Cataviz::prepare($sql . " AND lang = 'ger'"),
-    // "Ancien-Français" => Cataviz::prepare($sql . " AND lang = 'frm'"),
-    // no null, default is French
-    // "?" => Cataviz::prepare($sql . " AND lang IS NULL"),
-    // "ita" => "Italien",
-    // "spa" => "Espagnol",
-    // "dut" => "Néerlandais",
-    // "frm" => "Ancien-français",
+    "in-2°" => Cataviz::prepare($sql." AND format = 2"),
+    "in-4°" => Cataviz::prepare($sql." AND format = 4"),
+    "in-8°" => Cataviz::prepare($sql." AND format = 8"),
+    "in-12°" => Cataviz::prepare($sql." AND format = 12"),
+    "in-16+°" => Cataviz::prepare($sql." AND format >= 16"),
+    "In-?°" => Cataviz::prepare($sql . " AND  format IS NULL"),
 );
-
-$qdoc = Cataviz::prepare("SELECT count(*) AS count FROM doc WHERE year = ? AND lang = ?");
 
 
 echo "{\n";
 echo '    "data":[';
 $first = true;
-for ($year = Cataviz::$p['from']; $year <= Cataviz::$p['to']; $year++) {
+for ($year = $start; $year <= $end; $year++) {
     if ($first) $first = false;
     else echo ","; 
     echo "\n        [" . $year;
@@ -36,6 +33,10 @@ for ($year = Cataviz::$p['from']; $year <= Cataviz::$p['to']; $year++) {
         $q->execute(array($year));
         list($val) = $q->fetch(PDO::FETCH_NUM);
         if (!$val) $val = 'null';
+        /*
+        if ($val >= $min) echo ", " . $val;
+        else echo ", null";
+        */
         echo ", " . $val;
     }
     echo "]";
@@ -49,28 +50,34 @@ foreach ($queries as $label => $q) {
     echo ', "' . $label . '"';
 }
 echo "]";
+
 // per series infos
 echo ',
         "attrs": {
-            "y2label":"Moyenne nb de pages",
             "series": {
-                "Français": {
+                "in-2°": {
                     "plotter": "Dygraph.plotHistory"
                 },
-                "Latin": {
+                "in-4°": {
                     "plotter": "Dygraph.plotHistory"
                 },
-                "Anglais": {
+                "in-8°": {
                     "plotter": "Dygraph.plotHistory"
                 },
-                "Allemand": {
+                "in-12°": {
                     "plotter": "Dygraph.plotHistory"
                 },
-                "Ancien-Français": {
+                "in-16+°": {
                     "plotter": "Dygraph.plotHistory"
+                },
+                "In-?°": {
+                    "pointSize": 0,
+                    "color": "#ccc",
+                    "strokeWidth": 1
                 }
             }
         }';
+
 
 echo "\n    }\n";
 echo "}\n";
