@@ -15,8 +15,8 @@ function main()
 <div class="form_chart">
     <form name="form" class="line">
 
-        <label>De <input name="start" size="4" value="<?= $start ?>" /></label>
-        <label>à <input name="end" size="4" value="<?= $end ?>" /></label>
+        <label>De <input class="year" name="start" size="4" value="<?= $start ?>" /></label>
+        <label>à <input class="year" name="end" size="4" value="<?= $end ?>" /></label>
         <button id="submit" type="submit">▶</button>
     </form>
     <div id="row">
@@ -24,8 +24,8 @@ function main()
             <form>
                 <input name="q" class="q" placeholder="Filtrer par lettres"/>
                 <div>Né
-                après <input name="after" size="4"/>
-                avant <input name="before" size="4"/>
+                après <input class="year" name="after" size="4"/>
+                avant <input class="year" name="before" size="4"/>
                 </div>
             </form>
             <nav>
@@ -39,8 +39,6 @@ function main()
 </div>
 <script type="text/javascript" src="<?= Route::home_href() ?>theme/cataviz.js">//</script>
 <script type="text/javascript">
-
-const chartUrl = "data/curve_contrib.php";
 
 Cataviz.dypars.title = "<?= title() ?>";
 Cataviz.dypars.ylabel = "Titres par an";

@@ -14,8 +14,8 @@ function main()
 ?>
 <div class="form_chart">
     <form name="form">
-        De <input name="start" size="4" value="<?= $start ?>" />
-        à <input name="end" size="4" value="<?= $end ?>" />
+        De <input class="year" name="start" size="4" value="<?= $start ?>" />
+        à <input class="year" name="end" size="4" value="<?= $end ?>" />
         <?php 
 $select = new Select('data', 'select_data');
 $select->add('curve_pages', 'Pages');

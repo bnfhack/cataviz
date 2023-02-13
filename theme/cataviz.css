@@ -311,6 +311,11 @@ form.line {
     text-align: right;
 }
 
+input.year {
+    width: 6ex;
+    text-align: center;
+}
+
 #sugg input.q {
     width: 100%;
 }

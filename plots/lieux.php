@@ -16,8 +16,8 @@ function main()
 <div class="form_chart">
     <form name="form">
 
-        <label>De <input name="start" size="4" value="<?= $start ?>" /></label>
-        <label>à <input name="end" size="4" value="<?= $end ?>" /></label>
+        <label>De <input name="start" class="year" size="4" value="<?= $start ?>" /></label>
+        <label>à <input name="end" class="year" size="4" value="<?= $end ?>" /></label>
         <button id="submit" type="submit">▶</button>
     </form>
     <div id="row">
