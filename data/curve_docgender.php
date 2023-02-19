@@ -85,7 +85,7 @@ $attrs = [
             'fillGraph' => true,
         ],
         $inconnu => [
-            "color" => '#000',
+            "color" => '#ccc',
             "fillAlpha" => 0.2,
             'fillGraph' => true,
         ],

@@ -42,7 +42,6 @@ function main()
 
 Cataviz.dypars.title = "<?= title() ?>";
 Cataviz.dypars.ylabel = "Titres par an";
-Cataviz.dypars.drawPoints = true;
 Cataviz.dypars.historySmooth = 1;
 Cataviz.dypars.plotter = Dygraph.plotHistory;
 

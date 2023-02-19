@@ -270,13 +270,14 @@ Cataviz.dypars = {
     // labelsSeparateLines: true,
     showRoller: false,
     titleHeight: 75,
-    pointSize: 5,
-    drawPoints: true,
     connectSeparatedPoints: false,
+    drawPoints: true,
+    pointSize: 2,
+    strokeWidth: 5,
 }
 
 Cataviz.dypars.colors = [
-    'hsla(0, 0%, 0%, 1)', // black
+    // 'hsla(0, 0%, 50%, 1)', // 50%
     'hsla(0, 0%, 90%, 1)', // white
     'hsla(0, 50%, 50%, 1)', // red
     'hsla(225, 50%, 70%, 1)', // blue

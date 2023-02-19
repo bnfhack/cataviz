@@ -34,8 +34,8 @@
         // console.log(ctx.lineWidth);
 
         // if (ctx.lineWidth >= 2) ctx.globalAlpha = 0.5;
-        if (ctx.lineWidth >= 10) ctx.globalAlpha = 0.15;
-        else if (ctx.lineWidth >= 5) ctx.globalAlpha = 0.3;
+        if (ctx.lineWidth >= 10) ctx.globalAlpha = 0.3;
+        else if (ctx.lineWidth >= 5) ctx.globalAlpha = 0.5;
         else if (ctx.lineWidth <= 2) {
             ctx.shadowColor = "#fff";
             // ctx.shadowBlur = 2;

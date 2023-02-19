@@ -74,7 +74,7 @@ $attrs = [
     "title" => "BnF, Catalogue général, classification “Clément”",
     "y2label" => "Titres par classe “Clément”",    
     "ylabel" => "Titres total",
-    'drawPoints' => true,
+    // 'drawPoints' => true,
     'pointSize' => 5,
     'strokeWidth' => ($start < 1750)?2:1,
     "logscale" => true,
@@ -84,11 +84,10 @@ $attrs = [
 
 $attrs['series'][$tout] = [
     "axis" => "y1",
-    "color" => 'rgba(0, 0, 0, 0.3)',
     "fillAlpha" => 0.2,
     'fillGraph' => true,
     'drawPoints' => false,
-    'strokeWidth' => 0.5,
+    'strokeWidth' => 0,
     /*
     'strokeBorderWidth' => 0.3, 
     'strokeBorderColor' => "rgba(255, 255, 255, 0.3)",
