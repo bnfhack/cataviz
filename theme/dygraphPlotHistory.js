@@ -34,11 +34,11 @@
         // console.log(ctx.lineWidth);
 
         // if (ctx.lineWidth >= 2) ctx.globalAlpha = 0.5;
-        if (ctx.lineWidth >= 10) ctx.globalAlpha = 0.3;
-        else if (ctx.lineWidth >= 5) ctx.globalAlpha = 0.5;
+        if (ctx.lineWidth >= 10) ctx.globalAlpha = 0.2;
+        else if (ctx.lineWidth >= 5) ctx.globalAlpha = 0.3;
         else if (ctx.lineWidth <= 2) {
             ctx.shadowColor = "#fff";
-            ctx.shadowBlur = 2;
+            ctx.shadowBlur = 1;
             ctx.lineJoin = "round";
             ctx.globalAlpha = 1;
         }

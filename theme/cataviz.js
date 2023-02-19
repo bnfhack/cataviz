@@ -151,11 +151,26 @@ const Suggest = function() {
         }
         return new URLSearchParams(formData);
     }
-
+    /**
+     * For event.target, get first element of name
+     * @param {*} el 
+     * @param {*} name 
+     * @returns 
+     */
+    function selfOrAncestor(el, name) {
+        while (el.tagName.toLowerCase() != name) {
+            el = el.parentNode;
+            if (!el) return false;
+            let tag = el.tagName.toLowerCase();
+            if (tag == 'div' || tag == 'nav' || tag == 'body') return false;
+        }
+        return el;
+    }
     return {
         init: init,
         loadJson: loadJson,
         pars: pars,
+        selfOrAncestor: selfOrAncestor,
     }
 }();
 
@@ -564,11 +579,23 @@ Cataviz.suggInit = function(id) {
 Cataviz.suggInputs = function(name)
 {
     // add fields from 
+    if (!Cataviz.chart) return;
     const point = Cataviz.chart.form.lastElementChild;
     const url = new URL(window.location.href);
     for (const value of url.searchParams.getAll(name)) {
         let el = Suggest.input(name, value, value, Cataviz.chartUp);
         point.parentNode.insertBefore(el, point);
     }
-    
 }
+
+let once = (function () {
+    // add dynamic parameters to menu link if clicked
+    const menu = document.getElementById('menu');
+    if (!menu) return;
+    menu.addEventListener('click',function (e) { 
+        let a = Suggest.selfOrAncestor(e.target, 'a');
+        if (!a) return;
+        a.search = window.location.search;
+    });
+})();
+once();

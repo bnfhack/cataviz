@@ -9,11 +9,12 @@ use Oeuvres\Kit\{Http, I18n, Route, Web};
 
 $body_class = 'plot';
 
-function menu_item($url, $label, $title=null, $pars=['start', 'end'])
+function menu_item($url, $label, $title=null)
 {
     $html = '<a href="';
     $html .= Route::home_href();
     $html .= $url;
+    /* done by js
     if ($pars && count($pars) > 0) {
         $first = true;
         foreach($pars as $key) {
@@ -27,6 +28,7 @@ function menu_item($url, $label, $title=null, $pars=['start', 'end'])
             $html .= $key . '=' . Http::par($key);
         }
     }
+    */
     $html .= '"';
     if ($title) $html .= ' title="' . $title . '"';
     $html .= '>' . $label . '</a>';
@@ -47,16 +49,20 @@ function menu_item($url, $label, $title=null, $pars=['start', 'end'])
     <body class="<?= $body_class ?>">
         <div id="page">
             <header id="header">
-                <nav class="menu" id="top">
+                <nav class="menu" id="menu">
 <a href="." class="plus">◀ Cataviz</a>
 <?php
-echo menu_item('titres', 'Titres', 'Chronologie générale des publications', ['start', 'end']);
-echo menu_item('auteurs', 'Auteurs', 'Auteurs, rythme chronologique de publication', ['start', 'end']);
+// echo menu_item('titres', 'Titres', 'Chronologie générale des publications');
 // echo menu_item('demographie', 'Démographie', 'Mortalité, “Natalité”, générations…', ['from', 'to']);
-echo menu_item('clement', 'Classement Clément', 'Plan de classement selon la cote Clément (1647 / 1712)', ['start', 'end']);
-echo menu_item('lieux', 'Lieux d’édition', 'Lieux d’édition', ['start', 'end']);
-echo menu_item('sujets', 'Personnes sujet', 'Personnes sujet d’un titre', ['start', 'end']);
-echo menu_item('parite', 'Parité', 'Parité entre auteurs femmes et hommes', ['start', 'end']);
+echo menu_item('formats', 'Formats', 'Répartition par formats in-8°, in-4°…');
+echo menu_item('langues', 'Langues', 'Répartition par langues');
+echo menu_item('pages', 'Pages', 'Répartition par tailles en pages');
+echo menu_item('premiers', '1er livres', 'Répartition entre premiers livres et suivants');
+echo menu_item('auteurs', 'Auteurs', 'Auteurs, rythme chronologique de publication');
+echo menu_item('sujets', 'Personnes sujet', 'Personnes sujet d’un titre');
+echo menu_item('lieux', 'Lieux d’édition', 'Lieux d’édition');
+echo menu_item('clement', 'Classement Clément', 'Plan de classement selon la cote Clément (1647 / 1712)');
+echo menu_item('parite', 'Parité', 'Parité entre auteurs femmes et hommes');
 
 ?>
 
