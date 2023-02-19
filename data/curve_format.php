@@ -72,7 +72,8 @@ foreach ($queries as $label => $q) {
     else {
         $series[$label] = [
             "axis" => "y2",
-            'strokeWidth' => ($start < 1750)?2:1,
+            "pointSize" => 5,
+            'strokeWidth' => 2, // ($start < 1750)?2:1,
             "plotter" => "Dygraph.plotHistory",
         ];
     
@@ -81,11 +82,9 @@ foreach ($queries as $label => $q) {
 
 
 $attrs = [
-//    "title" => "BnF, catalogue général, part des premiers livres",
+    "title" => "BnF, catalogue général, répartition des formats",
     "ylabel" => "Nombre de titres par an",
     "y2label" => "% des titres d’une année",
-    "rollPeriod" => 0,
-    "strokeWidth" => 0,
     "fillAlpha" => 0.7,
     'historySmooth' => ($start < 1750)?1:0,
     'logscale' => false,

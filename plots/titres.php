@@ -18,12 +18,12 @@ function main()
         à <input class="year" name="end" size="4" value="<?= $end ?>" />
         <?php 
 $select = new Select('data', 'select_data');
+$select->add('curve_format', 'Formats');
 $select->add('curve_order', 'Livre 1er, 2nd, 3e');
 $select->add('curve_lang', 'Langues');
-$select->add('curve_format', 'Formats');
 $select->add('curve_pages', 'Pages');
 echo $select;
-$data = Http::par('data', 'curve_pages');
+$data = Http::par('data', 'curve_format');
         ?>
         <button type="submit">▶</button>
     </form>

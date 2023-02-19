@@ -88,7 +88,7 @@ foreach ($queries as $label => $q) {
 
 
 $attrs = [
-//    "title" => "BnF, catalogue général, part des premiers livres",
+    "title" => "BnF, catalogue général, part des langues",
     "ylabel" => "Nombre de titres par an",
     "y2label" => "% des titres d’une année",
     "rollPeriod" => 0,
