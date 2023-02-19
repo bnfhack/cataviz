@@ -270,14 +270,16 @@ Cataviz.dypars = {
     // labelsSeparateLines: true,
     showRoller: false,
     titleHeight: 75,
-    pointSize: 2,
+    pointSize: 5,
+    drawPoints: true,
     connectSeparatedPoints: false,
 }
 
 Cataviz.dypars.colors = [
-    'hsla(0, 0%, 50%, 1)', // grey
+    'hsla(0, 0%, 0%, 1)', // black
+    'hsla(0, 0%, 90%, 1)', // white
     'hsla(0, 50%, 50%, 1)', // red
-    'hsla(225, 50%, 50%, 1)', // blue
+    'hsla(225, 50%, 70%, 1)', // blue
     'hsla(45, 80%, 50%, 1)', // yellow
     'hsla(90, 60%, 30%, 1)', // green
     'hsla(180, 50%, 40%, 1)', // 5
@@ -350,6 +352,9 @@ Cataviz.dypars.axes = {
         gridLinePattern: [1, 2],
         gridLineColor: "rgba(128, 128, 128, 0.7)",
         gridLineWidth: 0.5,
+        axisLabelFormatter: function(y) {
+            return Math.abs(y);
+        },
     },
     y2: {
         drawGrid: false,
@@ -394,6 +399,14 @@ Cataviz.chartUp = function() {
     url.search = pars;
     window.history.pushState({}, '', url);
 
+    // modify smoothing of the history plotter according width in points
+    const start = pars.get('start');
+    const end = pars.get('end');
+    /*
+    if(start && end) {
+        Cataviz.dypars.historySmooth = Math.floor((end - start) / 100.0);
+    }
+    */
     url = new URL(Cataviz.chart.dataset.url, document.location);
     url.search = pars;
     Suggest.loadJson(url, function(json) {
@@ -526,7 +539,6 @@ Cataviz.suggInit = function(id) {
             form.q.autocomplete = 'off';
             form.q.addEventListener('input', Cataviz.suggUp);
         }
-        console.log(typeof form.popo);
         /*
         if (form.after) {
             form.after.autocomplete = 'off';
@@ -546,6 +558,7 @@ Cataviz.suggInit = function(id) {
     // filter.addEventListener('input', suggUp);
 
 }
+
 
 Cataviz.suggInputs = function(name)
 {

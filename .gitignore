@@ -2,6 +2,7 @@
 *.sqlite
 *.sqold
 
+
 test.php
 *.db
 vendor/

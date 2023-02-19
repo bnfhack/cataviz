@@ -107,7 +107,7 @@ return [
     "VZ" => "Sciences, autre fonds",
     "X" => "Linguistique et rhétorique",
     "XO" => "Langues orientales",
-    "Y" => "Critique littéraire",
+    "Y" => "Littérature, divers",
     "YA" => "Poésie orientale",
     "YB" => "Poésie grecque",
     "YC" => "Poésie latine",

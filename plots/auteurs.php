@@ -20,7 +20,7 @@ function main()
         <button id="submit" type="submit">▶</button>
     </form>
     <div id="row">
-        <div id="sugg" data-url="data/suggest_contrib.php" data-name="pers">
+        <div id="sugg" data-url="data/suggest_contrib.php" data-name="auth">
             <form>
                 <input name="q" class="q" placeholder="Filtrer par lettres"/>
                 <div>Né
@@ -43,15 +43,13 @@ function main()
 Cataviz.dypars.title = "<?= title() ?>";
 Cataviz.dypars.ylabel = "Titres par an";
 Cataviz.dypars.drawPoints = true;
-Cataviz.dypars.pointSize = 1.5;
-Cataviz.dypars.historySmooth = 3;
-Cataviz.dypars.strokeWidth = 2;
+Cataviz.dypars.historySmooth = 1;
 Cataviz.dypars.plotter = Dygraph.plotHistory;
 
 Cataviz.chartInit('chart', 'form');
 Cataviz.suggInit('sugg');
 Cataviz.suggUp();
-<?= Cataviz::url_pers() ?>
+<?= Cataviz::url_auth() ?>
 Cataviz.chartUp();
 
 

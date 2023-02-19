@@ -40,10 +40,7 @@ function main()
 // styling curves
 Cataviz.dypars.title = "<?= title() ?>";
 Cataviz.dypars.ylabel = "Titres par an";
-Cataviz.dypars.drawPoints = true;
-Cataviz.dypars.pointSize = 1.5;
 Cataviz.dypars.historySmooth = 3;
-Cataviz.dypars.strokeWidth = 2;
 Cataviz.dypars.plotter = Dygraph.plotHistory;
 Cataviz.dypars.logscale = true;
 

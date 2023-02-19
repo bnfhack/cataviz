@@ -80,20 +80,20 @@ class Cataviz
     /**
      * Produce some js code with SQL label to update chart form with url params
      */
-    static function url_pers()
+    static function url_auth()
     {
         $js = '';
         $js .= "const point = Cataviz.chart.form.lastElementChild;\n";
         $js .= "let el = null;\n";
-        $terms = http::pars('pers');
-        $sql = "SELECT * FROM pers WHERE id = ?";
+        $terms = http::pars('auth');
+        $sql = "SELECT * FROM auth WHERE id = ?";
         $stmt = Cataviz::prepare($sql);
-        foreach($terms as $pers_id) {
-            $stmt->execute([$pers_id]);
-            $pers_row = $stmt->fetch();
-            if (!$pers_row) continue;
-            $label = addslashes(Cataviz::pers_label($pers_row));
-            $js .= "el = Suggest.input('pers', '$pers_id', '$label', Cataviz.chartUp);\n";
+        foreach($terms as $auth_id) {
+            $stmt->execute([$auth_id]);
+            $auth_row = $stmt->fetch();
+            if (!$auth_row) continue;
+            $label = addslashes(Cataviz::auth_label($auth_row));
+            $js .= "el = Suggest.input('auth', '$auth_id', '$label', Cataviz.chartUp);\n";
             $js .= "point.parentNode.insertBefore(el, point);\n";
         }
         return $js;
@@ -185,83 +185,28 @@ class Cataviz
     }
 
 
-    /**
-     * Renvoyer les informations sur une personne, met en cache le résultat
-     */
-    static function person($persark = null)
-    {
-        if (!$persark) return $this->person;
-        if ($persark == $this->persark) return $this->person;
-        $this->$persark = $persark;
-        $this->person = self::$pdo->query("SELECT * FROM person WHERE ark = " . self::$pdo->quote($persark))->fetch(PDO::FETCH_ASSOC);
-        return $this->person;
-    }
-
 
     /**
-     * Build a string about a pers from an sql row
+     * Build a string about an auth row
      */
-    static function pers_label($pers_row)
+    static function auth_label($auth_row)
     {
         $label = '';
-        $label .= $pers_row['name'];
-        if ($pers_row['given']) $label .= ", " . $pers_row['given'];
-        if ($pers_row['role']) $label .= ", " . $pers_row['role'];
-        if ($pers_row['birthyear'] || $pers_row['deathyear']) {
+        $label .= $auth_row['name'];
+        if ($auth_row['given']) $label .= ", " . $auth_row['given'];
+        if ($auth_row['role']) $label .= ", " . $auth_row['role'];
+        if ($auth_row['birthyear'] || $auth_row['deathyear']) {
             $label .= " (";
-            if ($pers_row['birthyear']) $label .= $pers_row['birthyear'];
+            if ($auth_row['birthyear']) $label .= $auth_row['birthyear'];
             else $label .= " ";
             $label .= '/';
-            if ($pers_row['deathyear']) $label .= $pers_row['deathyear'];
+            if ($auth_row['deathyear']) $label .= $auth_row['deathyear'];
             else  $label .= " ";
             $label .= ")";
         }
         return $label;
     }
 
-    /**
-     * Nombre de documents relatifs à un auteur
-     */
-    static function dygraph($persark)
-    {
-        $person = $this->person($persark);
-        $csv = array();
-        $from = $person['birthyear'];
-        if (!$from) $from = 1400; // ex : Homère
-        if ($from < 1400) $from = 1450;
-        $to = 2016;
-        $sql = "SELECT count(*) FROM contribution WHERE person = ? AND date = ? AND writes = 1";
-        $q = self::$pdo->prepare($sql);
-        // collecter toute la série pour calculer ensuite la moyenne glissante;
-        $years = array();
-        $counts = array();
-        for ($date = $from; $date <= $to; $date++) {
-            $years[] = $date;
-            $q->execute(array($person['id'], $date));
-            $counts[] = current($q->fetch(PDO::FETCH_NUM));
-        }
-        // sortie tableau js
-        $txt = array();
-        $txt[] = "[";
-        $size = count($counts);
-        // durée de vie d’un livre
-        $long = 30;
-        $time = microtime(true);
-        for ($i = 0; $i < $size; $i++) {
-            $ifrom = max(0, $i - $long);
-            $stock = 0;
-            for ($j = $ifrom; $j <= $i; $j++) {
-                // echo $counts[$j].' '.(($long - ($i-$j)) / $long).', ';
-                // un livre en fin de vie ne vaut plus rien
-                $stock += $counts[$j] * (($long - ($i - $j)) / $long);
-            }
-            // $avg = number_format(array_sum(array_slice($counts, $ifrom, $iwidth)) / $iwidth, 1, '.', '');
-
-            $txt[] = '   [' . $years[$i] . ',' . $counts[$i] . ',' . $stock . '],';
-        }
-        $txt[] = "]";
-        return implode("\n", $txt);
-    }
 
     /**
      * Lister les collaborations comme un tableau

@@ -13,12 +13,12 @@ $sql = "SELECT count(*) AS c FROM doc WHERE year = ? ";
 
 $queries = array(
     "Tout" => Cataviz::prepare($sql),
-    "in-2°" => Cataviz::prepare($sql." AND format = 2"),
-    "in-4°" => Cataviz::prepare($sql." AND format = 4"),
-    "in-8°" => Cataviz::prepare($sql." AND format = 8"),
-    "in-12°" => Cataviz::prepare($sql." AND format = 12"),
-    "in-16+°" => Cataviz::prepare($sql." AND format >= 16"),
-    "In-?°" => Cataviz::prepare($sql . " AND  format IS NULL"),
+    "% in-8°" => Cataviz::prepare($sql." AND format = 8"),
+    "% in-4°" => Cataviz::prepare($sql." AND format = 4"),
+    "% in-16+°" => Cataviz::prepare($sql." AND format >= 16"),
+    "% in-2°" => Cataviz::prepare($sql." AND format = 2"),
+    "% in-12°" => Cataviz::prepare($sql." AND format = 12"),
+    "% In-?°" => Cataviz::prepare($sql . " AND  format IS NULL"),
 );
 
 
@@ -29,14 +29,19 @@ for ($year = $start; $year <= $end; $year++) {
     if ($first) $first = false;
     else echo ","; 
     echo "\n        [" . $year;
+    $tout = null;
     foreach ($queries as $label => $q) {
         $q->execute(array($year));
         list($val) = $q->fetch(PDO::FETCH_NUM);
-        if (!$val) $val = 'null';
-        /*
-        if ($val >= $min) echo ", " . $val;
-        else echo ", null";
-        */
+        if (!$val) {
+            $val = 'null';
+        }
+        else if ($label == 'Tout') {
+            $tout = $val;
+        }
+        else {
+            $val = round(10000.0 * $val/  $tout) / 100.0;
+        } 
         echo ", " . $val;
     }
     echo "]";
@@ -51,32 +56,45 @@ foreach ($queries as $label => $q) {
 }
 echo "]";
 
+
 // per series infos
+$series = [];
+foreach ($queries as $label => $q) {
+    if ($label == 'Tout') {
+        $series[$label] = [
+            "axis" => "y1",
+            "fillAlpha" => 0.2,
+            'fillGraph' => true,
+            'drawPoints' => false,
+            'strokeWidth' => 0,
+        ];
+    }
+    else {
+        $series[$label] = [
+            "axis" => "y2",
+            'strokeWidth' => ($start < 1750)?2:1,
+            "plotter" => "Dygraph.plotHistory",
+        ];
+    
+    }
+}
+
+
+$attrs = [
+//    "title" => "BnF, catalogue général, part des premiers livres",
+    "ylabel" => "Nombre de titres par an",
+    "y2label" => "% des titres d’une année",
+    "rollPeriod" => 0,
+    "strokeWidth" => 0,
+    "fillAlpha" => 0.7,
+    'historySmooth' => ($start < 1750)?1:0,
+    'logscale' => false,
+    "series" => $series,
+];
+
 echo ',
-        "attrs": {
-            "series": {
-                "in-2°": {
-                    "plotter": "Dygraph.plotHistory"
-                },
-                "in-4°": {
-                    "plotter": "Dygraph.plotHistory"
-                },
-                "in-8°": {
-                    "plotter": "Dygraph.plotHistory"
-                },
-                "in-12°": {
-                    "plotter": "Dygraph.plotHistory"
-                },
-                "in-16+°": {
-                    "plotter": "Dygraph.plotHistory"
-                },
-                "In-?°": {
-                    "pointSize": 0,
-                    "color": "#ccc",
-                    "strokeWidth": 1
-                }
-            }
-        }';
+        "attrs": ' . json_encode($attrs);
+
 
 
 echo "\n    }\n";

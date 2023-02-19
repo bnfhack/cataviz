@@ -18,7 +18,9 @@
         const smooth = e.dygraph.getOption('historySmooth', 0);
 
         // Do the actual plotting.
-        ctx.globalAlpha = 1;
+        if (pointSize >= 5) ctx.globalAlpha = 0.3;
+        else if (pointSize >= 3) ctx.globalAlpha = 0.5;
+        else ctx.globalAlpha = 1;
         if (pointSize > 0) {
             for (var i = 0; i < points.length; i++) {
                 var p = points[i];
@@ -32,12 +34,13 @@
         // console.log(ctx.lineWidth);
 
         // if (ctx.lineWidth >= 2) ctx.globalAlpha = 0.5;
-        if (ctx.lineWidth >= 5) ctx.globalAlpha = 0.3;
         if (ctx.lineWidth >= 10) ctx.globalAlpha = 0.15;
-        if (ctx.lineWidth <= 2) {
+        else if (ctx.lineWidth >= 5) ctx.globalAlpha = 0.3;
+        else if (ctx.lineWidth <= 2) {
             ctx.shadowColor = "#fff";
-            ctx.shadowBlur = 15;
+            // ctx.shadowBlur = 2;
             ctx.lineJoin = "round";
+            ctx.globalAlpha = 1;
         }
 
         // verify points

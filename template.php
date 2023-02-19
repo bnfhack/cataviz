@@ -56,6 +56,7 @@ echo menu_item('auteurs', 'Auteurs', 'Auteurs, rythme chronologique de publicati
 echo menu_item('clement', 'Classement Clément', 'Plan de classement selon la cote Clément (1647 / 1712)', ['start', 'end']);
 echo menu_item('lieux', 'Lieux d’édition', 'Lieux d’édition', ['start', 'end']);
 echo menu_item('sujets', 'Personnes sujet', 'Personnes sujet d’un titre', ['start', 'end']);
+echo menu_item('parite', 'Parité', 'Parité entre auteurs femmes et hommes', ['start', 'end']);
 
 ?>
 
