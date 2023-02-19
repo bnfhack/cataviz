@@ -284,7 +284,7 @@ Cataviz.dypars = {
     legend: "always",
     // labelsSeparateLines: true,
     showRoller: false,
-    titleHeight: 75,
+    titleHeight: 65,
     connectSeparatedPoints: false,
     drawPoints: true,
     pointSize: 2,
@@ -588,14 +588,15 @@ Cataviz.suggInputs = function(name)
     }
 }
 
-let once = (function () {
+Cataviz.menuInit = function() {
     // add dynamic parameters to menu link if clicked
     const menu = document.getElementById('menu');
     if (!menu) return;
     menu.addEventListener('click',function (e) { 
         let a = Suggest.selfOrAncestor(e.target, 'a');
         if (!a) return;
+        if (a.classList.contains('home')) return;
         a.search = window.location.search;
     });
-})();
-once();
+};
+Cataviz.menuInit();

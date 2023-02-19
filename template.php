@@ -11,9 +11,9 @@ $body_class = 'plot';
 
 function menu_item($url, $label, $title=null)
 {
+    $href = Route::home_href() . $url;
     $html = '<a href="';
-    $html .= Route::home_href();
-    $html .= $url;
+    $html .= $href;
     /* done by js
     if ($pars && count($pars) > 0) {
         $first = true;
@@ -30,6 +30,7 @@ function menu_item($url, $label, $title=null)
     }
     */
     $html .= '"';
+    if ($url == ltrim(Route::url_request(), '/')) $html .= ' class="selected"';
     if ($title) $html .= ' title="' . $title . '"';
     $html .= '>' . $label . '</a>';
     return $html;
@@ -50,7 +51,7 @@ function menu_item($url, $label, $title=null)
         <div id="page">
             <header id="header">
                 <nav class="menu" id="menu">
-<a href="." class="plus">◀ Cataviz</a>
+                <a class="home" href="." class="plus">Cataviz</a>
 <?php
 // echo menu_item('titres', 'Titres', 'Chronologie générale des publications');
 // echo menu_item('demographie', 'Démographie', 'Mortalité, “Natalité”, générations…', ['from', 'to']);
