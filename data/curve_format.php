@@ -41,7 +41,7 @@ for ($year = $start; $year <= $end; $year++) {
         }
         else {
             $val = round(10000.0 * $val/  $tout) / 100.0;
-        } 
+        }
         echo ", " . $val;
     }
     echo "]";
@@ -87,7 +87,7 @@ $attrs = [
     "y2label" => "% des titres d’une année",
     "fillAlpha" => 0.7,
     'historySmooth' => ($start < 1750)?1:0,
-    'logscale' => false,
+    // 'logscale' => true,
     "series" => $series,
 ];
 
