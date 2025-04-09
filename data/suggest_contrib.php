@@ -11,8 +11,8 @@ header("Content-Type: application/json");
 $limit = 50;
 
 $stmt_pars = [];
-$stmt_pars[] = Http::int('start', 1452, 1452, 2019);
-$stmt_pars[] = Http::int('end', 2019, 1452, 2019);
+$stmt_pars[] = Http::int('start', 1452, 1452, Cataviz::$p['date_max']);
+$stmt_pars[] = Http::int('end', Cataviz::$p['date_max'], 1452, Cataviz::$p['date_max']);
 
 $auth_sql = '';
 $auth_where = [];

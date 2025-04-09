@@ -15,7 +15,7 @@ class Cataviz
     /** parameters */
     static public $p = array(
         'date_min' => 1452,
-        'date_max' => 2020,
+        'date_max' => 2022,
     );
 
 

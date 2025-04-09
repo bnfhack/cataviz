@@ -7,8 +7,8 @@ $start_time = microtime(true);
 header("Access-Control-Allow-Origin:*");
 header("Content-Type: application/json");
 
-$start = Http::int('start', 1685, 1452, 2020);
-$end = Http::int('end', 1913, 1452, 2020);
+$start = Http::int('start', 1685, 1452, Cataviz::$p['date_max']);
+$end = Http::int('end', 1913, 1452, Cataviz::$p['date_max']);
 
 
 // get grouping values

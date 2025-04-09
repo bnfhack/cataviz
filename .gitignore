@@ -1,11 +1,4 @@
-*.docx
 *.sqlite
 *.sqold
-
-
 test.php
-*.db
-vendor/
-package-lock.json
 config.php
-composer.lock

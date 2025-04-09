@@ -7,8 +7,8 @@ $start_time = microtime(true);
 header("Access-Control-Allow-Origin:*");
 header("Content-Type: application/json");
 
-$start = Http::int('start', 1685, 1452, 2019);
-$end = Http::int('end', 1913, 1452, 2019);
+$start = Http::int('start', 1685, 1452, Cataviz::$p['date_max']);
+$end = Http::int('end', 1913, 1452, Cataviz::$p['date_max']);
 
 $sql = "SELECT count(*) AS count FROM doc WHERE year = ? ";
 
@@ -31,9 +31,9 @@ for ($year = $start; $year <= $end; $year++) {
     foreach ($queries as $label => $q) {
         $q->execute(array($year));
         list($val) = $q->fetch(PDO::FETCH_NUM);
-        if (!$val) $val = 'null';
         if ($label == 'Tout') {
             $tout = $val;
+            if ($tout == 0) $tout = 1;
         }
         else {
             $val = round(10000.0 * $val/  $tout) / 100.0;

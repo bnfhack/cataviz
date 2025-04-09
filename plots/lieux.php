@@ -9,8 +9,8 @@ function title()
 function main()
 {
 
-    $start = Http::int('start', 1685, 1452, 2019);
-    $end = Http::int('end', 1913, 1452, 2019);
+    $start = Http::int('start', 1685, 1452, Cataviz::$p['date_max']);
+    $end = Http::int('end', 1913, 1452, Cataviz::$p['date_max']);
 
 ?>
 <div class="form_chart">

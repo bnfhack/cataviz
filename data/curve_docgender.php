@@ -9,8 +9,8 @@ header("Content-Type: application/json");
 
 $none = 0;
 
-$start = Http::int('start', 1685, 1452, 2019);
-$end = Http::int('end', 1913, 1452, 2019);
+$start = Http::int('start', 1685, 1452, Cataviz::$p['date_max']);
+$end = Http::int('end', 1913, 1452, Cataviz::$p['date_max']);
 
 
 $sql = "SELECT count(*) AS count FROM auth WHERE doc1 = ? ";
@@ -45,7 +45,7 @@ for ($year = $start; $year <= $end; $year++) {
             list($val) = $q->fetch(PDO::FETCH_NUM);
         }
         if ($label === $femrate) {
-            $val = round(10000.0 *  $row[$femmes] / $val) / 100.0;
+            if ($val != 0) $val = round(10000.0 *  $row[$femmes] / $val) / 100.0;
         }
         else if ($label === $zero) {
             $val = -1;

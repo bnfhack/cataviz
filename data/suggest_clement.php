@@ -10,9 +10,9 @@ header("Content-Type: application/json");
 $start_time = microtime(true);
 
 $where = [];
-$start = Http::int('start', null, 1452, 2020);
+$start = Http::int('start', null, 1452, Cataviz::$p['date_max']);
 if ($start) $where[] = "year >= $start";
-$end = Http::int('end', null, 1452, 2020);
+$end = Http::int('end', null, 1452, Cataviz::$p['date_max']);
 if ($end < $start) $end = null;
 if ($end > 2015) $end = null;
 if ($end) $where[] = "year <= $end";
