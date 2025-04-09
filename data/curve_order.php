@@ -14,10 +14,11 @@ $sql = "SELECT count(*) AS count FROM doc WHERE year = ? ";
 
 $queries = array(
     "Tout" => Cataviz::prepare($sql),
-    "% 1er livre" => Cataviz::prepare($sql." AND order1 = 1"),
+    "% 1er livre" => Cataviz::prepare($sql." AND hume1 = 1"),
     // "2nd" => Cataviz::prepare($sql." AND order1 = 2"),
-    "% 2nd-9e livre" => Cataviz::prepare($sql." AND order1 >= 2 AND order1 <= 9"),
-    "% 10e et + livre" => Cataviz::prepare($sql." AND order1 >= 10"),
+    "% anthume" => Cataviz::prepare($sql." AND hume1 = 2"),
+    "% posthume" => Cataviz::prepare($sql." AND hume1 = 3"),
+    "% ?" => Cataviz::prepare($sql." AND hume1 IS NULL"),
 );
 
 
