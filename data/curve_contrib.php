@@ -73,32 +73,24 @@ foreach ($auth_ids as $id => $label) {
     echo ', "' . $label . '"';
 }
 echo "]";
+
 /*
-// per series infos
+$attrs = [
+    "title" => "BnF, catalogue général, part des premiers livres",
+    "ylabel" => "Nombre de titres par an",
+    "y2label" => "% des titres d’une année",
+    "rollPeriod" => 0,
+    'strokeWidth' => ($start < 1750)?2:1,
+    "fillAlpha" => 0.7,
+    'drawPoints' => true,
+    'pointSize' => 5,
+    'historySmooth' => ($start < 1750)?1:0,
+    'logscale' => false,
+    "series" => $series,
+];
+
 echo ',
-        "attrs": {
-            "y2label":"%",
-            "series": {
-                "' . $inconnu . '": {
-                    "pointSize": 0,
-                    "color": "#ccc",
-                    "strokeWidth": 1
-                },
-                "' . $hommes . '": {
-                    "plotter": "Dygraph.plotHistory"
-                },
-                "' . $femmes . '": {
-                    "plotter": "Dygraph.plotHistory"
-                },
-                "' . $doc1ratio . '": {
-                    "axis": "y2",
-                    "strokeWidth": 0.1,
-                    "stackedGraph": true,
-                    "fillGraph": true,
-                    "color": "#aaf"
-                }
-            }
-        }';
+        "attrs": ' . json_encode($attrs);
 */
 echo ', 
         "time": "'. (microtime(true) - $start_time) * 1000 . 'ms."';

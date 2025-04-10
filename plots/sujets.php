@@ -3,7 +3,7 @@ use Oeuvres\Kit\{Http, Route, Select};
 
 function title()
 {
-    return "BnF, Catalogue général, sujets auteur (titres cumulés)";
+    return "BnF, Catalogue général, sujets auteur";
 }
 
 function main()
@@ -40,10 +40,13 @@ function main()
 <script type="text/javascript">
 
 Cataviz.dypars.title = "<?= title() ?>";
-Cataviz.dypars.ylabel = "Titres cumulés";
-Cataviz.dypars.drawPoints = true;
+Cataviz.dypars.ylabel = "Titres";
+Cataviz.dypars.drawPoints = false;
 Cataviz.dypars.pointSize = 2.5;
-Cataviz.dypars.strokeWidth = 1.5;
+Cataviz.dypars.strokeWidth = 5;
+// Cataviz.dypars.plotter = Dygraph.plotHistory;
+Cataviz.dypars.rollPeriod = 20;
+Cataviz.dypars.showRoller = true;
 
 Cataviz.chartInit('chart', 'form');
 Cataviz.suggInit('sugg');

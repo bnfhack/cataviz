@@ -1,4 +1,4 @@
 <?php
 $table = "about";
-$cumul = true;
+$cumul = false;
 require_once(__DIR__ . "/curve_contrib.php");
